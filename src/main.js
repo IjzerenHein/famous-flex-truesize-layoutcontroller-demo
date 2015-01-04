@@ -81,13 +81,13 @@ define(function(require) {
     }
 
     function _fillWithTestData() {
-        scrollView.push(_createLC([
-            _createSurface('short text'),
-            _createSurface('Lorem ipsum dolor sit amet, aperiri adolescens vituperatoribus ne per, everti audire an qui, an mea agam explicari molestiae. Choro detracto vix no. Eu sea sint legimus, cu mazim intellegam mel, id omnes omnium volutpat duo. Habeo elaboraret te eum. An pri idque apeirian, sea commune abhorreant no. Idque fabellas indoctum sed an, an cum duis civibus, ea platonem contentiones eos.'),
-            _createSurface('short text')
-        ]));
-        scrollView.push(_createLC([
-            _createSurface('Lorem ipsum dolor sit amet, aperiri adolescens vituperatoribus ne per, everti audire an qui, an mea agam explicari molestiae. Choro detracto vix no. Eu sea sint legimus, cu mazim intellegam mel, id omnes omnium volutpat duo. Habeo elaboraret te eum. An pri idque apeirian, sea commune abhorreant no. Idque fabellas indoctum sed an, an cum duis civibus, ea platonem contentiones eos.')
-        ]));
+        for (var i = 0; i < 10; i++) {
+            scrollView.push(_createLC([
+                _createSurface('This examples demonstrates the use of LayoutController and ListLayout to calculate the height of multiple true-size surfaces. When the size of the LayoutController is set to [undefined, true], you can add it to a FlexScrollView which will then use the calculated height from the LayoutController.'),
+                _createSurface('<pre>var lc = new LayoutController({<br>    size: [undefined, true], // use the cumulative size of the child-renderables<br>    dataSource: [...]<br>});</pre>'),
+                _createSurface('Lorem ipsum dolor sit amet, aperiri adolescens vituperatoribus ne per, everti audire an qui, an mea agam explicari molestiae. Choro detracto vix no. Eu sea sint legimus, cu mazim intellegam mel, id omnes omnium volutpat duo. Habeo elaboraret te eum. An pri idque apeirian, sea commune abhorreant no. Idque fabellas indoctum sed an, an cum duis civibus, ea platonem contentiones eos.'),
+                _createSurface('-----------------------------')
+            ]));
+        }
     }
 });

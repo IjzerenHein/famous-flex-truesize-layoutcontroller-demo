@@ -74,7 +74,7 @@
 	    //</webpack>
 
 	    // please-js
-	    __webpack_require__(7);
+	    __webpack_require__(6);
 
 	    // import dependencies
 	    var Engine = __webpack_require__(13);
@@ -134,14 +134,14 @@
 	    }
 
 	    function _fillWithTestData() {
-	        scrollView.push(_createLC([
-	            _createSurface('short text'),
-	            _createSurface('Lorem ipsum dolor sit amet, aperiri adolescens vituperatoribus ne per, everti audire an qui, an mea agam explicari molestiae. Choro detracto vix no. Eu sea sint legimus, cu mazim intellegam mel, id omnes omnium volutpat duo. Habeo elaboraret te eum. An pri idque apeirian, sea commune abhorreant no. Idque fabellas indoctum sed an, an cum duis civibus, ea platonem contentiones eos.'),
-	            _createSurface('short text')
-	        ]));
-	        scrollView.push(_createLC([
-	            _createSurface('Lorem ipsum dolor sit amet, aperiri adolescens vituperatoribus ne per, everti audire an qui, an mea agam explicari molestiae. Choro detracto vix no. Eu sea sint legimus, cu mazim intellegam mel, id omnes omnium volutpat duo. Habeo elaboraret te eum. An pri idque apeirian, sea commune abhorreant no. Idque fabellas indoctum sed an, an cum duis civibus, ea platonem contentiones eos.')
-	        ]));
+	        for (var i = 0; i < 10; i++) {
+	            scrollView.push(_createLC([
+	                _createSurface('This examples demonstrates the use of LayoutController and ListLayout to calculate the height of multiple true-size surfaces. When the size of the LayoutController is set to [undefined, true], you can add it to a FlexScrollView which will then use the calculated height from the LayoutController.'),
+	                _createSurface('<pre>var lc = new LayoutController({<br>    size: [undefined, true], // use the cumulative size of the child-renderables<br>    dataSource: [...]<br>});</pre>'),
+	                _createSurface('Lorem ipsum dolor sit amet, aperiri adolescens vituperatoribus ne per, everti audire an qui, an mea agam explicari molestiae. Choro detracto vix no. Eu sea sint legimus, cu mazim intellegam mel, id omnes omnium volutpat duo. Habeo elaboraret te eum. An pri idque apeirian, sea commune abhorreant no. Idque fabellas indoctum sed an, an cum duis civibus, ea platonem contentiones eos.'),
+	                _createSurface('-----------------------------')
+	            ]));
+	        }
 	    }
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -159,7 +159,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
-	var dispose = __webpack_require__(6)
+	var dispose = __webpack_require__(7)
 		// The css code:
 		(__webpack_require__(4));
 	// Hot Module Replacement
@@ -183,33 +183,6 @@
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-	module.exports = function addStyle(cssCode) {
-		if(false) {
-			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-		}
-		var styleElement = document.createElement("style");
-		styleElement.type = "text/css";
-		var head = document.getElementsByTagName("head")[0];
-		head.appendChild(styleElement);
-		if (styleElement.styleSheet) {
-			styleElement.styleSheet.cssText = cssCode;
-		} else {
-			styleElement.appendChild(document.createTextNode(cssCode));
-		}
-		return function() {
-			head.removeChild(styleElement);
-		};
-	}
-
-
-/***/ },
-/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*Please JS v0.2.0, Jordan Checkman 2014, Checkman.io, MIT Liscense, Have fun.*/
@@ -814,6 +787,33 @@
 	})( window );
 
 /***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	module.exports = function addStyle(cssCode) {
+		if(false) {
+			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+		}
+		var styleElement = document.createElement("style");
+		styleElement.type = "text/css";
+		var head = document.getElementsByTagName("head")[0];
+		head.appendChild(styleElement);
+		if (styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = cssCode;
+		} else {
+			styleElement.appendChild(document.createTextNode(cssCode));
+		}
+		return function() {
+			head.removeChild(styleElement);
+		};
+	}
+
+
+/***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -850,8 +850,8 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var LayoutUtility = __webpack_require__(18);
-	    var ScrollController = __webpack_require__(22);
+	    var LayoutUtility = __webpack_require__(20);
+	    var ScrollController = __webpack_require__(24);
 	    var ListLayout = __webpack_require__(10);
 
 	    //
@@ -1448,17 +1448,17 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var Utility = __webpack_require__(28);
-	    var Entity = __webpack_require__(25);
-	    var ViewSequence = __webpack_require__(26);
-	    var OptionsManager = __webpack_require__(24);
-	    var EventHandler = __webpack_require__(23);
-	    var LayoutUtility = __webpack_require__(18);
-	    var LayoutNodeManager = __webpack_require__(19);
-	    var LayoutNode = __webpack_require__(20);
-	    var FlowLayoutNode = __webpack_require__(21);
-	    var Transform = __webpack_require__(27);
-	    __webpack_require__(29);
+	    var Utility = __webpack_require__(30);
+	    var Entity = __webpack_require__(27);
+	    var ViewSequence = __webpack_require__(28);
+	    var OptionsManager = __webpack_require__(18);
+	    var EventHandler = __webpack_require__(19);
+	    var LayoutUtility = __webpack_require__(20);
+	    var LayoutNodeManager = __webpack_require__(21);
+	    var LayoutNode = __webpack_require__(22);
+	    var FlowLayoutNode = __webpack_require__(23);
+	    var Transform = __webpack_require__(29);
+	    __webpack_require__(31);
 
 	    /**
 	     * @class
@@ -2286,8 +2286,8 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var Utility = __webpack_require__(28);
-	    var LayoutUtility = __webpack_require__(18);
+	    var Utility = __webpack_require__(30);
+	    var LayoutUtility = __webpack_require__(20);
 
 	    // Define capabilities of this layout function
 	    var capabilities = {
@@ -2515,7 +2515,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
-	var dispose = __webpack_require__(6)
+	var dispose = __webpack_require__(7)
 		// The css code:
 		(__webpack_require__(12));
 	// Hot Module Replacement
@@ -2561,9 +2561,9 @@
 	     * @static
 	     * @class Engine
 	     */
-	    var Context = __webpack_require__(31);
-	    var EventHandler = __webpack_require__(23);
-	    var OptionsManager = __webpack_require__(24);
+	    var Context = __webpack_require__(25);
+	    var EventHandler = __webpack_require__(19);
+	    var OptionsManager = __webpack_require__(18);
 
 	    var Engine = {};
 
@@ -2960,7 +2960,7 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var ElementOutput = __webpack_require__(30);
+	    var ElementOutput = __webpack_require__(26);
 
 	    /**
 	     * A base class for viewable content and event
@@ -3644,6 +3644,425 @@
 /* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
+	 * License, v. 2.0. If a copy of the MPL was not distributed with this
+	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+	 *
+	 * Owner: mark@famo.us
+	 * @license MPL 2.0
+	 * @copyright Famous Industries, Inc. 2014
+	 */
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+	    var EventHandler = __webpack_require__(19);
+
+	    /**
+	     *  A collection of methods for setting options which can be extended
+	     *  onto other classes.
+	     *
+	     *
+	     *  **** WARNING ****
+	     *  You can only pass through objects that will compile into valid JSON.
+	     *
+	     *  Valid options:
+	     *      Strings,
+	     *      Arrays,
+	     *      Objects,
+	     *      Numbers,
+	     *      Nested Objects,
+	     *      Nested Arrays.
+	     *
+	     *    This excludes:
+	     *        Document Fragments,
+	     *        Functions
+	     * @class OptionsManager
+	     * @constructor
+	     * @param {Object} value options dictionary
+	     */
+	    function OptionsManager(value) {
+	        this._value = value;
+	        this.eventOutput = null;
+	    }
+
+	    /**
+	     * Create options manager from source dictionary with arguments overriden by patch dictionary.
+	     *
+	     * @static
+	     * @method OptionsManager.patch
+	     *
+	     * @param {Object} source source arguments
+	     * @param {...Object} data argument additions and overwrites
+	     * @return {Object} source object
+	     */
+	    OptionsManager.patch = function patchObject(source, data) {
+	        var manager = new OptionsManager(source);
+	        for (var i = 1; i < arguments.length; i++) manager.patch(arguments[i]);
+	        return source;
+	    };
+
+	    function _createEventOutput() {
+	        this.eventOutput = new EventHandler();
+	        this.eventOutput.bindThis(this);
+	        EventHandler.setOutputHandler(this, this.eventOutput);
+	    }
+
+	    /**
+	     * Create OptionsManager from source with arguments overriden by patches.
+	     *   Triggers 'change' event on this object's event handler if the state of
+	     *   the OptionsManager changes as a result.
+	     *
+	     * @method patch
+	     *
+	     * @param {...Object} arguments list of patch objects
+	     * @return {OptionsManager} this
+	     */
+	    OptionsManager.prototype.patch = function patch() {
+	        var myState = this._value;
+	        for (var i = 0; i < arguments.length; i++) {
+	            var data = arguments[i];
+	            for (var k in data) {
+	                if ((k in myState) && (data[k] && data[k].constructor === Object) && (myState[k] && myState[k].constructor === Object)) {
+	                    if (!myState.hasOwnProperty(k)) myState[k] = Object.create(myState[k]);
+	                    this.key(k).patch(data[k]);
+	                    if (this.eventOutput) this.eventOutput.emit('change', {id: k, value: this.key(k).value()});
+	                }
+	                else this.set(k, data[k]);
+	            }
+	        }
+	        return this;
+	    };
+
+	    /**
+	     * Alias for patch
+	     *
+	     * @method setOptions
+	     *
+	     */
+	    OptionsManager.prototype.setOptions = OptionsManager.prototype.patch;
+
+	    /**
+	     * Return OptionsManager based on sub-object retrieved by key
+	     *
+	     * @method key
+	     *
+	     * @param {string} identifier key
+	     * @return {OptionsManager} new options manager with the value
+	     */
+	    OptionsManager.prototype.key = function key(identifier) {
+	        var result = new OptionsManager(this._value[identifier]);
+	        if (!(result._value instanceof Object) || result._value instanceof Array) result._value = {};
+	        return result;
+	    };
+
+	    /**
+	     * Look up value by key or get the full options hash
+	     * @method get
+	     *
+	     * @param {string} key key
+	     * @return {Object} associated object or full options hash
+	     */
+	    OptionsManager.prototype.get = function get(key) {
+	        return key ? this._value[key] : this._value;
+	    };
+
+	    /**
+	     * Alias for get
+	     * @method getOptions
+	     */
+	    OptionsManager.prototype.getOptions = OptionsManager.prototype.get;
+
+	    /**
+	     * Set key to value.  Outputs 'change' event if a value is overwritten.
+	     *
+	     * @method set
+	     *
+	     * @param {string} key key string
+	     * @param {Object} value value object
+	     * @return {OptionsManager} new options manager based on the value object
+	     */
+	    OptionsManager.prototype.set = function set(key, value) {
+	        var originalValue = this.get(key);
+	        this._value[key] = value;
+	        if (this.eventOutput && value !== originalValue) this.eventOutput.emit('change', {id: key, value: value});
+	        return this;
+	    };
+
+	    /**
+	     * Bind a callback function to an event type handled by this object.
+	     *
+	     * @method "on"
+	     *
+	     * @param {string} type event type key (for example, 'change')
+	     * @param {function(string, Object)} handler callback
+	     * @return {EventHandler} this
+	     */
+	    OptionsManager.prototype.on = function on() {
+	        _createEventOutput.call(this);
+	        return this.on.apply(this, arguments);
+	    };
+
+	    /**
+	     * Unbind an event by type and handler.
+	     *   This undoes the work of "on".
+	     *
+	     * @method removeListener
+	     *
+	     * @param {string} type event type key (for example, 'change')
+	     * @param {function} handler function object to remove
+	     * @return {EventHandler} internal event handler object (for chaining)
+	     */
+	    OptionsManager.prototype.removeListener = function removeListener() {
+	        _createEventOutput.call(this);
+	        return this.removeListener.apply(this, arguments);
+	    };
+
+	    /**
+	     * Add event handler object to set of downstream handlers.
+	     *
+	     * @method pipe
+	     *
+	     * @param {EventHandler} target event handler target object
+	     * @return {EventHandler} passed event handler
+	     */
+	    OptionsManager.prototype.pipe = function pipe() {
+	        _createEventOutput.call(this);
+	        return this.pipe.apply(this, arguments);
+	    };
+
+	    /**
+	     * Remove handler object from set of downstream handlers.
+	     * Undoes work of "pipe"
+	     *
+	     * @method unpipe
+	     *
+	     * @param {EventHandler} target target handler object
+	     * @return {EventHandler} provided target
+	     */
+	    OptionsManager.prototype.unpipe = function unpipe() {
+	        _createEventOutput.call(this);
+	        return this.unpipe.apply(this, arguments);
+	    };
+
+	    module.exports = OptionsManager;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
+	 * License, v. 2.0. If a copy of the MPL was not distributed with this
+	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+	 *
+	 * Owner: mark@famo.us
+	 * @license MPL 2.0
+	 * @copyright Famous Industries, Inc. 2014
+	 */
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+	    var EventEmitter = __webpack_require__(32);
+
+	    /**
+	     * EventHandler forwards received events to a set of provided callback functions.
+	     * It allows events to be captured, processed, and optionally piped through to other event handlers.
+	     *
+	     * @class EventHandler
+	     * @extends EventEmitter
+	     * @constructor
+	     */
+	    function EventHandler() {
+	        EventEmitter.apply(this, arguments);
+
+	        this.downstream = []; // downstream event handlers
+	        this.downstreamFn = []; // downstream functions
+
+	        this.upstream = []; // upstream event handlers
+	        this.upstreamListeners = {}; // upstream listeners
+	    }
+	    EventHandler.prototype = Object.create(EventEmitter.prototype);
+	    EventHandler.prototype.constructor = EventHandler;
+
+	    /**
+	     * Assign an event handler to receive an object's input events.
+	     *
+	     * @method setInputHandler
+	     * @static
+	     *
+	     * @param {Object} object object to mix trigger, subscribe, and unsubscribe functions into
+	     * @param {EventHandler} handler assigned event handler
+	     */
+	    EventHandler.setInputHandler = function setInputHandler(object, handler) {
+	        object.trigger = handler.trigger.bind(handler);
+	        if (handler.subscribe && handler.unsubscribe) {
+	            object.subscribe = handler.subscribe.bind(handler);
+	            object.unsubscribe = handler.unsubscribe.bind(handler);
+	        }
+	    };
+
+	    /**
+	     * Assign an event handler to receive an object's output events.
+	     *
+	     * @method setOutputHandler
+	     * @static
+	     *
+	     * @param {Object} object object to mix pipe, unpipe, on, addListener, and removeListener functions into
+	     * @param {EventHandler} handler assigned event handler
+	     */
+	    EventHandler.setOutputHandler = function setOutputHandler(object, handler) {
+	        if (handler instanceof EventHandler) handler.bindThis(object);
+	        object.pipe = handler.pipe.bind(handler);
+	        object.unpipe = handler.unpipe.bind(handler);
+	        object.on = handler.on.bind(handler);
+	        object.addListener = object.on;
+	        object.removeListener = handler.removeListener.bind(handler);
+	    };
+
+	    /**
+	     * Trigger an event, sending to all downstream handlers
+	     *   listening for provided 'type' key.
+	     *
+	     * @method emit
+	     *
+	     * @param {string} type event type key (for example, 'click')
+	     * @param {Object} event event data
+	     * @return {EventHandler} this
+	     */
+	    EventHandler.prototype.emit = function emit(type, event) {
+	        EventEmitter.prototype.emit.apply(this, arguments);
+	        var i = 0;
+	        for (i = 0; i < this.downstream.length; i++) {
+	            if (this.downstream[i].trigger) this.downstream[i].trigger(type, event);
+	        }
+	        for (i = 0; i < this.downstreamFn.length; i++) {
+	            this.downstreamFn[i](type, event);
+	        }
+	        return this;
+	    };
+
+	    /**
+	     * Alias for emit
+	     * @method addListener
+	     */
+	    EventHandler.prototype.trigger = EventHandler.prototype.emit;
+
+	    /**
+	     * Add event handler object to set of downstream handlers.
+	     *
+	     * @method pipe
+	     *
+	     * @param {EventHandler} target event handler target object
+	     * @return {EventHandler} passed event handler
+	     */
+	    EventHandler.prototype.pipe = function pipe(target) {
+	        if (target.subscribe instanceof Function) return target.subscribe(this);
+
+	        var downstreamCtx = (target instanceof Function) ? this.downstreamFn : this.downstream;
+	        var index = downstreamCtx.indexOf(target);
+	        if (index < 0) downstreamCtx.push(target);
+
+	        if (target instanceof Function) target('pipe', null);
+	        else if (target.trigger) target.trigger('pipe', null);
+
+	        return target;
+	    };
+
+	    /**
+	     * Remove handler object from set of downstream handlers.
+	     *   Undoes work of "pipe".
+	     *
+	     * @method unpipe
+	     *
+	     * @param {EventHandler} target target handler object
+	     * @return {EventHandler} provided target
+	     */
+	    EventHandler.prototype.unpipe = function unpipe(target) {
+	        if (target.unsubscribe instanceof Function) return target.unsubscribe(this);
+
+	        var downstreamCtx = (target instanceof Function) ? this.downstreamFn : this.downstream;
+	        var index = downstreamCtx.indexOf(target);
+	        if (index >= 0) {
+	            downstreamCtx.splice(index, 1);
+	            if (target instanceof Function) target('unpipe', null);
+	            else if (target.trigger) target.trigger('unpipe', null);
+	            return target;
+	        }
+	        else return false;
+	    };
+
+	    /**
+	     * Bind a callback function to an event type handled by this object.
+	     *
+	     * @method "on"
+	     *
+	     * @param {string} type event type key (for example, 'click')
+	     * @param {function(string, Object)} handler callback
+	     * @return {EventHandler} this
+	     */
+	    EventHandler.prototype.on = function on(type, handler) {
+	        EventEmitter.prototype.on.apply(this, arguments);
+	        if (!(type in this.upstreamListeners)) {
+	            var upstreamListener = this.trigger.bind(this, type);
+	            this.upstreamListeners[type] = upstreamListener;
+	            for (var i = 0; i < this.upstream.length; i++) {
+	                this.upstream[i].on(type, upstreamListener);
+	            }
+	        }
+	        return this;
+	    };
+
+	    /**
+	     * Alias for "on"
+	     * @method addListener
+	     */
+	    EventHandler.prototype.addListener = EventHandler.prototype.on;
+
+	    /**
+	     * Listen for events from an upstream event handler.
+	     *
+	     * @method subscribe
+	     *
+	     * @param {EventEmitter} source source emitter object
+	     * @return {EventHandler} this
+	     */
+	    EventHandler.prototype.subscribe = function subscribe(source) {
+	        var index = this.upstream.indexOf(source);
+	        if (index < 0) {
+	            this.upstream.push(source);
+	            for (var type in this.upstreamListeners) {
+	                source.on(type, this.upstreamListeners[type]);
+	            }
+	        }
+	        return this;
+	    };
+
+	    /**
+	     * Stop listening to events from an upstream event handler.
+	     *
+	     * @method unsubscribe
+	     *
+	     * @param {EventEmitter} source source emitter object
+	     * @return {EventHandler} this
+	     */
+	    EventHandler.prototype.unsubscribe = function unsubscribe(source) {
+	        var index = this.upstream.indexOf(source);
+	        if (index >= 0) {
+	            this.upstream.splice(index, 1);
+	            for (var type in this.upstreamListeners) {
+	                source.removeListener(type, this.upstreamListeners[type]);
+	            }
+	        }
+	        return this;
+	    };
+
+	    module.exports = EventHandler;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
 	 * This Source Code is licensed under the MIT license. If a copy of the
 	 * MIT-license was not distributed with this file, You can obtain one at:
@@ -3665,7 +4084,7 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var Utility = __webpack_require__(28);
+	    var Utility = __webpack_require__(30);
 
 	    /**
 	     * @class
@@ -3931,7 +4350,7 @@
 
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -3964,8 +4383,8 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var LayoutContext = __webpack_require__(32);
-	    var LayoutUtility = __webpack_require__(18);
+	    var LayoutContext = __webpack_require__(33);
+	    var LayoutUtility = __webpack_require__(20);
 
 	    var MAX_POOL_SIZE = 100;
 
@@ -4658,7 +5077,7 @@
 
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -4682,8 +5101,8 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var Transform = __webpack_require__(27);
-	    var LayoutUtility = __webpack_require__(18);
+	    var Transform = __webpack_require__(29);
+	    var LayoutUtility = __webpack_require__(20);
 
 	    /**
 	     * @class
@@ -4859,7 +5278,7 @@
 
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -4883,14 +5302,14 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var OptionsManager = __webpack_require__(24);
-	    var Transform = __webpack_require__(27);
-	    var Vector = __webpack_require__(35);
-	    var Particle = __webpack_require__(37);
-	    var Spring = __webpack_require__(38);
-	    var PhysicsEngine = __webpack_require__(36);
-	    var LayoutNode = __webpack_require__(20);
-	    var Transitionable = __webpack_require__(40);
+	    var OptionsManager = __webpack_require__(18);
+	    var Transform = __webpack_require__(29);
+	    var Vector = __webpack_require__(37);
+	    var Particle = __webpack_require__(39);
+	    var Spring = __webpack_require__(40);
+	    var PhysicsEngine = __webpack_require__(38);
+	    var LayoutNode = __webpack_require__(22);
+	    var Transitionable = __webpack_require__(42);
 
 	    /**
 	     * @class
@@ -5364,7 +5783,7 @@
 
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -5407,22 +5826,22 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var LayoutUtility = __webpack_require__(18);
+	    var LayoutUtility = __webpack_require__(20);
 	    var LayoutController = __webpack_require__(9);
-	    var LayoutNode = __webpack_require__(20);
-	    var FlowLayoutNode = __webpack_require__(21);
-	    var LayoutNodeManager = __webpack_require__(19);
-	    var ContainerSurface = __webpack_require__(41);
-	    var Transform = __webpack_require__(27);
-	    var EventHandler = __webpack_require__(23);
+	    var LayoutNode = __webpack_require__(22);
+	    var FlowLayoutNode = __webpack_require__(23);
+	    var LayoutNodeManager = __webpack_require__(21);
+	    var ContainerSurface = __webpack_require__(43);
+	    var Transform = __webpack_require__(29);
+	    var EventHandler = __webpack_require__(19);
 	    var Group = __webpack_require__(34);
-	    var Vector = __webpack_require__(35);
-	    var PhysicsEngine = __webpack_require__(36);
-	    var Particle = __webpack_require__(37);
-	    var Drag = __webpack_require__(39);
-	    var Spring = __webpack_require__(38);
-	    var ScrollSync = __webpack_require__(42);
-	    var ViewSequence = __webpack_require__(26);
+	    var Vector = __webpack_require__(37);
+	    var PhysicsEngine = __webpack_require__(38);
+	    var Particle = __webpack_require__(39);
+	    var Drag = __webpack_require__(41);
+	    var Spring = __webpack_require__(40);
+	    var ScrollSync = __webpack_require__(44);
+	    var ViewSequence = __webpack_require__(28);
 
 	    /**
 	     * Boudary reached detection
@@ -7286,7 +7705,7 @@
 
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -7299,61 +7718,159 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var EventEmitter = __webpack_require__(33);
+	    var RenderNode = __webpack_require__(35);
+	    var EventHandler = __webpack_require__(19);
+	    var ElementAllocator = __webpack_require__(36);
+	    var Transform = __webpack_require__(29);
+	    var Transitionable = __webpack_require__(42);
 
-	    /**
-	     * EventHandler forwards received events to a set of provided callback functions.
-	     * It allows events to be captured, processed, and optionally piped through to other event handlers.
-	     *
-	     * @class EventHandler
-	     * @extends EventEmitter
-	     * @constructor
-	     */
-	    function EventHandler() {
-	        EventEmitter.apply(this, arguments);
+	    var _zeroZero = [0, 0];
+	    var usePrefix = !('perspective' in document.documentElement.style);
 
-	        this.downstream = []; // downstream event handlers
-	        this.downstreamFn = []; // downstream functions
-
-	        this.upstream = []; // upstream event handlers
-	        this.upstreamListeners = {}; // upstream listeners
+	    function _getElementSize(element) {
+	        return [element.clientWidth, element.clientHeight];
 	    }
-	    EventHandler.prototype = Object.create(EventEmitter.prototype);
-	    EventHandler.prototype.constructor = EventHandler;
 
-	    /**
-	     * Assign an event handler to receive an object's input events.
-	     *
-	     * @method setInputHandler
-	     * @static
-	     *
-	     * @param {Object} object object to mix trigger, subscribe, and unsubscribe functions into
-	     * @param {EventHandler} handler assigned event handler
-	     */
-	    EventHandler.setInputHandler = function setInputHandler(object, handler) {
-	        object.trigger = handler.trigger.bind(handler);
-	        if (handler.subscribe && handler.unsubscribe) {
-	            object.subscribe = handler.subscribe.bind(handler);
-	            object.unsubscribe = handler.unsubscribe.bind(handler);
-	        }
+	    var _setPerspective = usePrefix ? function(element, perspective) {
+	        element.style.webkitPerspective = perspective ? perspective.toFixed() + 'px' : '';
+	    } : function(element, perspective) {
+	        element.style.perspective = perspective ? perspective.toFixed() + 'px' : '';
 	    };
 
 	    /**
-	     * Assign an event handler to receive an object's output events.
+	     * The top-level container for a Famous-renderable piece of the document.
+	     *   It is directly updated by the process-wide Engine object, and manages one
+	     *   render tree root, which can contain other renderables.
 	     *
-	     * @method setOutputHandler
-	     * @static
-	     *
-	     * @param {Object} object object to mix pipe, unpipe, on, addListener, and removeListener functions into
-	     * @param {EventHandler} handler assigned event handler
+	     * @class Context
+	     * @constructor
+	     * @private
+	     * @param {Node} container Element in which content will be inserted
 	     */
-	    EventHandler.setOutputHandler = function setOutputHandler(object, handler) {
-	        if (handler instanceof EventHandler) handler.bindThis(object);
-	        object.pipe = handler.pipe.bind(handler);
-	        object.unpipe = handler.unpipe.bind(handler);
-	        object.on = handler.on.bind(handler);
-	        object.addListener = object.on;
-	        object.removeListener = handler.removeListener.bind(handler);
+	    function Context(container) {
+	        this.container = container;
+	        this._allocator = new ElementAllocator(container);
+
+	        this._node = new RenderNode();
+	        this._eventOutput = new EventHandler();
+	        this._size = _getElementSize(this.container);
+
+	        this._perspectiveState = new Transitionable(0);
+	        this._perspective = undefined;
+
+	        this._nodeContext = {
+	            allocator: this._allocator,
+	            transform: Transform.identity,
+	            opacity: 1,
+	            origin: _zeroZero,
+	            align: _zeroZero,
+	            size: this._size
+	        };
+
+	        this._eventOutput.on('resize', function() {
+	            this.setSize(_getElementSize(this.container));
+	        }.bind(this));
+
+	    }
+
+	    // Note: Unused
+	    Context.prototype.getAllocator = function getAllocator() {
+	        return this._allocator;
+	    };
+
+	    /**
+	     * Add renderables to this Context's render tree.
+	     *
+	     * @method add
+	     *
+	     * @param {Object} obj renderable object
+	     * @return {RenderNode} RenderNode wrapping this object, if not already a RenderNode
+	     */
+	    Context.prototype.add = function add(obj) {
+	        return this._node.add(obj);
+	    };
+
+	    /**
+	     * Move this Context to another containing document element.
+	     *
+	     * @method migrate
+	     *
+	     * @param {Node} container Element to which content will be migrated
+	     */
+	    Context.prototype.migrate = function migrate(container) {
+	        if (container === this.container) return;
+	        this.container = container;
+	        this._allocator.migrate(container);
+	    };
+
+	    /**
+	     * Gets viewport size for Context.
+	     *
+	     * @method getSize
+	     *
+	     * @return {Array.Number} viewport size as [width, height]
+	     */
+	    Context.prototype.getSize = function getSize() {
+	        return this._size;
+	    };
+
+	    /**
+	     * Sets viewport size for Context.
+	     *
+	     * @method setSize
+	     *
+	     * @param {Array.Number} size [width, height].  If unspecified, use size of root document element.
+	     */
+	    Context.prototype.setSize = function setSize(size) {
+	        if (!size) size = _getElementSize(this.container);
+	        this._size[0] = size[0];
+	        this._size[1] = size[1];
+	    };
+
+	    /**
+	     * Commit this Context's content changes to the document.
+	     *
+	     * @private
+	     * @method update
+	     * @param {Object} contextParameters engine commit specification
+	     */
+	    Context.prototype.update = function update(contextParameters) {
+	        if (contextParameters) {
+	            if (contextParameters.transform) this._nodeContext.transform = contextParameters.transform;
+	            if (contextParameters.opacity) this._nodeContext.opacity = contextParameters.opacity;
+	            if (contextParameters.origin) this._nodeContext.origin = contextParameters.origin;
+	            if (contextParameters.align) this._nodeContext.align = contextParameters.align;
+	            if (contextParameters.size) this._nodeContext.size = contextParameters.size;
+	        }
+	        var perspective = this._perspectiveState.get();
+	        if (perspective !== this._perspective) {
+	            _setPerspective(this.container, perspective);
+	            this._perspective = perspective;
+	        }
+
+	        this._node.commit(this._nodeContext);
+	    };
+
+	    /**
+	     * Get current perspective of this context in pixels.
+	     *
+	     * @method getPerspective
+	     * @return {Number} depth perspective in pixels
+	     */
+	    Context.prototype.getPerspective = function getPerspective() {
+	        return this._perspectiveState.get();
+	    };
+
+	    /**
+	     * Set current perspective of this context in pixels.
+	     *
+	     * @method setPerspective
+	     * @param {Number} perspective in pixels
+	     * @param {Object} [transition] Transitionable object for applying the change
+	     * @param {function(Object)} callback function called on completion of transition
+	     */
+	    Context.prototype.setPerspective = function setPerspective(perspective, transition, callback) {
+	        return this._perspectiveState.set(perspective, transition, callback);
 	    };
 
 	    /**
@@ -7366,66 +7883,8 @@
 	     * @param {Object} event event data
 	     * @return {EventHandler} this
 	     */
-	    EventHandler.prototype.emit = function emit(type, event) {
-	        EventEmitter.prototype.emit.apply(this, arguments);
-	        var i = 0;
-	        for (i = 0; i < this.downstream.length; i++) {
-	            if (this.downstream[i].trigger) this.downstream[i].trigger(type, event);
-	        }
-	        for (i = 0; i < this.downstreamFn.length; i++) {
-	            this.downstreamFn[i](type, event);
-	        }
-	        return this;
-	    };
-
-	    /**
-	     * Alias for emit
-	     * @method addListener
-	     */
-	    EventHandler.prototype.trigger = EventHandler.prototype.emit;
-
-	    /**
-	     * Add event handler object to set of downstream handlers.
-	     *
-	     * @method pipe
-	     *
-	     * @param {EventHandler} target event handler target object
-	     * @return {EventHandler} passed event handler
-	     */
-	    EventHandler.prototype.pipe = function pipe(target) {
-	        if (target.subscribe instanceof Function) return target.subscribe(this);
-
-	        var downstreamCtx = (target instanceof Function) ? this.downstreamFn : this.downstream;
-	        var index = downstreamCtx.indexOf(target);
-	        if (index < 0) downstreamCtx.push(target);
-
-	        if (target instanceof Function) target('pipe', null);
-	        else if (target.trigger) target.trigger('pipe', null);
-
-	        return target;
-	    };
-
-	    /**
-	     * Remove handler object from set of downstream handlers.
-	     *   Undoes work of "pipe".
-	     *
-	     * @method unpipe
-	     *
-	     * @param {EventHandler} target target handler object
-	     * @return {EventHandler} provided target
-	     */
-	    EventHandler.prototype.unpipe = function unpipe(target) {
-	        if (target.unsubscribe instanceof Function) return target.unsubscribe(this);
-
-	        var downstreamCtx = (target instanceof Function) ? this.downstreamFn : this.downstream;
-	        var index = downstreamCtx.indexOf(target);
-	        if (index >= 0) {
-	            downstreamCtx.splice(index, 1);
-	            if (target instanceof Function) target('unpipe', null);
-	            else if (target.trigger) target.trigger('unpipe', null);
-	            return target;
-	        }
-	        else return false;
+	    Context.prototype.emit = function emit(type, event) {
+	        return this._eventOutput.emit(type, event);
 	    };
 
 	    /**
@@ -7437,68 +7896,55 @@
 	     * @param {function(string, Object)} handler callback
 	     * @return {EventHandler} this
 	     */
-	    EventHandler.prototype.on = function on(type, handler) {
-	        EventEmitter.prototype.on.apply(this, arguments);
-	        if (!(type in this.upstreamListeners)) {
-	            var upstreamListener = this.trigger.bind(this, type);
-	            this.upstreamListeners[type] = upstreamListener;
-	            for (var i = 0; i < this.upstream.length; i++) {
-	                this.upstream[i].on(type, upstreamListener);
-	            }
-	        }
-	        return this;
+	    Context.prototype.on = function on(type, handler) {
+	        return this._eventOutput.on(type, handler);
 	    };
 
 	    /**
-	     * Alias for "on"
-	     * @method addListener
-	     */
-	    EventHandler.prototype.addListener = EventHandler.prototype.on;
-
-	    /**
-	     * Listen for events from an upstream event handler.
+	     * Unbind an event by type and handler.
+	     *   This undoes the work of "on".
 	     *
-	     * @method subscribe
+	     * @method removeListener
 	     *
-	     * @param {EventEmitter} source source emitter object
-	     * @return {EventHandler} this
+	     * @param {string} type event type key (for example, 'click')
+	     * @param {function} handler function object to remove
+	     * @return {EventHandler} internal event handler object (for chaining)
 	     */
-	    EventHandler.prototype.subscribe = function subscribe(source) {
-	        var index = this.upstream.indexOf(source);
-	        if (index < 0) {
-	            this.upstream.push(source);
-	            for (var type in this.upstreamListeners) {
-	                source.on(type, this.upstreamListeners[type]);
-	            }
-	        }
-	        return this;
+	    Context.prototype.removeListener = function removeListener(type, handler) {
+	        return this._eventOutput.removeListener(type, handler);
 	    };
 
 	    /**
-	     * Stop listening to events from an upstream event handler.
+	     * Add event handler object to set of downstream handlers.
 	     *
-	     * @method unsubscribe
+	     * @method pipe
 	     *
-	     * @param {EventEmitter} source source emitter object
-	     * @return {EventHandler} this
+	     * @param {EventHandler} target event handler target object
+	     * @return {EventHandler} passed event handler
 	     */
-	    EventHandler.prototype.unsubscribe = function unsubscribe(source) {
-	        var index = this.upstream.indexOf(source);
-	        if (index >= 0) {
-	            this.upstream.splice(index, 1);
-	            for (var type in this.upstreamListeners) {
-	                source.removeListener(type, this.upstreamListeners[type]);
-	            }
-	        }
-	        return this;
+	    Context.prototype.pipe = function pipe(target) {
+	        return this._eventOutput.pipe(target);
 	    };
 
-	    module.exports = EventHandler;
+	    /**
+	     * Remove handler object from set of downstream handlers.
+	     *   Undoes work of "pipe".
+	     *
+	     * @method unpipe
+	     *
+	     * @param {EventHandler} target target handler object
+	     * @return {EventHandler} provided target
+	     */
+	    Context.prototype.unpipe = function unpipe(target) {
+	        return this._eventOutput.unpipe(target);
+	    };
+
+	    module.exports = Context;
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -7511,166 +7957,89 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var EventHandler = __webpack_require__(23);
+	    var Entity = __webpack_require__(27);
+	    var EventHandler = __webpack_require__(19);
+	    var Transform = __webpack_require__(29);
+
+	    var usePrefix = !('transform' in document.documentElement.style);
+	    var devicePixelRatio = window.devicePixelRatio || 1;
 
 	    /**
-	     *  A collection of methods for setting options which can be extended
-	     *  onto other classes.
+	     * A base class for viewable content and event
+	     *   targets inside a Famo.us application, containing a renderable document
+	     *   fragment. Like an HTML div, it can accept internal markup,
+	     *   properties, classes, and handle events.
 	     *
-	     *
-	     *  **** WARNING ****
-	     *  You can only pass through objects that will compile into valid JSON.
-	     *
-	     *  Valid options:
-	     *      Strings,
-	     *      Arrays,
-	     *      Objects,
-	     *      Numbers,
-	     *      Nested Objects,
-	     *      Nested Arrays.
-	     *
-	     *    This excludes:
-	     *        Document Fragments,
-	     *        Functions
-	     * @class OptionsManager
+	     * @class ElementOutput
 	     * @constructor
-	     * @param {Object} value options dictionary
+	     *
+	     * @param {Node} element document parent of this container
 	     */
-	    function OptionsManager(value) {
-	        this._value = value;
-	        this.eventOutput = null;
+	    function ElementOutput(element) {
+	        this._matrix = null;
+	        this._opacity = 1;
+	        this._origin = null;
+	        this._size = null;
+
+	        this._eventOutput = new EventHandler();
+	        this._eventOutput.bindThis(this);
+
+	        /** @ignore */
+	        this.eventForwarder = function eventForwarder(event) {
+	            this._eventOutput.emit(event.type, event);
+	        }.bind(this);
+
+	        this.id = Entity.register(this);
+	        this._element = null;
+	        this._sizeDirty = false;
+	        this._originDirty = false;
+	        this._transformDirty = false;
+
+	        this._invisible = false;
+	        if (element) this.attach(element);
 	    }
-
-	    /**
-	     * Create options manager from source dictionary with arguments overriden by patch dictionary.
-	     *
-	     * @static
-	     * @method OptionsManager.patch
-	     *
-	     * @param {Object} source source arguments
-	     * @param {...Object} data argument additions and overwrites
-	     * @return {Object} source object
-	     */
-	    OptionsManager.patch = function patchObject(source, data) {
-	        var manager = new OptionsManager(source);
-	        for (var i = 1; i < arguments.length; i++) manager.patch(arguments[i]);
-	        return source;
-	    };
-
-	    function _createEventOutput() {
-	        this.eventOutput = new EventHandler();
-	        this.eventOutput.bindThis(this);
-	        EventHandler.setOutputHandler(this, this.eventOutput);
-	    }
-
-	    /**
-	     * Create OptionsManager from source with arguments overriden by patches.
-	     *   Triggers 'change' event on this object's event handler if the state of
-	     *   the OptionsManager changes as a result.
-	     *
-	     * @method patch
-	     *
-	     * @param {...Object} arguments list of patch objects
-	     * @return {OptionsManager} this
-	     */
-	    OptionsManager.prototype.patch = function patch() {
-	        var myState = this._value;
-	        for (var i = 0; i < arguments.length; i++) {
-	            var data = arguments[i];
-	            for (var k in data) {
-	                if ((k in myState) && (data[k] && data[k].constructor === Object) && (myState[k] && myState[k].constructor === Object)) {
-	                    if (!myState.hasOwnProperty(k)) myState[k] = Object.create(myState[k]);
-	                    this.key(k).patch(data[k]);
-	                    if (this.eventOutput) this.eventOutput.emit('change', {id: k, value: this.key(k).value()});
-	                }
-	                else this.set(k, data[k]);
-	            }
-	        }
-	        return this;
-	    };
-
-	    /**
-	     * Alias for patch
-	     *
-	     * @method setOptions
-	     *
-	     */
-	    OptionsManager.prototype.setOptions = OptionsManager.prototype.patch;
-
-	    /**
-	     * Return OptionsManager based on sub-object retrieved by key
-	     *
-	     * @method key
-	     *
-	     * @param {string} identifier key
-	     * @return {OptionsManager} new options manager with the value
-	     */
-	    OptionsManager.prototype.key = function key(identifier) {
-	        var result = new OptionsManager(this._value[identifier]);
-	        if (!(result._value instanceof Object) || result._value instanceof Array) result._value = {};
-	        return result;
-	    };
-
-	    /**
-	     * Look up value by key or get the full options hash
-	     * @method get
-	     *
-	     * @param {string} key key
-	     * @return {Object} associated object or full options hash
-	     */
-	    OptionsManager.prototype.get = function get(key) {
-	        return key ? this._value[key] : this._value;
-	    };
-
-	    /**
-	     * Alias for get
-	     * @method getOptions
-	     */
-	    OptionsManager.prototype.getOptions = OptionsManager.prototype.get;
-
-	    /**
-	     * Set key to value.  Outputs 'change' event if a value is overwritten.
-	     *
-	     * @method set
-	     *
-	     * @param {string} key key string
-	     * @param {Object} value value object
-	     * @return {OptionsManager} new options manager based on the value object
-	     */
-	    OptionsManager.prototype.set = function set(key, value) {
-	        var originalValue = this.get(key);
-	        this._value[key] = value;
-	        if (this.eventOutput && value !== originalValue) this.eventOutput.emit('change', {id: key, value: value});
-	        return this;
-	    };
 
 	    /**
 	     * Bind a callback function to an event type handled by this object.
 	     *
 	     * @method "on"
 	     *
-	     * @param {string} type event type key (for example, 'change')
-	     * @param {function(string, Object)} handler callback
+	     * @param {string} type event type key (for example, 'click')
+	     * @param {function(string, Object)} fn handler callback
 	     * @return {EventHandler} this
 	     */
-	    OptionsManager.prototype.on = function on() {
-	        _createEventOutput.call(this);
-	        return this.on.apply(this, arguments);
+	    ElementOutput.prototype.on = function on(type, fn) {
+	        if (this._element) this._element.addEventListener(type, this.eventForwarder);
+	        this._eventOutput.on(type, fn);
 	    };
 
 	    /**
 	     * Unbind an event by type and handler.
-	     *   This undoes the work of "on".
+	     *   This undoes the work of "on"
 	     *
 	     * @method removeListener
-	     *
-	     * @param {string} type event type key (for example, 'change')
-	     * @param {function} handler function object to remove
-	     * @return {EventHandler} internal event handler object (for chaining)
+	     * @param {string} type event type key (for example, 'click')
+	     * @param {function(string, Object)} fn handler
 	     */
-	    OptionsManager.prototype.removeListener = function removeListener() {
-	        _createEventOutput.call(this);
-	        return this.removeListener.apply(this, arguments);
+	    ElementOutput.prototype.removeListener = function removeListener(type, fn) {
+	        this._eventOutput.removeListener(type, fn);
+	    };
+
+	    /**
+	     * Trigger an event, sending to all downstream handlers
+	     *   listening for provided 'type' key.
+	     *
+	     * @method emit
+	     *
+	     * @param {string} type event type key (for example, 'click')
+	     * @param {Object} [event] event data
+	     * @return {EventHandler} this
+	     */
+	    ElementOutput.prototype.emit = function emit(type, event) {
+	        if (event && !event.origin) event.origin = this;
+	        var handled = this._eventOutput.emit(type, event);
+	        if (handled && event && event.stopPropagation) event.stopPropagation();
+	        return handled;
 	    };
 
 	    /**
@@ -7681,31 +8050,235 @@
 	     * @param {EventHandler} target event handler target object
 	     * @return {EventHandler} passed event handler
 	     */
-	    OptionsManager.prototype.pipe = function pipe() {
-	        _createEventOutput.call(this);
-	        return this.pipe.apply(this, arguments);
+	    ElementOutput.prototype.pipe = function pipe(target) {
+	        return this._eventOutput.pipe(target);
 	    };
 
 	    /**
 	     * Remove handler object from set of downstream handlers.
-	     * Undoes work of "pipe"
+	     *   Undoes work of "pipe"
 	     *
 	     * @method unpipe
 	     *
 	     * @param {EventHandler} target target handler object
 	     * @return {EventHandler} provided target
 	     */
-	    OptionsManager.prototype.unpipe = function unpipe() {
-	        _createEventOutput.call(this);
-	        return this.unpipe.apply(this, arguments);
+	    ElementOutput.prototype.unpipe = function unpipe(target) {
+	        return this._eventOutput.unpipe(target);
 	    };
 
-	    module.exports = OptionsManager;
+	    /**
+	     * Return spec for this surface. Note that for a base surface, this is
+	     *    simply an id.
+	     *
+	     * @method render
+	     * @private
+	     * @return {Object} render spec for this surface (spec id)
+	     */
+	    ElementOutput.prototype.render = function render() {
+	        return this.id;
+	    };
+
+	    //  Attach Famous event handling to document events emanating from target
+	    //    document element.  This occurs just after attachment to the document.
+	    //    Calling this enables methods like #on and #pipe.
+	    function _addEventListeners(target) {
+	        for (var i in this._eventOutput.listeners) {
+	            target.addEventListener(i, this.eventForwarder);
+	        }
+	    }
+
+	    //  Detach Famous event handling from document events emanating from target
+	    //  document element.  This occurs just before detach from the document.
+	    function _removeEventListeners(target) {
+	        for (var i in this._eventOutput.listeners) {
+	            target.removeEventListener(i, this.eventForwarder);
+	        }
+	    }
+
+	    /**
+	     * Return a Matrix's webkit css representation to be used with the
+	     *    CSS3 -webkit-transform style.
+	     *    Example: -webkit-transform: matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,716,243,0,1)
+	     *
+	     * @method _formatCSSTransform
+	     * @private
+	     * @param {FamousMatrix} m matrix
+	     * @return {string} matrix3d CSS style representation of the transform
+	     */
+	    function _formatCSSTransform(m) {
+	        m[12] = Math.round(m[12] * devicePixelRatio) / devicePixelRatio;
+	        m[13] = Math.round(m[13] * devicePixelRatio) / devicePixelRatio;
+
+	        var result = 'matrix3d(';
+	        for (var i = 0; i < 15; i++) {
+	            result += (m[i] < 0.000001 && m[i] > -0.000001) ? '0,' : m[i] + ',';
+	        }
+	        result += m[15] + ')';
+	        return result;
+	    }
+
+	    /**
+	     * Directly apply given FamousMatrix to the document element as the
+	     *   appropriate webkit CSS style.
+	     *
+	     * @method setMatrix
+	     *
+	     * @static
+	     * @private
+	     * @param {Element} element document element
+	     * @param {FamousMatrix} matrix
+	     */
+
+	    var _setMatrix;
+	    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+	        _setMatrix = function(element, matrix) {
+	            element.style.zIndex = (matrix[14] * 1000000) | 0;    // fix for Firefox z-buffer issues
+	            element.style.transform = _formatCSSTransform(matrix);
+	        };
+	    }
+	    else if (usePrefix) {
+	        _setMatrix = function(element, matrix) {
+	            element.style.webkitTransform = _formatCSSTransform(matrix);
+	        };
+	    }
+	    else {
+	        _setMatrix = function(element, matrix) {
+	            element.style.transform = _formatCSSTransform(matrix);
+	        };
+	    }
+
+	    // format origin as CSS percentage string
+	    function _formatCSSOrigin(origin) {
+	        return (100 * origin[0]) + '% ' + (100 * origin[1]) + '%';
+	    }
+
+	    // Directly apply given origin coordinates to the document element as the
+	    // appropriate webkit CSS style.
+	    var _setOrigin = usePrefix ? function(element, origin) {
+	        element.style.webkitTransformOrigin = _formatCSSOrigin(origin);
+	    } : function(element, origin) {
+	        element.style.transformOrigin = _formatCSSOrigin(origin);
+	    };
+
+	    // Shrink given document element until it is effectively invisible.
+	    var _setInvisible = usePrefix ? function(element) {
+	        element.style.webkitTransform = 'scale3d(0.0001,0.0001,0.0001)';
+	        element.style.opacity = 0;
+	    } : function(element) {
+	        element.style.transform = 'scale3d(0.0001,0.0001,0.0001)';
+	        element.style.opacity = 0;
+	    };
+
+	    function _xyNotEquals(a, b) {
+	        return (a && b) ? (a[0] !== b[0] || a[1] !== b[1]) : a !== b;
+	    }
+
+	    /**
+	     * Apply changes from this component to the corresponding document element.
+	     * This includes changes to classes, styles, size, content, opacity, origin,
+	     * and matrix transforms.
+	     *
+	     * @private
+	     * @method commit
+	     * @param {Context} context commit context
+	     */
+	    ElementOutput.prototype.commit = function commit(context) {
+	        var target = this._element;
+	        if (!target) return;
+
+	        var matrix = context.transform;
+	        var opacity = context.opacity;
+	        var origin = context.origin;
+	        var size = context.size;
+
+	        if (!matrix && this._matrix) {
+	            this._matrix = null;
+	            this._opacity = 0;
+	            _setInvisible(target);
+	            return;
+	        }
+
+	        if (_xyNotEquals(this._origin, origin)) this._originDirty = true;
+	        if (Transform.notEquals(this._matrix, matrix)) this._transformDirty = true;
+
+	        if (this._invisible) {
+	            this._invisible = false;
+	            this._element.style.display = '';
+	        }
+
+	        if (this._opacity !== opacity) {
+	            this._opacity = opacity;
+	            target.style.opacity = (opacity >= 1) ? '0.999999' : opacity;
+	        }
+
+	        if (this._transformDirty || this._originDirty || this._sizeDirty) {
+	            if (this._sizeDirty) this._sizeDirty = false;
+
+	            if (this._originDirty) {
+	                if (origin) {
+	                    if (!this._origin) this._origin = [0, 0];
+	                    this._origin[0] = origin[0];
+	                    this._origin[1] = origin[1];
+	                }
+	                else this._origin = null;
+	                _setOrigin(target, this._origin);
+	                this._originDirty = false;
+	            }
+
+	            if (!matrix) matrix = Transform.identity;
+	            this._matrix = matrix;
+	            var aaMatrix = this._size ? Transform.thenMove(matrix, [-this._size[0]*origin[0], -this._size[1]*origin[1], 0]) : matrix;
+	            _setMatrix(target, aaMatrix);
+	            this._transformDirty = false;
+	        }
+	    };
+
+	    ElementOutput.prototype.cleanup = function cleanup() {
+	        if (this._element) {
+	            this._invisible = true;
+	            this._element.style.display = 'none';
+	        }
+	    };
+
+	    /**
+	     * Place the document element that this component manages into the document.
+	     *
+	     * @private
+	     * @method attach
+	     * @param {Node} target document parent of this container
+	     */
+	    ElementOutput.prototype.attach = function attach(target) {
+	        this._element = target;
+	        _addEventListeners.call(this, target);
+	    };
+
+	    /**
+	     * Remove any contained document content associated with this surface
+	     *   from the actual document.
+	     *
+	     * @private
+	     * @method detach
+	     */
+	    ElementOutput.prototype.detach = function detach() {
+	        var target = this._element;
+	        if (target) {
+	            _removeEventListeners.call(this, target);
+	            if (this._invisible) {
+	                this._invisible = false;
+	                this._element.style.display = '';
+	            }
+	        }
+	        this._element = null;
+	        return target;
+	    };
+
+	    module.exports = ElementOutput;
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -7788,7 +8361,7 @@
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -8132,7 +8705,7 @@
 
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -8820,7 +9393,7 @@
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -8947,7 +9520,7 @@
 
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -9000,7 +9573,7 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var LayoutUtility = __webpack_require__(18);
+	    var LayoutUtility = __webpack_require__(20);
 
 	    /**
 	     * @class
@@ -9215,7 +9788,7 @@
 
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -9228,494 +9801,16 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Entity = __webpack_require__(25);
-	    var EventHandler = __webpack_require__(23);
-	    var Transform = __webpack_require__(27);
-
-	    var usePrefix = !('transform' in document.documentElement.style);
-	    var devicePixelRatio = window.devicePixelRatio || 1;
-
 	    /**
-	     * A base class for viewable content and event
-	     *   targets inside a Famo.us application, containing a renderable document
-	     *   fragment. Like an HTML div, it can accept internal markup,
-	     *   properties, classes, and handle events.
+	     * EventEmitter represents a channel for events.
 	     *
-	     * @class ElementOutput
+	     * @class EventEmitter
 	     * @constructor
-	     *
-	     * @param {Node} element document parent of this container
 	     */
-	    function ElementOutput(element) {
-	        this._matrix = null;
-	        this._opacity = 1;
-	        this._origin = null;
-	        this._size = null;
-
-	        this._eventOutput = new EventHandler();
-	        this._eventOutput.bindThis(this);
-
-	        /** @ignore */
-	        this.eventForwarder = function eventForwarder(event) {
-	            this._eventOutput.emit(event.type, event);
-	        }.bind(this);
-
-	        this.id = Entity.register(this);
-	        this._element = null;
-	        this._sizeDirty = false;
-	        this._originDirty = false;
-	        this._transformDirty = false;
-
-	        this._invisible = false;
-	        if (element) this.attach(element);
+	    function EventEmitter() {
+	        this.listeners = {};
+	        this._owner = this;
 	    }
-
-	    /**
-	     * Bind a callback function to an event type handled by this object.
-	     *
-	     * @method "on"
-	     *
-	     * @param {string} type event type key (for example, 'click')
-	     * @param {function(string, Object)} fn handler callback
-	     * @return {EventHandler} this
-	     */
-	    ElementOutput.prototype.on = function on(type, fn) {
-	        if (this._element) this._element.addEventListener(type, this.eventForwarder);
-	        this._eventOutput.on(type, fn);
-	    };
-
-	    /**
-	     * Unbind an event by type and handler.
-	     *   This undoes the work of "on"
-	     *
-	     * @method removeListener
-	     * @param {string} type event type key (for example, 'click')
-	     * @param {function(string, Object)} fn handler
-	     */
-	    ElementOutput.prototype.removeListener = function removeListener(type, fn) {
-	        this._eventOutput.removeListener(type, fn);
-	    };
-
-	    /**
-	     * Trigger an event, sending to all downstream handlers
-	     *   listening for provided 'type' key.
-	     *
-	     * @method emit
-	     *
-	     * @param {string} type event type key (for example, 'click')
-	     * @param {Object} [event] event data
-	     * @return {EventHandler} this
-	     */
-	    ElementOutput.prototype.emit = function emit(type, event) {
-	        if (event && !event.origin) event.origin = this;
-	        var handled = this._eventOutput.emit(type, event);
-	        if (handled && event && event.stopPropagation) event.stopPropagation();
-	        return handled;
-	    };
-
-	    /**
-	     * Add event handler object to set of downstream handlers.
-	     *
-	     * @method pipe
-	     *
-	     * @param {EventHandler} target event handler target object
-	     * @return {EventHandler} passed event handler
-	     */
-	    ElementOutput.prototype.pipe = function pipe(target) {
-	        return this._eventOutput.pipe(target);
-	    };
-
-	    /**
-	     * Remove handler object from set of downstream handlers.
-	     *   Undoes work of "pipe"
-	     *
-	     * @method unpipe
-	     *
-	     * @param {EventHandler} target target handler object
-	     * @return {EventHandler} provided target
-	     */
-	    ElementOutput.prototype.unpipe = function unpipe(target) {
-	        return this._eventOutput.unpipe(target);
-	    };
-
-	    /**
-	     * Return spec for this surface. Note that for a base surface, this is
-	     *    simply an id.
-	     *
-	     * @method render
-	     * @private
-	     * @return {Object} render spec for this surface (spec id)
-	     */
-	    ElementOutput.prototype.render = function render() {
-	        return this.id;
-	    };
-
-	    //  Attach Famous event handling to document events emanating from target
-	    //    document element.  This occurs just after attachment to the document.
-	    //    Calling this enables methods like #on and #pipe.
-	    function _addEventListeners(target) {
-	        for (var i in this._eventOutput.listeners) {
-	            target.addEventListener(i, this.eventForwarder);
-	        }
-	    }
-
-	    //  Detach Famous event handling from document events emanating from target
-	    //  document element.  This occurs just before detach from the document.
-	    function _removeEventListeners(target) {
-	        for (var i in this._eventOutput.listeners) {
-	            target.removeEventListener(i, this.eventForwarder);
-	        }
-	    }
-
-	    /**
-	     * Return a Matrix's webkit css representation to be used with the
-	     *    CSS3 -webkit-transform style.
-	     *    Example: -webkit-transform: matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,716,243,0,1)
-	     *
-	     * @method _formatCSSTransform
-	     * @private
-	     * @param {FamousMatrix} m matrix
-	     * @return {string} matrix3d CSS style representation of the transform
-	     */
-	    function _formatCSSTransform(m) {
-	        m[12] = Math.round(m[12] * devicePixelRatio) / devicePixelRatio;
-	        m[13] = Math.round(m[13] * devicePixelRatio) / devicePixelRatio;
-
-	        var result = 'matrix3d(';
-	        for (var i = 0; i < 15; i++) {
-	            result += (m[i] < 0.000001 && m[i] > -0.000001) ? '0,' : m[i] + ',';
-	        }
-	        result += m[15] + ')';
-	        return result;
-	    }
-
-	    /**
-	     * Directly apply given FamousMatrix to the document element as the
-	     *   appropriate webkit CSS style.
-	     *
-	     * @method setMatrix
-	     *
-	     * @static
-	     * @private
-	     * @param {Element} element document element
-	     * @param {FamousMatrix} matrix
-	     */
-
-	    var _setMatrix;
-	    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-	        _setMatrix = function(element, matrix) {
-	            element.style.zIndex = (matrix[14] * 1000000) | 0;    // fix for Firefox z-buffer issues
-	            element.style.transform = _formatCSSTransform(matrix);
-	        };
-	    }
-	    else if (usePrefix) {
-	        _setMatrix = function(element, matrix) {
-	            element.style.webkitTransform = _formatCSSTransform(matrix);
-	        };
-	    }
-	    else {
-	        _setMatrix = function(element, matrix) {
-	            element.style.transform = _formatCSSTransform(matrix);
-	        };
-	    }
-
-	    // format origin as CSS percentage string
-	    function _formatCSSOrigin(origin) {
-	        return (100 * origin[0]) + '% ' + (100 * origin[1]) + '%';
-	    }
-
-	    // Directly apply given origin coordinates to the document element as the
-	    // appropriate webkit CSS style.
-	    var _setOrigin = usePrefix ? function(element, origin) {
-	        element.style.webkitTransformOrigin = _formatCSSOrigin(origin);
-	    } : function(element, origin) {
-	        element.style.transformOrigin = _formatCSSOrigin(origin);
-	    };
-
-	    // Shrink given document element until it is effectively invisible.
-	    var _setInvisible = usePrefix ? function(element) {
-	        element.style.webkitTransform = 'scale3d(0.0001,0.0001,0.0001)';
-	        element.style.opacity = 0;
-	    } : function(element) {
-	        element.style.transform = 'scale3d(0.0001,0.0001,0.0001)';
-	        element.style.opacity = 0;
-	    };
-
-	    function _xyNotEquals(a, b) {
-	        return (a && b) ? (a[0] !== b[0] || a[1] !== b[1]) : a !== b;
-	    }
-
-	    /**
-	     * Apply changes from this component to the corresponding document element.
-	     * This includes changes to classes, styles, size, content, opacity, origin,
-	     * and matrix transforms.
-	     *
-	     * @private
-	     * @method commit
-	     * @param {Context} context commit context
-	     */
-	    ElementOutput.prototype.commit = function commit(context) {
-	        var target = this._element;
-	        if (!target) return;
-
-	        var matrix = context.transform;
-	        var opacity = context.opacity;
-	        var origin = context.origin;
-	        var size = context.size;
-
-	        if (!matrix && this._matrix) {
-	            this._matrix = null;
-	            this._opacity = 0;
-	            _setInvisible(target);
-	            return;
-	        }
-
-	        if (_xyNotEquals(this._origin, origin)) this._originDirty = true;
-	        if (Transform.notEquals(this._matrix, matrix)) this._transformDirty = true;
-
-	        if (this._invisible) {
-	            this._invisible = false;
-	            this._element.style.display = '';
-	        }
-
-	        if (this._opacity !== opacity) {
-	            this._opacity = opacity;
-	            target.style.opacity = (opacity >= 1) ? '0.999999' : opacity;
-	        }
-
-	        if (this._transformDirty || this._originDirty || this._sizeDirty) {
-	            if (this._sizeDirty) this._sizeDirty = false;
-
-	            if (this._originDirty) {
-	                if (origin) {
-	                    if (!this._origin) this._origin = [0, 0];
-	                    this._origin[0] = origin[0];
-	                    this._origin[1] = origin[1];
-	                }
-	                else this._origin = null;
-	                _setOrigin(target, this._origin);
-	                this._originDirty = false;
-	            }
-
-	            if (!matrix) matrix = Transform.identity;
-	            this._matrix = matrix;
-	            var aaMatrix = this._size ? Transform.thenMove(matrix, [-this._size[0]*origin[0], -this._size[1]*origin[1], 0]) : matrix;
-	            _setMatrix(target, aaMatrix);
-	            this._transformDirty = false;
-	        }
-	    };
-
-	    ElementOutput.prototype.cleanup = function cleanup() {
-	        if (this._element) {
-	            this._invisible = true;
-	            this._element.style.display = 'none';
-	        }
-	    };
-
-	    /**
-	     * Place the document element that this component manages into the document.
-	     *
-	     * @private
-	     * @method attach
-	     * @param {Node} target document parent of this container
-	     */
-	    ElementOutput.prototype.attach = function attach(target) {
-	        this._element = target;
-	        _addEventListeners.call(this, target);
-	    };
-
-	    /**
-	     * Remove any contained document content associated with this surface
-	     *   from the actual document.
-	     *
-	     * @private
-	     * @method detach
-	     */
-	    ElementOutput.prototype.detach = function detach() {
-	        var target = this._element;
-	        if (target) {
-	            _removeEventListeners.call(this, target);
-	            if (this._invisible) {
-	                this._invisible = false;
-	                this._element.style.display = '';
-	            }
-	        }
-	        this._element = null;
-	        return target;
-	    };
-
-	    module.exports = ElementOutput;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
-	 * License, v. 2.0. If a copy of the MPL was not distributed with this
-	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-	 *
-	 * Owner: mark@famo.us
-	 * @license MPL 2.0
-	 * @copyright Famous Industries, Inc. 2014
-	 */
-
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var RenderNode = __webpack_require__(43);
-	    var EventHandler = __webpack_require__(23);
-	    var ElementAllocator = __webpack_require__(44);
-	    var Transform = __webpack_require__(27);
-	    var Transitionable = __webpack_require__(40);
-
-	    var _zeroZero = [0, 0];
-	    var usePrefix = !('perspective' in document.documentElement.style);
-
-	    function _getElementSize(element) {
-	        return [element.clientWidth, element.clientHeight];
-	    }
-
-	    var _setPerspective = usePrefix ? function(element, perspective) {
-	        element.style.webkitPerspective = perspective ? perspective.toFixed() + 'px' : '';
-	    } : function(element, perspective) {
-	        element.style.perspective = perspective ? perspective.toFixed() + 'px' : '';
-	    };
-
-	    /**
-	     * The top-level container for a Famous-renderable piece of the document.
-	     *   It is directly updated by the process-wide Engine object, and manages one
-	     *   render tree root, which can contain other renderables.
-	     *
-	     * @class Context
-	     * @constructor
-	     * @private
-	     * @param {Node} container Element in which content will be inserted
-	     */
-	    function Context(container) {
-	        this.container = container;
-	        this._allocator = new ElementAllocator(container);
-
-	        this._node = new RenderNode();
-	        this._eventOutput = new EventHandler();
-	        this._size = _getElementSize(this.container);
-
-	        this._perspectiveState = new Transitionable(0);
-	        this._perspective = undefined;
-
-	        this._nodeContext = {
-	            allocator: this._allocator,
-	            transform: Transform.identity,
-	            opacity: 1,
-	            origin: _zeroZero,
-	            align: _zeroZero,
-	            size: this._size
-	        };
-
-	        this._eventOutput.on('resize', function() {
-	            this.setSize(_getElementSize(this.container));
-	        }.bind(this));
-
-	    }
-
-	    // Note: Unused
-	    Context.prototype.getAllocator = function getAllocator() {
-	        return this._allocator;
-	    };
-
-	    /**
-	     * Add renderables to this Context's render tree.
-	     *
-	     * @method add
-	     *
-	     * @param {Object} obj renderable object
-	     * @return {RenderNode} RenderNode wrapping this object, if not already a RenderNode
-	     */
-	    Context.prototype.add = function add(obj) {
-	        return this._node.add(obj);
-	    };
-
-	    /**
-	     * Move this Context to another containing document element.
-	     *
-	     * @method migrate
-	     *
-	     * @param {Node} container Element to which content will be migrated
-	     */
-	    Context.prototype.migrate = function migrate(container) {
-	        if (container === this.container) return;
-	        this.container = container;
-	        this._allocator.migrate(container);
-	    };
-
-	    /**
-	     * Gets viewport size for Context.
-	     *
-	     * @method getSize
-	     *
-	     * @return {Array.Number} viewport size as [width, height]
-	     */
-	    Context.prototype.getSize = function getSize() {
-	        return this._size;
-	    };
-
-	    /**
-	     * Sets viewport size for Context.
-	     *
-	     * @method setSize
-	     *
-	     * @param {Array.Number} size [width, height].  If unspecified, use size of root document element.
-	     */
-	    Context.prototype.setSize = function setSize(size) {
-	        if (!size) size = _getElementSize(this.container);
-	        this._size[0] = size[0];
-	        this._size[1] = size[1];
-	    };
-
-	    /**
-	     * Commit this Context's content changes to the document.
-	     *
-	     * @private
-	     * @method update
-	     * @param {Object} contextParameters engine commit specification
-	     */
-	    Context.prototype.update = function update(contextParameters) {
-	        if (contextParameters) {
-	            if (contextParameters.transform) this._nodeContext.transform = contextParameters.transform;
-	            if (contextParameters.opacity) this._nodeContext.opacity = contextParameters.opacity;
-	            if (contextParameters.origin) this._nodeContext.origin = contextParameters.origin;
-	            if (contextParameters.align) this._nodeContext.align = contextParameters.align;
-	            if (contextParameters.size) this._nodeContext.size = contextParameters.size;
-	        }
-	        var perspective = this._perspectiveState.get();
-	        if (perspective !== this._perspective) {
-	            _setPerspective(this.container, perspective);
-	            this._perspective = perspective;
-	        }
-
-	        this._node.commit(this._nodeContext);
-	    };
-
-	    /**
-	     * Get current perspective of this context in pixels.
-	     *
-	     * @method getPerspective
-	     * @return {Number} depth perspective in pixels
-	     */
-	    Context.prototype.getPerspective = function getPerspective() {
-	        return this._perspectiveState.get();
-	    };
-
-	    /**
-	     * Set current perspective of this context in pixels.
-	     *
-	     * @method setPerspective
-	     * @param {Number} perspective in pixels
-	     * @param {Object} [transition] Transitionable object for applying the change
-	     * @param {function(Object)} callback function called on completion of transition
-	     */
-	    Context.prototype.setPerspective = function setPerspective(perspective, transition, callback) {
-	        return this._perspectiveState.set(perspective, transition, callback);
-	    };
 
 	    /**
 	     * Trigger an event, sending to all downstream handlers
@@ -9727,8 +9822,14 @@
 	     * @param {Object} event event data
 	     * @return {EventHandler} this
 	     */
-	    Context.prototype.emit = function emit(type, event) {
-	        return this._eventOutput.emit(type, event);
+	    EventEmitter.prototype.emit = function emit(type, event) {
+	        var handlers = this.listeners[type];
+	        if (handlers) {
+	            for (var i = 0; i < handlers.length; i++) {
+	                handlers[i].call(this._owner, event);
+	            }
+	        }
+	        return this;
 	    };
 
 	    /**
@@ -9740,11 +9841,20 @@
 	     * @param {function(string, Object)} handler callback
 	     * @return {EventHandler} this
 	     */
-	    Context.prototype.on = function on(type, handler) {
-	        return this._eventOutput.on(type, handler);
+	   EventEmitter.prototype.on = function on(type, handler) {
+	        if (!(type in this.listeners)) this.listeners[type] = [];
+	        var index = this.listeners[type].indexOf(handler);
+	        if (index < 0) this.listeners[type].push(handler);
+	        return this;
 	    };
 
 	    /**
+	     * Alias for "on".
+	     * @method addListener
+	     */
+	    EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+
+	   /**
 	     * Unbind an event by type and handler.
 	     *   This undoes the work of "on".
 	     *
@@ -9752,43 +9862,34 @@
 	     *
 	     * @param {string} type event type key (for example, 'click')
 	     * @param {function} handler function object to remove
-	     * @return {EventHandler} internal event handler object (for chaining)
+	     * @return {EventEmitter} this
 	     */
-	    Context.prototype.removeListener = function removeListener(type, handler) {
-	        return this._eventOutput.removeListener(type, handler);
+	    EventEmitter.prototype.removeListener = function removeListener(type, handler) {
+	        var listener = this.listeners[type];
+	        if (listener !== undefined) {
+	            var index = listener.indexOf(handler);
+	            if (index >= 0) listener.splice(index, 1);
+	        }
+	        return this;
 	    };
 
 	    /**
-	     * Add event handler object to set of downstream handlers.
+	     * Call event handlers with this set to owner.
 	     *
-	     * @method pipe
+	     * @method bindThis
 	     *
-	     * @param {EventHandler} target event handler target object
-	     * @return {EventHandler} passed event handler
+	     * @param {Object} owner object this EventEmitter belongs to
 	     */
-	    Context.prototype.pipe = function pipe(target) {
-	        return this._eventOutput.pipe(target);
+	    EventEmitter.prototype.bindThis = function bindThis(owner) {
+	        this._owner = owner;
 	    };
 
-	    /**
-	     * Remove handler object from set of downstream handlers.
-	     *   Undoes work of "pipe".
-	     *
-	     * @method unpipe
-	     *
-	     * @param {EventHandler} target target handler object
-	     * @return {EventHandler} provided target
-	     */
-	    Context.prototype.unpipe = function unpipe(target) {
-	        return this._eventOutput.unpipe(target);
-	    };
-
-	    module.exports = Context;
+	    module.exports = EventEmitter;
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -10058,107 +10159,6 @@
 
 
 /***/ },
-/* 33 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
-	 * License, v. 2.0. If a copy of the MPL was not distributed with this
-	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-	 *
-	 * Owner: mark@famo.us
-	 * @license MPL 2.0
-	 * @copyright Famous Industries, Inc. 2014
-	 */
-
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    /**
-	     * EventEmitter represents a channel for events.
-	     *
-	     * @class EventEmitter
-	     * @constructor
-	     */
-	    function EventEmitter() {
-	        this.listeners = {};
-	        this._owner = this;
-	    }
-
-	    /**
-	     * Trigger an event, sending to all downstream handlers
-	     *   listening for provided 'type' key.
-	     *
-	     * @method emit
-	     *
-	     * @param {string} type event type key (for example, 'click')
-	     * @param {Object} event event data
-	     * @return {EventHandler} this
-	     */
-	    EventEmitter.prototype.emit = function emit(type, event) {
-	        var handlers = this.listeners[type];
-	        if (handlers) {
-	            for (var i = 0; i < handlers.length; i++) {
-	                handlers[i].call(this._owner, event);
-	            }
-	        }
-	        return this;
-	    };
-
-	    /**
-	     * Bind a callback function to an event type handled by this object.
-	     *
-	     * @method "on"
-	     *
-	     * @param {string} type event type key (for example, 'click')
-	     * @param {function(string, Object)} handler callback
-	     * @return {EventHandler} this
-	     */
-	   EventEmitter.prototype.on = function on(type, handler) {
-	        if (!(type in this.listeners)) this.listeners[type] = [];
-	        var index = this.listeners[type].indexOf(handler);
-	        if (index < 0) this.listeners[type].push(handler);
-	        return this;
-	    };
-
-	    /**
-	     * Alias for "on".
-	     * @method addListener
-	     */
-	    EventEmitter.prototype.addListener = EventEmitter.prototype.on;
-
-	   /**
-	     * Unbind an event by type and handler.
-	     *   This undoes the work of "on".
-	     *
-	     * @method removeListener
-	     *
-	     * @param {string} type event type key (for example, 'click')
-	     * @param {function} handler function object to remove
-	     * @return {EventEmitter} this
-	     */
-	    EventEmitter.prototype.removeListener = function removeListener(type, handler) {
-	        var listener = this.listeners[type];
-	        if (listener !== undefined) {
-	            var index = listener.indexOf(handler);
-	            if (index >= 0) listener.splice(index, 1);
-	        }
-	        return this;
-	    };
-
-	    /**
-	     * Call event handlers with this set to owner.
-	     *
-	     * @method bindThis
-	     *
-	     * @param {Object} owner object this EventEmitter belongs to
-	     */
-	    EventEmitter.prototype.bindThis = function bindThis(owner) {
-	        this._owner = owner;
-	    };
-
-	    module.exports = EventEmitter;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -10172,8 +10172,8 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Context = __webpack_require__(31);
-	    var Transform = __webpack_require__(27);
+	    var Context = __webpack_require__(25);
+	    var Transform = __webpack_require__(29);
 	    var Surface = __webpack_require__(14);
 
 	    /**
@@ -10290,6 +10290,291 @@
 
 /***/ },
 /* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
+	 * License, v. 2.0. If a copy of the MPL was not distributed with this
+	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+	 *
+	 * Owner: mark@famo.us
+	 * @license MPL 2.0
+	 * @copyright Famous Industries, Inc. 2014
+	 */
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+	    var Entity = __webpack_require__(27);
+	    var SpecParser = __webpack_require__(45);
+
+	    /**
+	     * A wrapper for inserting a renderable component (like a Modifer or
+	     *   Surface) into the render tree.
+	     *
+	     * @class RenderNode
+	     * @constructor
+	     *
+	     * @param {Object} object Target renderable component
+	     */
+	    function RenderNode(object) {
+	        this._object = null;
+	        this._child = null;
+	        this._hasMultipleChildren = false;
+	        this._isRenderable = false;
+	        this._isModifier = false;
+
+	        this._resultCache = {};
+	        this._prevResults = {};
+
+	        this._childResult = null;
+
+	        if (object) this.set(object);
+	    }
+
+	    /**
+	     * Append a renderable to the list of this node's children.
+	     *   This produces a new RenderNode in the tree.
+	     *   Note: Does not double-wrap if child is a RenderNode already.
+	     *
+	     * @method add
+	     * @param {Object} child renderable object
+	     * @return {RenderNode} new render node wrapping child
+	     */
+	    RenderNode.prototype.add = function add(child) {
+	        var childNode = (child instanceof RenderNode) ? child : new RenderNode(child);
+	        if (this._child instanceof Array) this._child.push(childNode);
+	        else if (this._child) {
+	            this._child = [this._child, childNode];
+	            this._hasMultipleChildren = true;
+	            this._childResult = []; // to be used later
+	        }
+	        else this._child = childNode;
+
+	        return childNode;
+	    };
+
+	    /**
+	     * Return the single wrapped object.  Returns null if this node has multiple child nodes.
+	     *
+	     * @method get
+	     *
+	     * @return {Ojbect} contained renderable object
+	     */
+	    RenderNode.prototype.get = function get() {
+	        return this._object || (this._hasMultipleChildren ? null : (this._child ? this._child.get() : null));
+	    };
+
+	    /**
+	     * Overwrite the list of children to contain the single provided object
+	     *
+	     * @method set
+	     * @param {Object} child renderable object
+	     * @return {RenderNode} this render node, or child if it is a RenderNode
+	     */
+	    RenderNode.prototype.set = function set(child) {
+	        this._childResult = null;
+	        this._hasMultipleChildren = false;
+	        this._isRenderable = child.render ? true : false;
+	        this._isModifier = child.modify ? true : false;
+	        this._object = child;
+	        this._child = null;
+	        if (child instanceof RenderNode) return child;
+	        else return this;
+	    };
+
+	    /**
+	     * Get render size of contained object.
+	     *
+	     * @method getSize
+	     * @return {Array.Number} size of this or size of single child.
+	     */
+	    RenderNode.prototype.getSize = function getSize() {
+	        var result = null;
+	        var target = this.get();
+	        if (target && target.getSize) result = target.getSize();
+	        if (!result && this._child && this._child.getSize) result = this._child.getSize();
+	        return result;
+	    };
+
+	    // apply results of rendering this subtree to the document
+	    function _applyCommit(spec, context, cacheStorage) {
+	        var result = SpecParser.parse(spec, context);
+	        var keys = Object.keys(result);
+	        for (var i = 0; i < keys.length; i++) {
+	            var id = keys[i];
+	            var childNode = Entity.get(id);
+	            var commitParams = result[id];
+	            commitParams.allocator = context.allocator;
+	            var commitResult = childNode.commit(commitParams);
+	            if (commitResult) _applyCommit(commitResult, context, cacheStorage);
+	            else cacheStorage[id] = commitParams;
+	        }
+	    }
+
+	    /**
+	     * Commit the content change from this node to the document.
+	     *
+	     * @private
+	     * @method commit
+	     * @param {Context} context render context
+	     */
+	    RenderNode.prototype.commit = function commit(context) {
+	        // free up some divs from the last loop
+	        var prevKeys = Object.keys(this._prevResults);
+	        for (var i = 0; i < prevKeys.length; i++) {
+	            var id = prevKeys[i];
+	            if (this._resultCache[id] === undefined) {
+	                var object = Entity.get(id);
+	                if (object.cleanup) object.cleanup(context.allocator);
+	            }
+	        }
+
+	        this._prevResults = this._resultCache;
+	        this._resultCache = {};
+	        _applyCommit(this.render(), context, this._resultCache);
+	    };
+
+	    /**
+	     * Generate a render spec from the contents of the wrapped component.
+	     *
+	     * @private
+	     * @method render
+	     *
+	     * @return {Object} render specification for the component subtree
+	     *    only under this node.
+	     */
+	    RenderNode.prototype.render = function render() {
+	        if (this._isRenderable) return this._object.render();
+
+	        var result = null;
+	        if (this._hasMultipleChildren) {
+	            result = this._childResult;
+	            var children = this._child;
+	            for (var i = 0; i < children.length; i++) {
+	                result[i] = children[i].render();
+	            }
+	        }
+	        else if (this._child) result = this._child.render();
+
+	        return this._isModifier ? this._object.modify(result) : result;
+	    };
+
+	    module.exports = RenderNode;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
+	 * License, v. 2.0. If a copy of the MPL was not distributed with this
+	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+	 *
+	 * Owner: mark@famo.us
+	 * @license MPL 2.0
+	 * @copyright Famous Industries, Inc. 2014
+	 */
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+
+	    /**
+	     * Internal helper object to Context that handles the process of
+	     *   creating and allocating DOM elements within a managed div.
+	     *   Private.
+	     *
+	     * @class ElementAllocator
+	     * @constructor
+	     * @private
+	     * @param {Node} container document element in which Famo.us content will be inserted
+	     */
+	    function ElementAllocator(container) {
+	        if (!container) container = document.createDocumentFragment();
+	        this.container = container;
+	        this.detachedNodes = {};
+	        this.nodeCount = 0;
+	    }
+
+	    /**
+	     * Move the document elements from their original container to a new one.
+	     *
+	     * @private
+	     * @method migrate
+	     *
+	     * @param {Node} container document element to which Famo.us content will be migrated
+	     */
+	    ElementAllocator.prototype.migrate = function migrate(container) {
+	        var oldContainer = this.container;
+	        if (container === oldContainer) return;
+
+	        if (oldContainer instanceof DocumentFragment) {
+	            container.appendChild(oldContainer);
+	        }
+	        else {
+	            while (oldContainer.hasChildNodes()) {
+	                container.appendChild(oldContainer.firstChild);
+	            }
+	        }
+
+	        this.container = container;
+	    };
+
+	    /**
+	     * Allocate an element of specified type from the pool.
+	     *
+	     * @private
+	     * @method allocate
+	     *
+	     * @param {string} type type of element, e.g. 'div'
+	     * @return {Node} allocated document element
+	     */
+	    ElementAllocator.prototype.allocate = function allocate(type) {
+	        type = type.toLowerCase();
+	        if (!(type in this.detachedNodes)) this.detachedNodes[type] = [];
+	        var nodeStore = this.detachedNodes[type];
+	        var result;
+	        if (nodeStore.length > 0) {
+	            result = nodeStore.pop();
+	        }
+	        else {
+	            result = document.createElement(type);
+	            this.container.appendChild(result);
+	        }
+	        this.nodeCount++;
+	        return result;
+	    };
+
+	    /**
+	     * De-allocate an element of specified type to the pool.
+	     *
+	     * @private
+	     * @method deallocate
+	     *
+	     * @param {Node} element document element to deallocate
+	     */
+	    ElementAllocator.prototype.deallocate = function deallocate(element) {
+	        var nodeType = element.nodeName.toLowerCase();
+	        var nodeStore = this.detachedNodes[nodeType];
+	        nodeStore.push(element);
+	        this.nodeCount--;
+	    };
+
+	    /**
+	     * Get count of total allocated nodes in the document.
+	     *
+	     * @private
+	     * @method getNodeCount
+	     *
+	     * @return {Number} total node count
+	     */
+	    ElementAllocator.prototype.getNodeCount = function getNodeCount() {
+	        return this.nodeCount;
+	    };
+
+	    module.exports = ElementAllocator;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -10675,7 +10960,7 @@
 
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -10686,7 +10971,7 @@
 	 * @copyright Famous Industries, Inc. 2014
 	 */
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var EventHandler = __webpack_require__(23);
+	    var EventHandler = __webpack_require__(19);
 
 	    /**
 	     * The Physics Engine is responsible for mediating bodies with their
@@ -11208,7 +11493,7 @@
 
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -11221,9 +11506,9 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Vector = __webpack_require__(35);
-	    var Transform = __webpack_require__(27);
-	    var EventHandler = __webpack_require__(23);
+	    var Vector = __webpack_require__(37);
+	    var Transform = __webpack_require__(29);
+	    var EventHandler = __webpack_require__(19);
 	    var Integrator = __webpack_require__(49);
 
 	    /**
@@ -11601,7 +11886,7 @@
 
 
 /***/ },
-/* 38 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -11616,8 +11901,8 @@
 	/*global console */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Force = __webpack_require__(45);
-	    var Vector = __webpack_require__(35);
+	    var Force = __webpack_require__(46);
+	    var Vector = __webpack_require__(37);
 
 	    /**
 	     *  A force that moves a physics body to a location with a spring motion.
@@ -11874,7 +12159,7 @@
 
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -11887,7 +12172,7 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Force = __webpack_require__(45);
+	    var Force = __webpack_require__(46);
 
 	    /**
 	     * Drag is a force that opposes velocity. Attach it to the physics engine
@@ -11999,7 +12284,7 @@
 
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -12012,8 +12297,8 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var MultipleTransition = __webpack_require__(46);
-	    var TweenTransition = __webpack_require__(47);
+	    var MultipleTransition = __webpack_require__(47);
+	    var TweenTransition = __webpack_require__(48);
 
 	    /**
 	     * A state maintainer for a smooth transition between
@@ -12227,7 +12512,7 @@
 
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;
@@ -12242,7 +12527,7 @@
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 	    var Surface = __webpack_require__(14);
-	    var Context = __webpack_require__(31);
+	    var Context = __webpack_require__(25);
 
 	    /**
 	     * ContainerSurface is an object designed to contain surfaces and
@@ -12348,7 +12633,7 @@
 
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -12360,9 +12645,9 @@
 	 * @copyright Famous Industries, Inc. 2014
 	 */
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var EventHandler = __webpack_require__(23);
+	    var EventHandler = __webpack_require__(19);
 	    var Engine = __webpack_require__(13);
-	    var OptionsManager = __webpack_require__(24);
+	    var OptionsManager = __webpack_require__(18);
 
 	    /**
 	     * Handles piped in mousewheel events.
@@ -12551,292 +12836,189 @@
 
 
 /***/ },
-/* 43 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
-	 * License, v. 2.0. If a copy of the MPL was not distributed with this
-	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-	 *
-	 * Owner: mark@famo.us
-	 * @license MPL 2.0
-	 * @copyright Famous Industries, Inc. 2014
-	 */
-
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Entity = __webpack_require__(25);
-	    var SpecParser = __webpack_require__(48);
-
-	    /**
-	     * A wrapper for inserting a renderable component (like a Modifer or
-	     *   Surface) into the render tree.
-	     *
-	     * @class RenderNode
-	     * @constructor
-	     *
-	     * @param {Object} object Target renderable component
-	     */
-	    function RenderNode(object) {
-	        this._object = null;
-	        this._child = null;
-	        this._hasMultipleChildren = false;
-	        this._isRenderable = false;
-	        this._isModifier = false;
-
-	        this._resultCache = {};
-	        this._prevResults = {};
-
-	        this._childResult = null;
-
-	        if (object) this.set(object);
-	    }
-
-	    /**
-	     * Append a renderable to the list of this node's children.
-	     *   This produces a new RenderNode in the tree.
-	     *   Note: Does not double-wrap if child is a RenderNode already.
-	     *
-	     * @method add
-	     * @param {Object} child renderable object
-	     * @return {RenderNode} new render node wrapping child
-	     */
-	    RenderNode.prototype.add = function add(child) {
-	        var childNode = (child instanceof RenderNode) ? child : new RenderNode(child);
-	        if (this._child instanceof Array) this._child.push(childNode);
-	        else if (this._child) {
-	            this._child = [this._child, childNode];
-	            this._hasMultipleChildren = true;
-	            this._childResult = []; // to be used later
-	        }
-	        else this._child = childNode;
-
-	        return childNode;
-	    };
-
-	    /**
-	     * Return the single wrapped object.  Returns null if this node has multiple child nodes.
-	     *
-	     * @method get
-	     *
-	     * @return {Ojbect} contained renderable object
-	     */
-	    RenderNode.prototype.get = function get() {
-	        return this._object || (this._hasMultipleChildren ? null : (this._child ? this._child.get() : null));
-	    };
-
-	    /**
-	     * Overwrite the list of children to contain the single provided object
-	     *
-	     * @method set
-	     * @param {Object} child renderable object
-	     * @return {RenderNode} this render node, or child if it is a RenderNode
-	     */
-	    RenderNode.prototype.set = function set(child) {
-	        this._childResult = null;
-	        this._hasMultipleChildren = false;
-	        this._isRenderable = child.render ? true : false;
-	        this._isModifier = child.modify ? true : false;
-	        this._object = child;
-	        this._child = null;
-	        if (child instanceof RenderNode) return child;
-	        else return this;
-	    };
-
-	    /**
-	     * Get render size of contained object.
-	     *
-	     * @method getSize
-	     * @return {Array.Number} size of this or size of single child.
-	     */
-	    RenderNode.prototype.getSize = function getSize() {
-	        var result = null;
-	        var target = this.get();
-	        if (target && target.getSize) result = target.getSize();
-	        if (!result && this._child && this._child.getSize) result = this._child.getSize();
-	        return result;
-	    };
-
-	    // apply results of rendering this subtree to the document
-	    function _applyCommit(spec, context, cacheStorage) {
-	        var result = SpecParser.parse(spec, context);
-	        var keys = Object.keys(result);
-	        for (var i = 0; i < keys.length; i++) {
-	            var id = keys[i];
-	            var childNode = Entity.get(id);
-	            var commitParams = result[id];
-	            commitParams.allocator = context.allocator;
-	            var commitResult = childNode.commit(commitParams);
-	            if (commitResult) _applyCommit(commitResult, context, cacheStorage);
-	            else cacheStorage[id] = commitParams;
-	        }
-	    }
-
-	    /**
-	     * Commit the content change from this node to the document.
-	     *
-	     * @private
-	     * @method commit
-	     * @param {Context} context render context
-	     */
-	    RenderNode.prototype.commit = function commit(context) {
-	        // free up some divs from the last loop
-	        var prevKeys = Object.keys(this._prevResults);
-	        for (var i = 0; i < prevKeys.length; i++) {
-	            var id = prevKeys[i];
-	            if (this._resultCache[id] === undefined) {
-	                var object = Entity.get(id);
-	                if (object.cleanup) object.cleanup(context.allocator);
-	            }
-	        }
-
-	        this._prevResults = this._resultCache;
-	        this._resultCache = {};
-	        _applyCommit(this.render(), context, this._resultCache);
-	    };
-
-	    /**
-	     * Generate a render spec from the contents of the wrapped component.
-	     *
-	     * @private
-	     * @method render
-	     *
-	     * @return {Object} render specification for the component subtree
-	     *    only under this node.
-	     */
-	    RenderNode.prototype.render = function render() {
-	        if (this._isRenderable) return this._object.render();
-
-	        var result = null;
-	        if (this._hasMultipleChildren) {
-	            result = this._childResult;
-	            var children = this._child;
-	            for (var i = 0; i < children.length; i++) {
-	                result[i] = children[i].render();
-	            }
-	        }
-	        else if (this._child) result = this._child.render();
-
-	        return this._isModifier ? this._object.modify(result) : result;
-	    };
-
-	    module.exports = RenderNode;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 44 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
-	 * License, v. 2.0. If a copy of the MPL was not distributed with this
-	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-	 *
-	 * Owner: mark@famo.us
-	 * @license MPL 2.0
-	 * @copyright Famous Industries, Inc. 2014
-	 */
-
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-
-	    /**
-	     * Internal helper object to Context that handles the process of
-	     *   creating and allocating DOM elements within a managed div.
-	     *   Private.
-	     *
-	     * @class ElementAllocator
-	     * @constructor
-	     * @private
-	     * @param {Node} container document element in which Famo.us content will be inserted
-	     */
-	    function ElementAllocator(container) {
-	        if (!container) container = document.createDocumentFragment();
-	        this.container = container;
-	        this.detachedNodes = {};
-	        this.nodeCount = 0;
-	    }
-
-	    /**
-	     * Move the document elements from their original container to a new one.
-	     *
-	     * @private
-	     * @method migrate
-	     *
-	     * @param {Node} container document element to which Famo.us content will be migrated
-	     */
-	    ElementAllocator.prototype.migrate = function migrate(container) {
-	        var oldContainer = this.container;
-	        if (container === oldContainer) return;
-
-	        if (oldContainer instanceof DocumentFragment) {
-	            container.appendChild(oldContainer);
-	        }
-	        else {
-	            while (oldContainer.hasChildNodes()) {
-	                container.appendChild(oldContainer.firstChild);
-	            }
-	        }
-
-	        this.container = container;
-	    };
-
-	    /**
-	     * Allocate an element of specified type from the pool.
-	     *
-	     * @private
-	     * @method allocate
-	     *
-	     * @param {string} type type of element, e.g. 'div'
-	     * @return {Node} allocated document element
-	     */
-	    ElementAllocator.prototype.allocate = function allocate(type) {
-	        type = type.toLowerCase();
-	        if (!(type in this.detachedNodes)) this.detachedNodes[type] = [];
-	        var nodeStore = this.detachedNodes[type];
-	        var result;
-	        if (nodeStore.length > 0) {
-	            result = nodeStore.pop();
-	        }
-	        else {
-	            result = document.createElement(type);
-	            this.container.appendChild(result);
-	        }
-	        this.nodeCount++;
-	        return result;
-	    };
-
-	    /**
-	     * De-allocate an element of specified type to the pool.
-	     *
-	     * @private
-	     * @method deallocate
-	     *
-	     * @param {Node} element document element to deallocate
-	     */
-	    ElementAllocator.prototype.deallocate = function deallocate(element) {
-	        var nodeType = element.nodeName.toLowerCase();
-	        var nodeStore = this.detachedNodes[nodeType];
-	        nodeStore.push(element);
-	        this.nodeCount--;
-	    };
-
-	    /**
-	     * Get count of total allocated nodes in the document.
-	     *
-	     * @private
-	     * @method getNodeCount
-	     *
-	     * @return {Number} total node count
-	     */
-	    ElementAllocator.prototype.getNodeCount = function getNodeCount() {
-	        return this.nodeCount;
-	    };
-
-	    module.exports = ElementAllocator;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
 /* 45 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
+	 * License, v. 2.0. If a copy of the MPL was not distributed with this
+	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+	 *
+	 * Owner: mark@famo.us
+	 * @license MPL 2.0
+	 * @copyright Famous Industries, Inc. 2014
+	 */
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+	    var Transform = __webpack_require__(29);
+
+	    /**
+	     *
+	     * This object translates the rendering instructions ("render specs")
+	     *   that renderable components generate into document update
+	     *   instructions ("update specs").  Private.
+	     *
+	     * @private
+	     * @class SpecParser
+	     * @constructor
+	     */
+	    function SpecParser() {
+	        this.result = {};
+	    }
+	    SpecParser._instance = new SpecParser();
+
+	    /**
+	     * Convert a render spec coming from the context's render chain to an
+	     *    update spec for the update chain. This is the only major entry point
+	     *    for a consumer of this class.
+	     *
+	     * @method parse
+	     * @static
+	     * @private
+	     *
+	     * @param {renderSpec} spec input render spec
+	     * @param {Object} context context to do the parse in
+	     * @return {Object} the resulting update spec (if no callback
+	     *   specified, else none)
+	     */
+	    SpecParser.parse = function parse(spec, context) {
+	        return SpecParser._instance.parse(spec, context);
+	    };
+
+	    /**
+	     * Convert a renderSpec coming from the context's render chain to an update
+	     *    spec for the update chain. This is the only major entrypoint for a
+	     *    consumer of this class.
+	     *
+	     * @method parse
+	     *
+	     * @private
+	     * @param {renderSpec} spec input render spec
+	     * @param {Context} context
+	     * @return {updateSpec} the resulting update spec
+	     */
+	    SpecParser.prototype.parse = function parse(spec, context) {
+	        this.reset();
+	        this._parseSpec(spec, context, Transform.identity);
+	        return this.result;
+	    };
+
+	    /**
+	     * Prepare SpecParser for re-use (or first use) by setting internal state
+	     *  to blank.
+	     *
+	     * @private
+	     * @method reset
+	     */
+	    SpecParser.prototype.reset = function reset() {
+	        this.result = {};
+	    };
+
+	    // Multiply matrix M by vector v
+	    function _vecInContext(v, m) {
+	        return [
+	            v[0] * m[0] + v[1] * m[4] + v[2] * m[8],
+	            v[0] * m[1] + v[1] * m[5] + v[2] * m[9],
+	            v[0] * m[2] + v[1] * m[6] + v[2] * m[10]
+	        ];
+	    }
+
+	    var _zeroZero = [0, 0];
+
+	    // From the provided renderSpec tree, recursively compose opacities,
+	    //    origins, transforms, and sizes corresponding to each surface id from
+	    //    the provided renderSpec tree structure. On completion, those
+	    //    properties of 'this' object should be ready to use to build an
+	    //    updateSpec.
+	    SpecParser.prototype._parseSpec = function _parseSpec(spec, parentContext, sizeContext) {
+	        var id;
+	        var target;
+	        var transform;
+	        var opacity;
+	        var origin;
+	        var align;
+	        var size;
+
+	        if (typeof spec === 'number') {
+	            id = spec;
+	            transform = parentContext.transform;
+	            align = parentContext.align || _zeroZero;
+	            if (parentContext.size && align && (align[0] || align[1])) {
+	                var alignAdjust = [align[0] * parentContext.size[0], align[1] * parentContext.size[1], 0];
+	                transform = Transform.thenMove(transform, _vecInContext(alignAdjust, sizeContext));
+	            }
+	            this.result[id] = {
+	                transform: transform,
+	                opacity: parentContext.opacity,
+	                origin: parentContext.origin || _zeroZero,
+	                align: parentContext.align || _zeroZero,
+	                size: parentContext.size
+	            };
+	        }
+	        else if (!spec) { // placed here so 0 will be cached earlier
+	            return;
+	        }
+	        else if (spec instanceof Array) {
+	            for (var i = 0; i < spec.length; i++) {
+	                this._parseSpec(spec[i], parentContext, sizeContext);
+	            }
+	        }
+	        else {
+	            target = spec.target;
+	            transform = parentContext.transform;
+	            opacity = parentContext.opacity;
+	            origin = parentContext.origin;
+	            align = parentContext.align;
+	            size = parentContext.size;
+	            var nextSizeContext = sizeContext;
+
+	            if (spec.opacity !== undefined) opacity = parentContext.opacity * spec.opacity;
+	            if (spec.transform) transform = Transform.multiply(parentContext.transform, spec.transform);
+	            if (spec.origin) {
+	                origin = spec.origin;
+	                nextSizeContext = parentContext.transform;
+	            }
+	            if (spec.align) align = spec.align;
+
+	            if (spec.size || spec.proportions) {
+	                var parentSize = size;
+	                size = [size[0], size[1]];
+
+	                if (spec.size) {
+	                    if (spec.size[0] !== undefined) size[0] = spec.size[0];
+	                    if (spec.size[1] !== undefined) size[1] = spec.size[1];
+	                }
+
+	                if (spec.proportions) {
+	                    if (spec.proportions[0] !== undefined) size[0] = size[0] * spec.proportions[0];
+	                    if (spec.proportions[1] !== undefined) size[1] = size[1] * spec.proportions[1];
+	                }
+
+	                if (parentSize) {
+	                    if (align && (align[0] || align[1])) transform = Transform.thenMove(transform, _vecInContext([align[0] * parentSize[0], align[1] * parentSize[1], 0], sizeContext));
+	                    if (origin && (origin[0] || origin[1])) transform = Transform.moveThen([-origin[0] * size[0], -origin[1] * size[1], 0], transform);
+	                }
+
+	                nextSizeContext = parentContext.transform;
+	                origin = null;
+	                align = null;
+	            }
+
+	            this._parseSpec(target, {
+	                transform: transform,
+	                opacity: opacity,
+	                origin: origin,
+	                align: align,
+	                size: size
+	            }, nextSizeContext);
+	        }
+	    };
+
+	    module.exports = SpecParser;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -12849,8 +13031,8 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Vector = __webpack_require__(35);
-	    var EventHandler = __webpack_require__(23);
+	    var Vector = __webpack_require__(37);
+	    var EventHandler = __webpack_require__(19);
 
 	    /**
 	     * Force base class.
@@ -12903,7 +13085,7 @@
 
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -12916,7 +13098,7 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Utility = __webpack_require__(28);
+	    var Utility = __webpack_require__(30);
 
 	    /**
 	     * Transition meta-method to support transitioning multiple
@@ -12986,7 +13168,7 @@
 
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -13414,188 +13596,6 @@
 	    };
 
 	    module.exports = TweenTransition;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 48 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
-	 * License, v. 2.0. If a copy of the MPL was not distributed with this
-	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-	 *
-	 * Owner: mark@famo.us
-	 * @license MPL 2.0
-	 * @copyright Famous Industries, Inc. 2014
-	 */
-
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Transform = __webpack_require__(27);
-
-	    /**
-	     *
-	     * This object translates the rendering instructions ("render specs")
-	     *   that renderable components generate into document update
-	     *   instructions ("update specs").  Private.
-	     *
-	     * @private
-	     * @class SpecParser
-	     * @constructor
-	     */
-	    function SpecParser() {
-	        this.result = {};
-	    }
-	    SpecParser._instance = new SpecParser();
-
-	    /**
-	     * Convert a render spec coming from the context's render chain to an
-	     *    update spec for the update chain. This is the only major entry point
-	     *    for a consumer of this class.
-	     *
-	     * @method parse
-	     * @static
-	     * @private
-	     *
-	     * @param {renderSpec} spec input render spec
-	     * @param {Object} context context to do the parse in
-	     * @return {Object} the resulting update spec (if no callback
-	     *   specified, else none)
-	     */
-	    SpecParser.parse = function parse(spec, context) {
-	        return SpecParser._instance.parse(spec, context);
-	    };
-
-	    /**
-	     * Convert a renderSpec coming from the context's render chain to an update
-	     *    spec for the update chain. This is the only major entrypoint for a
-	     *    consumer of this class.
-	     *
-	     * @method parse
-	     *
-	     * @private
-	     * @param {renderSpec} spec input render spec
-	     * @param {Context} context
-	     * @return {updateSpec} the resulting update spec
-	     */
-	    SpecParser.prototype.parse = function parse(spec, context) {
-	        this.reset();
-	        this._parseSpec(spec, context, Transform.identity);
-	        return this.result;
-	    };
-
-	    /**
-	     * Prepare SpecParser for re-use (or first use) by setting internal state
-	     *  to blank.
-	     *
-	     * @private
-	     * @method reset
-	     */
-	    SpecParser.prototype.reset = function reset() {
-	        this.result = {};
-	    };
-
-	    // Multiply matrix M by vector v
-	    function _vecInContext(v, m) {
-	        return [
-	            v[0] * m[0] + v[1] * m[4] + v[2] * m[8],
-	            v[0] * m[1] + v[1] * m[5] + v[2] * m[9],
-	            v[0] * m[2] + v[1] * m[6] + v[2] * m[10]
-	        ];
-	    }
-
-	    var _zeroZero = [0, 0];
-
-	    // From the provided renderSpec tree, recursively compose opacities,
-	    //    origins, transforms, and sizes corresponding to each surface id from
-	    //    the provided renderSpec tree structure. On completion, those
-	    //    properties of 'this' object should be ready to use to build an
-	    //    updateSpec.
-	    SpecParser.prototype._parseSpec = function _parseSpec(spec, parentContext, sizeContext) {
-	        var id;
-	        var target;
-	        var transform;
-	        var opacity;
-	        var origin;
-	        var align;
-	        var size;
-
-	        if (typeof spec === 'number') {
-	            id = spec;
-	            transform = parentContext.transform;
-	            align = parentContext.align || _zeroZero;
-	            if (parentContext.size && align && (align[0] || align[1])) {
-	                var alignAdjust = [align[0] * parentContext.size[0], align[1] * parentContext.size[1], 0];
-	                transform = Transform.thenMove(transform, _vecInContext(alignAdjust, sizeContext));
-	            }
-	            this.result[id] = {
-	                transform: transform,
-	                opacity: parentContext.opacity,
-	                origin: parentContext.origin || _zeroZero,
-	                align: parentContext.align || _zeroZero,
-	                size: parentContext.size
-	            };
-	        }
-	        else if (!spec) { // placed here so 0 will be cached earlier
-	            return;
-	        }
-	        else if (spec instanceof Array) {
-	            for (var i = 0; i < spec.length; i++) {
-	                this._parseSpec(spec[i], parentContext, sizeContext);
-	            }
-	        }
-	        else {
-	            target = spec.target;
-	            transform = parentContext.transform;
-	            opacity = parentContext.opacity;
-	            origin = parentContext.origin;
-	            align = parentContext.align;
-	            size = parentContext.size;
-	            var nextSizeContext = sizeContext;
-
-	            if (spec.opacity !== undefined) opacity = parentContext.opacity * spec.opacity;
-	            if (spec.transform) transform = Transform.multiply(parentContext.transform, spec.transform);
-	            if (spec.origin) {
-	                origin = spec.origin;
-	                nextSizeContext = parentContext.transform;
-	            }
-	            if (spec.align) align = spec.align;
-
-	            if (spec.size || spec.proportions) {
-	                var parentSize = size;
-	                size = [size[0], size[1]];
-
-	                if (spec.size) {
-	                    if (spec.size[0] !== undefined) size[0] = spec.size[0];
-	                    if (spec.size[1] !== undefined) size[1] = spec.size[1];
-	                }
-
-	                if (spec.proportions) {
-	                    if (spec.proportions[0] !== undefined) size[0] = size[0] * spec.proportions[0];
-	                    if (spec.proportions[1] !== undefined) size[1] = size[1] * spec.proportions[1];
-	                }
-
-	                if (parentSize) {
-	                    if (align && (align[0] || align[1])) transform = Transform.thenMove(transform, _vecInContext([align[0] * parentSize[0], align[1] * parentSize[1], 0], sizeContext));
-	                    if (origin && (origin[0] || origin[1])) transform = Transform.moveThen([-origin[0] * size[0], -origin[1] * size[1], 0], transform);
-	                }
-
-	                nextSizeContext = parentContext.transform;
-	                origin = null;
-	                align = null;
-	            }
-
-	            this._parseSpec(target, {
-	                transform: transform,
-	                opacity: opacity,
-	                origin: origin,
-	                align: align,
-	                size: size
-	            }, nextSizeContext);
-	        }
-	    };
-
-	    module.exports = SpecParser;
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 
