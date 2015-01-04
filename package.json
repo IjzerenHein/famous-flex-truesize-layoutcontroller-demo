@@ -1,0 +1,72 @@
+{
+  "name": "famous-flex-truesize-layoutcontroller-demo",
+  "private": "true",
+  "version": "0.0.1",
+  "homepage": "https://github.com/IjzerenHein/famous-flex-truesize-layoutcontroller-demo",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/IjzerenHein/famous-flex-truesize-layoutcontroller-demo.git"
+  },
+  "author": {
+    "name": "Hein Rutjes <hrutjes@gmail.com>"
+  },
+  "description": "Demonstrates how to calculate the height of multiple true-size renderables using a LayoutController.",
+  "keywords": [
+    "famo.us",
+    "famous",
+    "flex",
+    "famous-flex",
+    "layoutcontroller",
+    "truesize"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/IjzerenHein/famous-flex-truesize-layoutcontroller-demo/blob/master/LICENSE"
+    }
+  ],
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/IjzerenHein/famous-flex-truesize-layoutcontroller-demo/issues"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "devDependencies": {
+    "css-loader": "^0.7.0",
+    "cuid": "^1.2.4",
+    "expose-loader": "^0.5.3",
+    "famous": "^0.3.1",
+    "famous-autosizetextarea": "latest",
+    "famous-flex": "latest",
+    "famous-refresh-loader": "latest",
+    "famous-lagometer": "latest",
+    "famous-polyfills": "^0.2.2",
+    "fastclick": "^1.0.3",
+    "file-loader": "^0.6.1",
+    "glob": "^4.0.5",
+    "grunt": "latest",
+    "grunt-eslint": "latest",
+    "grunt-exec": "latest",
+    "grunt-ftp-deploy": "latest",
+    "grunt-jscs": "latest",
+    "grunt-jsdoc-to-markdown": "latest",
+    "handlebars-loader": "^0.1.7",
+    "html-loader": "^0.2.2",
+    "json-loader": "^0.5.1",
+    "moment": "^2.8.3",
+    "optimist": "^0.6.1",
+    "pleasejs": "^0.2.0",
+    "script-loader": "^0.6.0",
+    "style-loader": "^0.6.4",
+    "ua_parser": "^1.0.14",
+    "url-loader": "^0.5.5",
+    "webpack": "latest",
+    "webpack-cordova-plugin": "latest",
+    "webpack-dev-server": "latest"
+  },
+  "files": [
+    "src",
+    "LICENSE"
+  ]
+}
