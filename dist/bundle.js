@@ -94,7 +94,7 @@
 	    var scrollView;
 	    function _createScrollView() {
 	        scrollView = new FlexScrollView({
-	            useContainer: true,
+	            autoPipeEvents: true,
 	            flow: false,
 	            mouseMove: true
 	        });
@@ -110,6 +110,7 @@
 	    function _createLC(data) {
 	        var lc = new LayoutController({
 	            layout: ListLayout,
+	            autoPipeEvents: true,
 	            size: [undefined, true],
 	            dataSource: data
 	        });
@@ -850,8 +851,8 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var LayoutUtility = __webpack_require__(20);
-	    var ScrollController = __webpack_require__(24);
+	    var LayoutUtility = __webpack_require__(18);
+	    var ScrollController = __webpack_require__(19);
 	    var ListLayout = __webpack_require__(10);
 
 	    //
@@ -1451,12 +1452,12 @@
 	    var Utility = __webpack_require__(30);
 	    var Entity = __webpack_require__(27);
 	    var ViewSequence = __webpack_require__(28);
-	    var OptionsManager = __webpack_require__(18);
-	    var EventHandler = __webpack_require__(19);
-	    var LayoutUtility = __webpack_require__(20);
-	    var LayoutNodeManager = __webpack_require__(21);
-	    var LayoutNode = __webpack_require__(22);
-	    var FlowLayoutNode = __webpack_require__(23);
+	    var OptionsManager = __webpack_require__(20);
+	    var EventHandler = __webpack_require__(21);
+	    var LayoutUtility = __webpack_require__(18);
+	    var LayoutNodeManager = __webpack_require__(22);
+	    var LayoutNode = __webpack_require__(23);
+	    var FlowLayoutNode = __webpack_require__(24);
 	    var Transform = __webpack_require__(29);
 	    __webpack_require__(31);
 
@@ -2287,7 +2288,7 @@
 
 	    // import dependencies
 	    var Utility = __webpack_require__(30);
-	    var LayoutUtility = __webpack_require__(20);
+	    var LayoutUtility = __webpack_require__(18);
 
 	    // Define capabilities of this layout function
 	    var capabilities = {
@@ -2562,8 +2563,8 @@
 	     * @class Engine
 	     */
 	    var Context = __webpack_require__(25);
-	    var EventHandler = __webpack_require__(19);
-	    var OptionsManager = __webpack_require__(18);
+	    var EventHandler = __webpack_require__(21);
+	    var OptionsManager = __webpack_require__(20);
 
 	    var Engine = {};
 
@@ -3644,425 +3645,6 @@
 /* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
-	 * License, v. 2.0. If a copy of the MPL was not distributed with this
-	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-	 *
-	 * Owner: mark@famo.us
-	 * @license MPL 2.0
-	 * @copyright Famous Industries, Inc. 2014
-	 */
-
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var EventHandler = __webpack_require__(19);
-
-	    /**
-	     *  A collection of methods for setting options which can be extended
-	     *  onto other classes.
-	     *
-	     *
-	     *  **** WARNING ****
-	     *  You can only pass through objects that will compile into valid JSON.
-	     *
-	     *  Valid options:
-	     *      Strings,
-	     *      Arrays,
-	     *      Objects,
-	     *      Numbers,
-	     *      Nested Objects,
-	     *      Nested Arrays.
-	     *
-	     *    This excludes:
-	     *        Document Fragments,
-	     *        Functions
-	     * @class OptionsManager
-	     * @constructor
-	     * @param {Object} value options dictionary
-	     */
-	    function OptionsManager(value) {
-	        this._value = value;
-	        this.eventOutput = null;
-	    }
-
-	    /**
-	     * Create options manager from source dictionary with arguments overriden by patch dictionary.
-	     *
-	     * @static
-	     * @method OptionsManager.patch
-	     *
-	     * @param {Object} source source arguments
-	     * @param {...Object} data argument additions and overwrites
-	     * @return {Object} source object
-	     */
-	    OptionsManager.patch = function patchObject(source, data) {
-	        var manager = new OptionsManager(source);
-	        for (var i = 1; i < arguments.length; i++) manager.patch(arguments[i]);
-	        return source;
-	    };
-
-	    function _createEventOutput() {
-	        this.eventOutput = new EventHandler();
-	        this.eventOutput.bindThis(this);
-	        EventHandler.setOutputHandler(this, this.eventOutput);
-	    }
-
-	    /**
-	     * Create OptionsManager from source with arguments overriden by patches.
-	     *   Triggers 'change' event on this object's event handler if the state of
-	     *   the OptionsManager changes as a result.
-	     *
-	     * @method patch
-	     *
-	     * @param {...Object} arguments list of patch objects
-	     * @return {OptionsManager} this
-	     */
-	    OptionsManager.prototype.patch = function patch() {
-	        var myState = this._value;
-	        for (var i = 0; i < arguments.length; i++) {
-	            var data = arguments[i];
-	            for (var k in data) {
-	                if ((k in myState) && (data[k] && data[k].constructor === Object) && (myState[k] && myState[k].constructor === Object)) {
-	                    if (!myState.hasOwnProperty(k)) myState[k] = Object.create(myState[k]);
-	                    this.key(k).patch(data[k]);
-	                    if (this.eventOutput) this.eventOutput.emit('change', {id: k, value: this.key(k).value()});
-	                }
-	                else this.set(k, data[k]);
-	            }
-	        }
-	        return this;
-	    };
-
-	    /**
-	     * Alias for patch
-	     *
-	     * @method setOptions
-	     *
-	     */
-	    OptionsManager.prototype.setOptions = OptionsManager.prototype.patch;
-
-	    /**
-	     * Return OptionsManager based on sub-object retrieved by key
-	     *
-	     * @method key
-	     *
-	     * @param {string} identifier key
-	     * @return {OptionsManager} new options manager with the value
-	     */
-	    OptionsManager.prototype.key = function key(identifier) {
-	        var result = new OptionsManager(this._value[identifier]);
-	        if (!(result._value instanceof Object) || result._value instanceof Array) result._value = {};
-	        return result;
-	    };
-
-	    /**
-	     * Look up value by key or get the full options hash
-	     * @method get
-	     *
-	     * @param {string} key key
-	     * @return {Object} associated object or full options hash
-	     */
-	    OptionsManager.prototype.get = function get(key) {
-	        return key ? this._value[key] : this._value;
-	    };
-
-	    /**
-	     * Alias for get
-	     * @method getOptions
-	     */
-	    OptionsManager.prototype.getOptions = OptionsManager.prototype.get;
-
-	    /**
-	     * Set key to value.  Outputs 'change' event if a value is overwritten.
-	     *
-	     * @method set
-	     *
-	     * @param {string} key key string
-	     * @param {Object} value value object
-	     * @return {OptionsManager} new options manager based on the value object
-	     */
-	    OptionsManager.prototype.set = function set(key, value) {
-	        var originalValue = this.get(key);
-	        this._value[key] = value;
-	        if (this.eventOutput && value !== originalValue) this.eventOutput.emit('change', {id: key, value: value});
-	        return this;
-	    };
-
-	    /**
-	     * Bind a callback function to an event type handled by this object.
-	     *
-	     * @method "on"
-	     *
-	     * @param {string} type event type key (for example, 'change')
-	     * @param {function(string, Object)} handler callback
-	     * @return {EventHandler} this
-	     */
-	    OptionsManager.prototype.on = function on() {
-	        _createEventOutput.call(this);
-	        return this.on.apply(this, arguments);
-	    };
-
-	    /**
-	     * Unbind an event by type and handler.
-	     *   This undoes the work of "on".
-	     *
-	     * @method removeListener
-	     *
-	     * @param {string} type event type key (for example, 'change')
-	     * @param {function} handler function object to remove
-	     * @return {EventHandler} internal event handler object (for chaining)
-	     */
-	    OptionsManager.prototype.removeListener = function removeListener() {
-	        _createEventOutput.call(this);
-	        return this.removeListener.apply(this, arguments);
-	    };
-
-	    /**
-	     * Add event handler object to set of downstream handlers.
-	     *
-	     * @method pipe
-	     *
-	     * @param {EventHandler} target event handler target object
-	     * @return {EventHandler} passed event handler
-	     */
-	    OptionsManager.prototype.pipe = function pipe() {
-	        _createEventOutput.call(this);
-	        return this.pipe.apply(this, arguments);
-	    };
-
-	    /**
-	     * Remove handler object from set of downstream handlers.
-	     * Undoes work of "pipe"
-	     *
-	     * @method unpipe
-	     *
-	     * @param {EventHandler} target target handler object
-	     * @return {EventHandler} provided target
-	     */
-	    OptionsManager.prototype.unpipe = function unpipe() {
-	        _createEventOutput.call(this);
-	        return this.unpipe.apply(this, arguments);
-	    };
-
-	    module.exports = OptionsManager;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
-	 * License, v. 2.0. If a copy of the MPL was not distributed with this
-	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-	 *
-	 * Owner: mark@famo.us
-	 * @license MPL 2.0
-	 * @copyright Famous Industries, Inc. 2014
-	 */
-
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var EventEmitter = __webpack_require__(32);
-
-	    /**
-	     * EventHandler forwards received events to a set of provided callback functions.
-	     * It allows events to be captured, processed, and optionally piped through to other event handlers.
-	     *
-	     * @class EventHandler
-	     * @extends EventEmitter
-	     * @constructor
-	     */
-	    function EventHandler() {
-	        EventEmitter.apply(this, arguments);
-
-	        this.downstream = []; // downstream event handlers
-	        this.downstreamFn = []; // downstream functions
-
-	        this.upstream = []; // upstream event handlers
-	        this.upstreamListeners = {}; // upstream listeners
-	    }
-	    EventHandler.prototype = Object.create(EventEmitter.prototype);
-	    EventHandler.prototype.constructor = EventHandler;
-
-	    /**
-	     * Assign an event handler to receive an object's input events.
-	     *
-	     * @method setInputHandler
-	     * @static
-	     *
-	     * @param {Object} object object to mix trigger, subscribe, and unsubscribe functions into
-	     * @param {EventHandler} handler assigned event handler
-	     */
-	    EventHandler.setInputHandler = function setInputHandler(object, handler) {
-	        object.trigger = handler.trigger.bind(handler);
-	        if (handler.subscribe && handler.unsubscribe) {
-	            object.subscribe = handler.subscribe.bind(handler);
-	            object.unsubscribe = handler.unsubscribe.bind(handler);
-	        }
-	    };
-
-	    /**
-	     * Assign an event handler to receive an object's output events.
-	     *
-	     * @method setOutputHandler
-	     * @static
-	     *
-	     * @param {Object} object object to mix pipe, unpipe, on, addListener, and removeListener functions into
-	     * @param {EventHandler} handler assigned event handler
-	     */
-	    EventHandler.setOutputHandler = function setOutputHandler(object, handler) {
-	        if (handler instanceof EventHandler) handler.bindThis(object);
-	        object.pipe = handler.pipe.bind(handler);
-	        object.unpipe = handler.unpipe.bind(handler);
-	        object.on = handler.on.bind(handler);
-	        object.addListener = object.on;
-	        object.removeListener = handler.removeListener.bind(handler);
-	    };
-
-	    /**
-	     * Trigger an event, sending to all downstream handlers
-	     *   listening for provided 'type' key.
-	     *
-	     * @method emit
-	     *
-	     * @param {string} type event type key (for example, 'click')
-	     * @param {Object} event event data
-	     * @return {EventHandler} this
-	     */
-	    EventHandler.prototype.emit = function emit(type, event) {
-	        EventEmitter.prototype.emit.apply(this, arguments);
-	        var i = 0;
-	        for (i = 0; i < this.downstream.length; i++) {
-	            if (this.downstream[i].trigger) this.downstream[i].trigger(type, event);
-	        }
-	        for (i = 0; i < this.downstreamFn.length; i++) {
-	            this.downstreamFn[i](type, event);
-	        }
-	        return this;
-	    };
-
-	    /**
-	     * Alias for emit
-	     * @method addListener
-	     */
-	    EventHandler.prototype.trigger = EventHandler.prototype.emit;
-
-	    /**
-	     * Add event handler object to set of downstream handlers.
-	     *
-	     * @method pipe
-	     *
-	     * @param {EventHandler} target event handler target object
-	     * @return {EventHandler} passed event handler
-	     */
-	    EventHandler.prototype.pipe = function pipe(target) {
-	        if (target.subscribe instanceof Function) return target.subscribe(this);
-
-	        var downstreamCtx = (target instanceof Function) ? this.downstreamFn : this.downstream;
-	        var index = downstreamCtx.indexOf(target);
-	        if (index < 0) downstreamCtx.push(target);
-
-	        if (target instanceof Function) target('pipe', null);
-	        else if (target.trigger) target.trigger('pipe', null);
-
-	        return target;
-	    };
-
-	    /**
-	     * Remove handler object from set of downstream handlers.
-	     *   Undoes work of "pipe".
-	     *
-	     * @method unpipe
-	     *
-	     * @param {EventHandler} target target handler object
-	     * @return {EventHandler} provided target
-	     */
-	    EventHandler.prototype.unpipe = function unpipe(target) {
-	        if (target.unsubscribe instanceof Function) return target.unsubscribe(this);
-
-	        var downstreamCtx = (target instanceof Function) ? this.downstreamFn : this.downstream;
-	        var index = downstreamCtx.indexOf(target);
-	        if (index >= 0) {
-	            downstreamCtx.splice(index, 1);
-	            if (target instanceof Function) target('unpipe', null);
-	            else if (target.trigger) target.trigger('unpipe', null);
-	            return target;
-	        }
-	        else return false;
-	    };
-
-	    /**
-	     * Bind a callback function to an event type handled by this object.
-	     *
-	     * @method "on"
-	     *
-	     * @param {string} type event type key (for example, 'click')
-	     * @param {function(string, Object)} handler callback
-	     * @return {EventHandler} this
-	     */
-	    EventHandler.prototype.on = function on(type, handler) {
-	        EventEmitter.prototype.on.apply(this, arguments);
-	        if (!(type in this.upstreamListeners)) {
-	            var upstreamListener = this.trigger.bind(this, type);
-	            this.upstreamListeners[type] = upstreamListener;
-	            for (var i = 0; i < this.upstream.length; i++) {
-	                this.upstream[i].on(type, upstreamListener);
-	            }
-	        }
-	        return this;
-	    };
-
-	    /**
-	     * Alias for "on"
-	     * @method addListener
-	     */
-	    EventHandler.prototype.addListener = EventHandler.prototype.on;
-
-	    /**
-	     * Listen for events from an upstream event handler.
-	     *
-	     * @method subscribe
-	     *
-	     * @param {EventEmitter} source source emitter object
-	     * @return {EventHandler} this
-	     */
-	    EventHandler.prototype.subscribe = function subscribe(source) {
-	        var index = this.upstream.indexOf(source);
-	        if (index < 0) {
-	            this.upstream.push(source);
-	            for (var type in this.upstreamListeners) {
-	                source.on(type, this.upstreamListeners[type]);
-	            }
-	        }
-	        return this;
-	    };
-
-	    /**
-	     * Stop listening to events from an upstream event handler.
-	     *
-	     * @method unsubscribe
-	     *
-	     * @param {EventEmitter} source source emitter object
-	     * @return {EventHandler} this
-	     */
-	    EventHandler.prototype.unsubscribe = function unsubscribe(source) {
-	        var index = this.upstream.indexOf(source);
-	        if (index >= 0) {
-	            this.upstream.splice(index, 1);
-	            for (var type in this.upstreamListeners) {
-	                source.removeListener(type, this.upstreamListeners[type]);
-	            }
-	        }
-	        return this;
-	    };
-
-	    module.exports = EventHandler;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
 	 * This Source Code is licensed under the MIT license. If a copy of the
 	 * MIT-license was not distributed with this file, You can obtain one at:
@@ -4350,1440 +3932,7 @@
 
 
 /***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/**
-	 * This Source Code is licensed under the MIT license. If a copy of the
-	 * MIT-license was not distributed with this file, You can obtain one at:
-	 * http://opensource.org/licenses/mit-license.html.
-	 *
-	 * @author: Hein Rutjes (IjzerenHein)
-	 * @license MIT
-	 * @copyright Gloey Apps, 2014
-	 */
-
-	/*global define*/
-	/*eslint no-use-before-define:0 */
-
-	/**
-	 * LayoutNodeManager is a private class used internally by LayoutController, ScrollController
-	 * and ScrollView. It manages the layout-nodes that are rendered and exposes the layout-context
-	 * which is passed along to the layout-function.
-	 *
-	 * LayoutNodeManager keeps track of every rendered node through an ordered double-linked
-	 * list. The first time the layout-function is called, the linked list is created.
-	 * After that, the linked list is updated to reflect the output of the layout-function.
-	 * When the layout is unchanged, then the linked-list exactly matches the order of the
-	 * accessed nodes in the layout-function, and no layout-nodes need to be created or
-	 * re-ordered.
-	 *
-	 * @module
-	 */
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-
-	    // import dependencies
-	    var LayoutContext = __webpack_require__(33);
-	    var LayoutUtility = __webpack_require__(20);
-
-	    var MAX_POOL_SIZE = 100;
-
-	    /**
-	     * @class
-	     * @param {LayoutNode} LayoutNode Layout-nodes to create
-	     * @param {Function} initLayoutNodeFn function to use when initializing new nodes
-	     * @alias module:LayoutNodeManager
-	     */
-	    function LayoutNodeManager(LayoutNode, initLayoutNodeFn) {
-	        this.LayoutNode = LayoutNode;
-	        this._initLayoutNodeFn = initLayoutNodeFn;
-	        this._layoutCount = 0;
-	        this._context = new LayoutContext({
-	            next: _contextNext.bind(this),
-	            prev: _contextPrev.bind(this),
-	            get: _contextGet.bind(this),
-	            set: _contextSet.bind(this),
-	            resolveSize: _contextResolveSize.bind(this),
-	            size: [0, 0]
-	            //,cycle: 0
-	        });
-	        this._contextState = {
-	            // enumation state for the context
-	            //nextSequence: undefined,
-	            //prevSequence: undefined,
-	            //next: undefined
-	            //prev: undefined
-	            //start: undefined
-	        };
-	        this._pool = {
-	            layoutNodes: {
-	                size: 0
-	                //first: undefined
-	            },
-	            resolveSize: [0, 0]
-	        };
-	        //this._first = undefined; // first item in the linked list
-	        //this._nodesById = undefined;
-	        //this._trueSizeRequested = false;
-	    }
-
-	    /**
-	     * Prepares the manager for a new layout iteration, after which it returns the
-	     * context which can be used by the layout-function.
-	     *
-	     * @param {ViewSequence} viewSequence first node to layout
-	     * @param {Object} [nodesById] dictionary to use when looking up nodes by id
-	     * @return {LayoutContext} context which can be passed to the layout-function
-	     */
-	    LayoutNodeManager.prototype.prepareForLayout = function(viewSequence, nodesById, contextData) {
-
-	        // Reset all nodes
-	        var node = this._first;
-	        while (node) {
-	            node.reset();
-	            node = node._next;
-	        }
-
-	        // Prepare data
-	        var context = this._context;
-	        this._layoutCount++;
-	        this._nodesById = nodesById;
-	        this._trueSizeRequested = false;
-	        this._reevalTrueSize =
-	            contextData.reevalTrueSize ||
-	            !context.size ||
-	            (context.size[0] !== contextData.size[0]) ||
-	            (context.size[1] !== contextData.size[1]);
-
-	        // Prepare context for enumation
-	        var contextState = this._contextState;
-	        contextState.nextSequence = viewSequence;
-	        contextState.prevSequence = viewSequence;
-	        contextState.start = undefined;
-	        contextState.nextGetIndex = 0;
-	        contextState.prevGetIndex = 0;
-	        contextState.nextSetIndex = 0;
-	        contextState.prevSetIndex = 0;
-	        contextState.addCount = 0;
-	        contextState.removeCount = 0;
-
-	        // Prepare content
-	        context.size[0] = contextData.size[0];
-	        context.size[1] = contextData.size[1];
-	        context.direction = contextData.direction;
-	        context.reverse = contextData.reverse;
-	        context.alignment = contextData.reverse ? 1 : 0;
-	        context.scrollOffset = contextData.scrollOffset || 0;
-	        context.scrollStart = contextData.scrollStart || 0;
-	        context.scrollEnd = contextData.scrollEnd || context.size[context.direction];
-	        //context.cycle++;
-	        return context;
-	    };
-
-	    /**
-	     * When the layout-function no longer lays-out the node, then it is not longer
-	     * being invalidated. In this case the destination is set to the removeSpec
-	     * after which the node is animated towards the remove-spec.
-	     *
-	     * @param {Spec} [removeSpec] spec towards which the no longer layed-out nodes are animated
-	     */
-	    LayoutNodeManager.prototype.removeNonInvalidatedNodes = function(removeSpec) {
-	        var node = this._first;
-	        while (node) {
-
-	            // If a node existed, but it is no longer being layed out,
-	            // then set it to the '_removing' state.
-	            if (!node._invalidated && !node._removing) {
-	                node.remove(removeSpec);
-	            }
-
-	            // Move to next node
-	            node = node._next;
-	        }
-	    };
-
-	    /**
-	     * Builds the render-spec and destroy any layout-nodes that no longer
-	     * return a render-spec.
-	     *
-	     * @return {Array.Spec} array of Specs
-	     */
-	    LayoutNodeManager.prototype.buildSpecAndDestroyUnrenderedNodes = function(translate) {
-	        var specs = [];
-	        var result = {
-	            specs: specs,
-	            modified: false
-	        };
-	        var node = this._first;
-	        while (node) {
-	            var modified = node._specModified;
-	            var spec = node.getSpec();
-	            //if (spec.removed && (!this._contextState.addCount || (this._contextState.removeCount > 5))) {
-	            if (spec.removed) {
-
-	                // Destroy node
-	                var destroyNode = node;
-	                node = node._next;
-	                _destroyNode.call(this, destroyNode);
-
-	                // Mark as modified
-	                result.modified = true;
-	            }
-	            else {
-
-	                // Update stats
-	                if (modified) {
-	                    if (spec.transform && translate) {
-	                        spec.transform[12] += translate[0];
-	                        spec.transform[13] += translate[1];
-	                        spec.transform[14] += translate[2];
-	                        spec.transform[12] = Math.round(spec.transform[12] * 100000) / 100000;
-	                        spec.transform[13] = Math.round(spec.transform[13] * 100000) / 100000;
-	                    }
-	                    result.modified = true;
-	                }
-
-	                // Add node to result output
-	                specs.push(spec);
-	                node = node._next;
-	            }
-	        }
-	        this._contextState.addCount = 0;
-	        this._contextState.removeCount = 0;
-	        return result;
-	    };
-
-	    /**
-	     * Get the layout-node by its renderable.
-	     *
-	     * @param {Object} renderable renderable
-	     * @return {LayoutNode} layout-node or undefined
-	     */
-	    LayoutNodeManager.prototype.getNodeByRenderNode = function(renderable) {
-	        var node = this._first;
-	        while (node) {
-	            if (node.renderNode === renderable) {
-	                return node;
-	            }
-	            node = node._next;
-	        }
-	        return undefined;
-	    };
-
-	    /**
-	     * Inserts a layout-node into the linked-list.
-	     *
-	     * @param {LayoutNode} node layout-node to insert
-	     */
-	    LayoutNodeManager.prototype.insertNode = function(node) {
-	        node._next = this._first;
-	        if (this._first) {
-	            this._first._prev = node;
-	        }
-	        this._first = node;
-	    };
-
-	    /**
-	     * Sets the options for all nodes.
-	     *
-	     * @param {Object} options node options
-	     */
-	    LayoutNodeManager.prototype.setNodeOptions = function(options) {
-	        this._nodeOptions = options;
-	        var node = this._first;
-	        while (node) {
-	            node.setOptions(options);
-	            node = node._next;
-	        }
-	        node = this._pool.layoutNodes.first;
-	        while (node) {
-	            node.setOptions(options);
-	            node = node._next;
-	        }
-	    };
-
-	    /**
-	     * Pre-allocate layout-nodes ahead of using them.
-	     *
-	     * @param {Number} count number of nodes to pre-allocate with the given spec
-	     * @param {Spec} [spec] render-spec (defined the node properties which to pre-allocate)
-	     */
-	    LayoutNodeManager.prototype.preallocateNodes = function(count, spec) {
-	        var nodes = [];
-	        for (var i = 0; i < count ; i++) {
-	            nodes.push(this.createNode(undefined, spec));
-	        }
-	        for (i = 0; i < count ; i++) {
-	            _destroyNode.call(this, nodes[i]);
-	        }
-	    };
-
-	    /**
-	     * Creates a layout-node
-	     *
-	     * @param {Object} renderNode render-node for whom to create a layout-node for
-	     * @return {LayoutNode} layout-node
-	     */
-	    LayoutNodeManager.prototype.createNode = function(renderNode, spec) {
-	        var node;
-	        if (this._pool.layoutNodes.first) {
-	            node = this._pool.layoutNodes.first;
-	            this._pool.layoutNodes.first = node._next;
-	            this._pool.layoutNodes.size--;
-	            node.constructor.apply(node, arguments);
-	        }
-	        else {
-	            node = new this.LayoutNode(renderNode, spec);
-	            if (this._nodeOptions) {
-	                node.setOptions(this._nodeOptions);
-	            }
-	        }
-	        node._prev = undefined;
-	        node._next = undefined;
-	        node._viewSequence = undefined;
-	        node._layoutCount = 0;
-	        if (this._initLayoutNodeFn) {
-	            this._initLayoutNodeFn.call(this, node, spec);
-	        }
-	        return node;
-	    };
-
-	    /**
-	     * Destroys a layout-node
-	     */
-	    function _destroyNode(node) {
-
-	        // Remove node from linked-list
-	        if (node._next) {
-	            node._next._prev = node._prev;
-	        }
-	        if (node._prev) {
-	            node._prev._next = node._next;
-	        }
-	        else {
-	            this._first = node._next;
-	        }
-
-	        // Destroy the node
-	        node.destroy();
-
-	        // Add node to pool
-	        if (this._pool.layoutNodes.size < MAX_POOL_SIZE) {
-	            this._pool.layoutNodes.size++;
-	            node._prev = undefined;
-	            node._next = this._pool.layoutNodes.first;
-	            this._pool.layoutNodes.first = node;
-	        }
-	    }
-
-	    /**
-	     * Gets start layout-node for enumeration.
-	     *
-	     * @param {Bool} [next] undefined = all, true = all next, false = all previous
-	     * @return {LayoutNode} layout-node or undefined
-	     */
-	    LayoutNodeManager.prototype.getStartEnumNode = function(next) {
-	        if (next === undefined) {
-	            return this._first;
-	        } else if (next === true) {
-	            return (this._contextState.start && this._contextState.startPrev) ? this._contextState.start._next : this._contextState.start;
-	        } else if (next === false) {
-	            return (this._contextState.start && !this._contextState.startPrev) ? this._contextState.start._prev : this._contextState.start;
-	        }
-	    };
-
-	    /**
-	     * Checks the integrity of the linked-list.
-	     */
-	    /*function _checkIntegrity() {
-	        var node = this._first;
-	        var count = 0;
-	        var prevNode;
-	        while (node) {
-	            if (!node._prev && (node !== this._first)) {
-	                throw 'No prev but not first';
-	            }
-	            if (node._prev !== prevNode) {
-	                throw 'Bork';
-	            }
-	            prevNode = node;
-	            node = node._next;
-	            count++;
-	        }
-	    }
-
-	    function _checkContextStateIntegrity() {
-	        var node = this._contextState.start;
-	        while (node) {
-	            if (node === this._contextState.next) {
-	                break;
-	            }
-	            if (!node._invalidated) {
-	                throw 'WTF';
-	            }
-	            node = node._next;
-	        }
-	        node = this._contextState.start;
-	        while (node) {
-	            if (node === this._contextState.prev) {
-	                break;
-	            }
-	            if (!node._invalidated) {
-	                throw 'WTF';
-	            }
-	            node = node._prev;
-	        }
-	    }*/
-
-	    /**
-	     * Creates or gets a layout node.
-	     */
-	    function _contextGetCreateAndOrderNodes(renderNode, prev) {
-
-	        // The first time this function is called, the current
-	        // prev/next position is obtained.
-	        var node;
-	        var state = this._contextState;
-	        if (!state.start) {
-	            node = this._first;
-	            while (node) {
-	                if (node.renderNode === renderNode) {
-	                    break;
-	                }
-	                node = node._next;
-	            }
-	            if (!node) {
-	                node = this.createNode(renderNode);
-	                node._next = this._first;
-	                if (this._first) {
-	                    this._first._prev = node;
-	                }
-	                this._first = node;
-	            }
-	            state.start = node;
-	            state.startPrev = prev;
-	            state.prev = node;
-	            state.next = node;
-	            return node;
-	        }
-
-	        // Check whether node already exist at the correct position
-	        // in the linked-list. If so, return that node immediately
-	        // and advance the prev/next pointer for the next/prev
-	        // lookup operation.
-	        if (prev) {
-	            if (state.prev._prev && (state.prev._prev.renderNode === renderNode)) {
-	                state.prev = state.prev._prev;
-	                return state.prev;
-	            }
-	        }
-	        else {
-	            if (state.next._next && (state.next._next.renderNode === renderNode)) {
-	                state.next = state.next._next;
-	                return state.next;
-	            }
-	        }
-
-	        // Lookup the node anywhere in the list..
-	        node = this._first;
-	        while (node) {
-	            if (node.renderNode === renderNode) {
-	                break;
-	            }
-	            node = node._next;
-	        }
-
-	        // Create new node if neccessary
-	        if (!node) {
-	            node = this.createNode(renderNode);
-	        }
-
-	        // Node existed, remove from linked-list
-	        else {
-	            if (node._next) {
-	                node._next._prev = node._prev;
-	            }
-	            if (node._prev) {
-	                node._prev._next = node._next;
-	            }
-	            else {
-	                this._first = node._next;
-	            }
-	            node._next = undefined;
-	            node._prev = undefined;
-	        }
-
-	        // Insert node into the linked list
-	        if (prev) {
-	            if (state.prev._prev) {
-	                node._prev = state.prev._prev;
-	                state.prev._prev._next = node;
-	            }
-	            else {
-	                this._first = node;
-	            }
-	            state.prev._prev = node;
-	            node._next = state.prev;
-	            state.prev = node;
-	        }
-	        else {
-	            if (state.next._next) {
-	                node._next = state.next._next;
-	                state.next._next._prev = node;
-	            }
-	            state.next._next = node;
-	            node._prev = state.next;
-	            state.next = node;
-	        }
-
-	        return node;
-	    }
-
-	    /**
-	     * Get the next render-node
-	     */
-	    function _contextNext() {
-
-	        // Get the next node from the sequence
-	        if (!this._contextState.nextSequence) {
-	            return undefined;
-	        }
-	        if (this._context.reverse) {
-	            this._contextState.nextSequence = this._contextState.nextSequence.getNext();
-	            if (!this._contextState.nextSequence) {
-	                return undefined;
-	            }
-	        }
-	        var renderNode = this._contextState.nextSequence.get();
-	        if (!renderNode) {
-	            this._contextState.nextSequence = undefined;
-	            return undefined;
-	        }
-	        var nextSequence = this._contextState.nextSequence;
-	        if (!this._context.reverse) {
-	            this._contextState.nextSequence = this._contextState.nextSequence.getNext();
-	        }
-	        return {
-	            renderNode: renderNode,
-	            viewSequence: nextSequence,
-	            next: true,
-	            index: ++this._contextState.nextGetIndex
-	        };
-	    }
-
-	    /**
-	     * Get the previous render-node
-	     */
-	    function _contextPrev() {
-
-	        // Get the previous node from the sequence
-	        if (!this._contextState.prevSequence) {
-	            return undefined;
-	        }
-	        if (!this._context.reverse) {
-	            this._contextState.prevSequence = this._contextState.prevSequence.getPrevious();
-	            if (!this._contextState.prevSequence) {
-	                return undefined;
-	            }
-	        }
-	        var renderNode = this._contextState.prevSequence.get();
-	        if (!renderNode) {
-	            this._contextState.prevSequence = undefined;
-	            return undefined;
-	        }
-	        var prevSequence = this._contextState.prevSequence;
-	        if (this._context.reverse) {
-	            this._contextState.prevSequence = this._contextState.prevSequence.getPrevious();
-	        }
-	        return {
-	            renderNode: renderNode,
-	            viewSequence: prevSequence,
-	            prev: true,
-	            index: --this._contextState.prevGetIndex
-	        };
-	    }
-
-	    /**
-	     * Resolve id into a context-node.
-	     */
-	     function _contextGet(contextNodeOrId) {
-	        if (this._nodesById && ((contextNodeOrId instanceof String) || (typeof contextNodeOrId === 'string'))) {
-	            var renderNode = this._nodesById[contextNodeOrId];
-	            if (!renderNode) {
-	                return undefined;
-	            }
-
-	            // Return array
-	            if (renderNode instanceof Array) {
-	                var result = [];
-	                for (var i = 0, j = renderNode.length; i < j; i++) {
-	                    result.push({
-	                        renderNode: renderNode[i],
-	                        arrayElement: true
-	                    });
-	                }
-	                return result;
-	            }
-
-	            // Create context node
-	            return {
-	                renderNode: renderNode,
-	                byId: true
-	            };
-	        }
-	        else {
-	            return contextNodeOrId;
-	        }
-	    }
-
-	    /**
-	     * Set the node content
-	     */
-	    function _contextSet(contextNodeOrId, set) {
-	        var contextNode = this._nodesById ? _contextGet.call(this, contextNodeOrId) : contextNodeOrId;
-	        if (contextNode) {
-	            var node = contextNode.node;
-	            if (!node) {
-	                if (contextNode.next) {
-	                     if (contextNode.index < this._contextState.nextSetIndex) {
-	                        LayoutUtility.error('Nodes must be layed out in the same order as they were requested!');
-	                     }
-	                     this._contextState.nextSetIndex = contextNode.index;
-	                } else if (contextNode.prev) {
-	                     if (contextNode.index > this._contextState.prevSetIndex) {
-	                        LayoutUtility.error('Nodes must be layed out in the same order as they were requested!');
-	                     }
-	                     this._contextState.prevSetIndex = contextNode.index;
-	                }
-	                node = _contextGetCreateAndOrderNodes.call(this, contextNode.renderNode, contextNode.prev);
-	                node._viewSequence = contextNode.viewSequence;
-	                node._layoutCount++;
-	                if (node._layoutCount === 1) {
-	                    this._contextState.addCount++;
-	                }
-	                contextNode.node = node;
-	            }
-	            node.usesTrueSize = contextNode.usesTrueSize;
-	            node.trueSizeRequested = contextNode.trueSizeRequested;
-	            node.set(set, this._context.size);
-	            contextNode.set = set;
-	        }
-	    }
-
-	    /**
-	     * Resolve the size of the layout-node from the renderable itsself
-	     */
-	    function _contextResolveSize(contextNodeOrId, parentSize) {
-	        var contextNode = this._nodesById ? _contextGet.call(this, contextNodeOrId) : contextNodeOrId;
-	        var resolveSize = this._pool.resolveSize;
-	        if (!contextNode) {
-	            resolveSize[0] = 0;
-	            resolveSize[1] = 0;
-	            return resolveSize;
-	        }
-
-	        // Get in use size
-	        var renderNode = contextNode.renderNode;
-	        var size = renderNode.getSize();
-	        if (!size) {
-	            return parentSize;
-	        }
-
-	        // Check if true-size is used and it must be reavaluated.
-	        // This particular piece of code specifically handles true-size Surfaces in famo.us.
-	        // It contains portions that ensure that the true-size of a Surface is re-evaluated
-	        // and also workaround code that backs up the size of a Surface, so that when the surface
-	        // is re-added to the DOM (e.g. when scrolling) it doesn't temporarily have a size of 0.
-	        var configSize = renderNode.size && (renderNode._trueSizeCheck !== undefined) ? renderNode.size : undefined;
-	        if (configSize && ((configSize[0] === true) || (configSize[1] === true))) {
-	            contextNode.usesTrueSize = true;
-	            var backupSize = renderNode._backupSize;
-	            if (renderNode._trueSizeCheck) {
-
-	                // Fix for true-size renderables. When true-size is used, the size
-	                // is incorrect for one render-cycle due to the fact that Surface.commit
-	                // updates the content after asking the DOM for the offsetHeight/offsetWidth.
-	                // The code below backs the size up, and re-uses that when this scenario
-	                // occurs.
-	                if (backupSize && (configSize !== size)) {
-	                    var newWidth = (configSize[0] === true) ? Math.max(backupSize[0], size[0]) : size[0];
-	                    var newHeight = (configSize[1] === true) ? Math.max(backupSize[1], size[1]) : size[1];
-	                    if ((newWidth !== backupSize[0]) || (newHeight !== backupSize[1])) {
-	                        this._trueSizeRequested = true;
-	                        contextNode.trueSizeRequested = true;
-	                    }
-	                    backupSize[0] = newWidth;
-	                    backupSize[1] = newHeight;
-	                    size = backupSize;
-	                    renderNode._backupSize = undefined;
-	                    backupSize = undefined;
-	                }
-	                else {
-	                    this._trueSizeRequested = true;
-	                    contextNode.trueSizeRequested = true;
-	                }
-	            }
-	            if (this._reevalTrueSize || (backupSize && ((backupSize[0] !== size[0]) || (backupSize[1] !== size[1])))) {
-	                renderNode._trueSizeCheck = true; // force request of true-size from DOM
-	                renderNode._sizeDirty = true;
-	                this._trueSizeRequested = true;
-	            }
-
-	            // Backup the size of the node
-	            if (!backupSize) {
-	                renderNode._backupSize = [0, 0];
-	                backupSize = renderNode._backupSize;
-	            }
-	            backupSize[0] = size[0];
-	            backupSize[1] = size[1];
-	        }
-
-	        // Ensure re-layout when a child layout-controller is using true-size and it
-	        // has ben changed.
-	        configSize = renderNode._nodes ? renderNode.options.size : undefined;
-	        if (configSize && ((configSize[0] === true) || (configSize[1] === true))) {
-	            if (this._reevalTrueSize || renderNode._nodes._trueSizeRequested) {
-	                contextNode.usesTrueSize = true;
-	                contextNode.trueSizeRequested = true;
-	                this._trueSizeRequested = true;
-	            }
-	        }
-
-	        // Resolve 'undefined' to parent-size and true to 0
-	        if ((size[0] === undefined) || (size[0] === true) || (size[1] === undefined) || (size[1] === true)) {
-	            resolveSize[0] = size[0];
-	            resolveSize[1] = size[1];
-	            size = resolveSize;
-	            if (size[0] === undefined) {
-	                size[0] = parentSize[0];
-	            } else if (size[0] === true) {
-	                size[0] = 0;
-	                this._trueSizeRequested = true;
-	                contextNode.trueSizeRequested = true;
-	            }
-	            if (size[1] === undefined) {
-	                size[1] = parentSize[1];
-	            } else if (size[1] === true) {
-	                size[1] = 0;
-	                this._trueSizeRequested = true;
-	                contextNode.trueSizeRequested = true;
-	            }
-	        }
-	        return size;
-	    }
-
-	    module.exports = LayoutNodeManager;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/**
-	 * This Source Code is licensed under the MIT license. If a copy of the
-	 * MIT-license was not distributed with this file, You can obtain one at:
-	 * http://opensource.org/licenses/mit-license.html.
-	 *
-	 * @author: Hein Rutjes (IjzerenHein)
-	 * @license MIT
-	 * @copyright Gloey Apps, 2014
-	 */
-
-	/*global define*/
-	/*eslint no-use-before-define:0 */
-
-	/**
-	 * Internal LayoutNode class used by `LayoutController`.
-	 *
-	 * @module
-	 */
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-
-	    // import dependencies
-	    var Transform = __webpack_require__(29);
-	    var LayoutUtility = __webpack_require__(20);
-
-	    /**
-	     * @class
-	     * @param {Object} renderNode Render-node which this layout-node represents
-	     * @alias module:LayoutNode
-	     */
-	    function LayoutNode(renderNode, spec) {
-	        this.renderNode = renderNode;
-	        this._spec = spec ? LayoutUtility.cloneSpec(spec) : {};
-	        this._spec.renderNode = renderNode; // also store in spec
-	        this._specModified = true;
-	        this._invalidated = false;
-	        this._removing = false;
-	        //this.scrollLength = undefined;
-	        //this.trueSizeRequested = false;
-	    }
-
-	    /**
-	     * Called to update the options for the node
-	     */
-	    LayoutNode.prototype.setOptions = function(options) {
-	        // override to implement
-	    };
-
-	    /**
-	     * Called when the node is destroyed
-	     */
-	    LayoutNode.prototype.destroy = function() {
-	        this.renderNode = undefined;
-	        this._spec.renderNode = undefined;
-	        this._viewSequence = undefined;
-	    };
-
-	    /**
-	     * Reset the end-state. This function is called on all layout-nodes prior to
-	     * calling the layout-function. So that the layout-function starts with a clean slate.
-	     */
-	    LayoutNode.prototype.reset = function() {
-	        this._invalidated = false;
-	        this.trueSizeRequested = false;
-	    };
-
-	    /**
-	     * Set the spec of the node
-	     *
-	     * @param {Object} spec
-	     */
-	    LayoutNode.prototype.setSpec = function(spec) {
-	        this._specModified = true;
-	        if (spec.align) {
-	            if (!spec.align) {
-	                this._spec.align = [0, 0];
-	            }
-	            this._spec.align[0] = spec.align[0];
-	            this._spec.align[1] = spec.align[1];
-	        }
-	        else {
-	            this._spec.align = undefined;
-	        }
-	        if (spec.origin) {
-	            if (!spec.origin) {
-	                this._spec.origin = [0, 0];
-	            }
-	            this._spec.origin[0] = spec.origin[0];
-	            this._spec.origin[1] = spec.origin[1];
-	        }
-	        else {
-	            this._spec.origin = undefined;
-	        }
-	        if (spec.size) {
-	            if (!spec.size) {
-	                this._spec.size = [0, 0];
-	            }
-	            this._spec.size[0] = spec.size[0];
-	            this._spec.size[1] = spec.size[1];
-	        }
-	        else {
-	            this._spec.size = undefined;
-	        }
-	        if (spec.transform) {
-	            if (!spec.transform) {
-	                this._spec.transform = spec.transform.slice(0);
-	            }
-	            else {
-	                for (var i = 0; i < 16; i++) {
-	                    this._spec.transform[0] = spec.transform[0];
-	                }
-	            }
-	        }
-	        else {
-	            this._spec.transform = undefined;
-	        }
-	        this._spec.opacity = spec.opacity;
-	    };
-
-	    /**
-	     * Set the content of the node
-	     *
-	     * @param {Object} set
-	     */
-	    LayoutNode.prototype.set = function(set, size) {
-	        this._invalidated = true;
-	        this._specModified = true;
-	        this._removing = false;
-	        var spec = this._spec;
-	        spec.opacity = set.opacity;
-	        if (set.size) {
-	            if (!spec.size) {
-	                spec.size = [0, 0];
-	            }
-	            spec.size[0] = set.size[0];
-	            spec.size[1] = set.size[1];
-	        }
-	        else {
-	            spec.size = undefined;
-	        }
-	        if (set.origin) {
-	            if (!spec.origin) {
-	                spec.origin = [0, 0];
-	            }
-	            spec.origin[0] = set.origin[0];
-	            spec.origin[1] = set.origin[1];
-	        }
-	        else {
-	            spec.origin = undefined;
-	        }
-	        if (set.align) {
-	            if (!spec.align) {
-	                spec.align = [0, 0];
-	            }
-	            spec.align[0] = set.align[0];
-	            spec.align[1] = set.align[1];
-	        }
-	        else {
-	            spec.align = undefined;
-	        }
-
-	        if (set.skew || set.rotate || set.scale) {
-	            this._spec.transform = Transform.build({
-	                translate: set.translate || [0, 0, 0],
-	                skew: set.skew || [0, 0, 0],
-	                scale: set.scale || [1, 1, 1],
-	                rotate: set.rotate || [0, 0, 0]
-	            });
-	        }
-	        else if (set.translate) {
-	            this._spec.transform = Transform.translate(set.translate[0], set.translate[1], set.translate[2]);
-	        }
-	        else {
-	            this._spec.transform = undefined;
-	        }
-	        this.scrollLength = set.scrollLength;
-	    };
-
-	    /**
-	     * Creates the render-spec
-	     */
-	    LayoutNode.prototype.getSpec = function() {
-	        this._specModified = false;
-	        this._spec.removed = !this._invalidated;
-	        return this._spec;
-	    };
-
-	    /**
-	     * Marks the node for removal
-	     */
-	    LayoutNode.prototype.remove = function(removeSpec) {
-	        this._removing = true;
-	    };
-
-	    module.exports = LayoutNode;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/**
-	 * This Source Code is licensed under the MIT license. If a copy of the
-	 * MIT-license was not distributed with this file, You can obtain one at:
-	 * http://opensource.org/licenses/mit-license.html.
-	 *
-	 * @author: Hein Rutjes (IjzerenHein)
-	 * @license MIT
-	 * @copyright Gloey Apps, 2014
-	 */
-
-	/*global define*/
-	/*eslint no-use-before-define:0 */
-
-	/**
-	 * Internal LayoutNode class used by `FlowLayoutController`.
-	 *
-	 * @module
-	 */
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-
-	    // import dependencies
-	    var OptionsManager = __webpack_require__(18);
-	    var Transform = __webpack_require__(29);
-	    var Vector = __webpack_require__(37);
-	    var Particle = __webpack_require__(39);
-	    var Spring = __webpack_require__(40);
-	    var PhysicsEngine = __webpack_require__(38);
-	    var LayoutNode = __webpack_require__(22);
-	    var Transitionable = __webpack_require__(42);
-
-	    /**
-	     * @class
-	     * @extends LayoutNode
-	     * @param {Object} renderNode Render-node which this layout-node represents
-	     * @param {Spec} spec Initial state
-	     * @param {Object} physicsEngines physics-engines to use
-	     * @alias module:FlowLayoutNode
-	     */
-	    function FlowLayoutNode(renderNode, spec) {
-	        LayoutNode.apply(this, arguments);
-
-	        if (!this.options) {
-	            this.options = Object.create(this.constructor.DEFAULT_OPTIONS);
-	            this._optionsManager = new OptionsManager(this.options);
-	        }
-
-	        if (!this._pe) {
-	            this._pe = new PhysicsEngine();
-	            this._pe.sleep();
-	        }
-
-	        if (!this._properties) {
-	            this._properties = {};
-	        }
-	        else {
-	            for (var propName in this._properties) {
-	                this._properties[propName].init = false;
-	            }
-	        }
-
-	        if (!this._lockTransitionable) {
-	            this._lockTransitionable = new Transitionable(1);
-	        }
-	        else {
-	            this._lockTransitionable.halt();
-	            this._lockTransitionable.reset(1);
-	        }
-
-	        this._specModified = true;
-	        this._initial = true;
-	        if (spec) {
-	            this.setSpec(spec);
-	        }
-	    }
-	    FlowLayoutNode.prototype = Object.create(LayoutNode.prototype);
-	    FlowLayoutNode.prototype.constructor = FlowLayoutNode;
-
-	    FlowLayoutNode.DEFAULT_OPTIONS = {
-	        spring: {
-	            dampingRatio: 0.8,
-	            period: 300
-	        },
-	        particleRounding: 0.001
-	    };
-
-	    /**
-	     * Defaults
-	     */
-	    var DEFAULT = {
-	        opacity: 1,
-	        opacity2D: [1, 0],
-	        size: [0, 0],
-	        origin: [0, 0],
-	        align: [0, 0],
-	        scale: [1, 1, 1],
-	        translate: [0, 0, 0],
-	        rotate: [0, 0, 0],
-	        skew: [0, 0, 0]
-	    };
-
-	    /**
-	     * Verifies that the integrity of the layout-node is oke.
-	     */
-	    /*function _verifyIntegrity() {
-	        var i;
-	        for (var propName in this._properties) {
-	            var prop = this._properties[propName];
-	            if (prop.particle) {
-	                if (isNaN(prop.particle.getEnergy())) {
-	                    throw 'invalid particle energy: ' + propName;
-	                }
-	                var value = prop.particle.getPosition();
-	                for (i = 0; i < value.length; i++) {
-	                    if (isNaN(value[i])) {
-	                       throw 'invalid particle value: ' + propName + '(' + i + ')';
-	                    }
-	                }
-	                value = prop.endState.get();
-	                for (i = 0; i < value.length; i++) {
-	                    if (isNaN(value[i])) {
-	                       throw 'invalid endState value: ' + propName + '(' + i + ')';
-	                    }
-	                }
-	            }
-	        }
-	    }*/
-
-	    /**
-	     * Sets the configuration options
-	     */
-	    FlowLayoutNode.prototype.setOptions = function(options) {
-	        this._optionsManager.setOptions(options);
-	        var wasSleeping = this._pe.isSleeping();
-	        for (var propName in this._properties) {
-	            var prop = this._properties[propName];
-	            if (prop.force) {
-	                prop.force.setOptions(prop.force);
-	            }
-	        }
-	        if (wasSleeping) {
-	            this._pe.sleep();
-	        }
-	        return this;
-	    };
-
-	    /**
-	     * Set the properties from a spec.
-	     */
-	    FlowLayoutNode.prototype.setSpec = function(spec) {
-	        var set;
-	        if (spec.transform) {
-	            set = Transform.interpret(spec.transform);
-	        }
-	        if (!set) {
-	            set = {};
-	        }
-	        set.opacity = spec.opacity;
-	        set.size = spec.size;
-	        set.align = spec.align;
-	        set.origin = spec.origin;
-
-	        var oldRemoving = this._removing;
-	        var oldInvalidated = this._invalidated;
-	        this.set(set);
-	        this._removing = oldRemoving;
-	        this._invalidated = oldInvalidated;
-	    };
-
-	    /**
-	     * Reset the end-state. This function is called on all layout-nodes prior to
-	     * calling the layout-function. So that the layout-function starts with a clean slate.
-	     */
-	    FlowLayoutNode.prototype.reset = function() {
-	        if (this._invalidated) {
-	            for (var propName in this._properties) {
-	                this._properties[propName].invalidated = false;
-	            }
-	            this._invalidated = false;
-	        }
-	        this.trueSizeRequested = false;
-	        this.usesTrueSize = false;
-	    };
-
-	    /**
-	     * Markes the node for removal.
-	     */
-	    FlowLayoutNode.prototype.remove = function(removeSpec) {
-
-	        // Transition to the remove-spec state
-	        this._removing = true;
-	        if (removeSpec) {
-	            this.setSpec(removeSpec);
-	        }
-	        else {
-	            this._pe.sleep();
-	            this._specModified = false;
-	        }
-
-	        // Mark for removal
-	        this._invalidated = false;
-	    };
-
-	    /**
-	     * Temporarily releases the flowing-lock that is applied to the node.
-	     * E.g., when changing position, resizing, the lock should be released so that
-	     * the renderables can smoothly transition to their new positions.
-	     */
-	    FlowLayoutNode.prototype.releaseLock = function(duration) {
-	        this._lockTransitionable.halt();
-	        this._lockTransitionable.reset(0);
-	        this._lockTransitionable.set(1, {
-	            duration: duration || this.options.spring.period || 1000
-	        });
-	    };
-
-	    /**
-	     * Helper function for getting the property value.
-	     */
-	    function _getRoundedValue3D(prop, def, precision) {
-	        if (!prop || !prop.init) {
-	            return def;
-	        }
-	        precision = precision || this.options.particleRounding;
-	        var value = prop.particle.getPosition();
-	        return [
-	            Math.round(value[0] / precision) * precision,
-	            Math.round(value[1] / precision) * precision,
-	            Math.round(value[2] / precision) * precision
-	        ];
-	    }
-
-	    /**
-	     * Creates the render-spec
-	     */
-	    FlowLayoutNode.prototype.getSpec = function() {
-
-	        // When the end state was reached, return the previous spec
-	        var endStateReached = this._pe.isSleeping();
-	        if (!this._specModified && endStateReached) {
-	            this._spec.removed = !this._invalidated;
-	            return this._spec;
-	        }
-	        this._initial = false;
-	        this._specModified = !endStateReached;
-	        this._spec.removed = false;
-
-	        // Step physics engine when not sleeping
-	        if (!endStateReached) {
-	            this._pe.step();
-	        }
-
-	        // Build fresh spec
-	        var spec = this._spec;
-	        var precision = this.options.particleRounding;
-	        var lockValue = this._lockTransitionable.get();
-
-	        // opacity
-	        var prop = this._properties.opacity;
-	        if (prop && prop.init) {
-	            spec.opacity = Math.round(Math.max(0, Math.min(1, prop.curState.x)) / precision) * precision;
-	        }
-	        else {
-	            spec.opacity = undefined;
-	        }
-
-	        // size
-	        prop = this._properties.size;
-	        if (prop && prop.init) {
-	            spec.size = spec.size || [0, 0];
-	            spec.size[0] = Math.round((prop.curState.x + ((prop.endState.x - prop.curState.x) * lockValue)) / 0.1) * 0.1;
-	            spec.size[1] = Math.round((prop.curState.y + ((prop.endState.y - prop.curState.y) * lockValue)) / 0.1) * 0.1;
-	        }
-	        else {
-	            spec.size = undefined;
-	        }
-
-	        // align
-	        prop = this._properties.align;
-	        if (prop && prop.init) {
-	            spec.align = spec.align || [0, 0];
-	            spec.align[0] = Math.round((prop.curState.x + ((prop.endState.x - prop.curState.x) * lockValue)) / 0.1) * 0.1;
-	            spec.align[1] = Math.round((prop.curState.y + ((prop.endState.y - prop.curState.y) * lockValue)) / 0.1) * 0.1;
-	        }
-	        else {
-	            spec.align = undefined;
-	        }
-
-	        // origin
-	        prop = this._properties.origin;
-	        if (prop && prop.init) {
-	            spec.origin = spec.origin || [0, 0];
-	            spec.origin[0] = Math.round((prop.curState.x + ((prop.endState.x - prop.curState.x) * lockValue)) / 0.1) * 0.1;
-	            spec.origin[1] = Math.round((prop.curState.y + ((prop.endState.y - prop.curState.y) * lockValue)) / 0.1) * 0.1;
-	        }
-	        else {
-	            spec.origin = undefined;
-	        }
-
-	        // translate
-	        var translate = this._properties.translate;
-	        var translateX;
-	        var translateY;
-	        var translateZ;
-	        if (translate && translate.init) {
-	            translateX = Math.round((translate.curState.x + ((translate.endState.x - translate.curState.x) * lockValue)) / precision) * precision;
-	            translateY = Math.round((translate.curState.y + ((translate.endState.y - translate.curState.y) * lockValue)) / precision) * precision;
-	            translateZ = Math.round((translate.curState.z + ((translate.endState.z - translate.curState.z) * lockValue)) / precision) * precision;
-	        }
-	        else {
-	            translateX = 0;
-	            translateY = 0;
-	            translateZ = 0;
-	        }
-
-	        // scale, skew, scale
-	        var scale = this._properties.scale;
-	        var skew = this._properties.skew;
-	        var rotate = this._properties.rotate;
-	        if (scale || skew || rotate) {
-	            spec.transform = Transform.build({
-	                translate: [translateX, translateY, translateZ],
-	                skew: _getRoundedValue3D.call(this, skew, DEFAULT.skew),
-	                scale: _getRoundedValue3D.call(this, scale, DEFAULT.scale),
-	                rotate: _getRoundedValue3D.call(this, rotate, DEFAULT.rotate)
-	            });
-	        }
-	        else if (translate) {
-	            if (!spec.transform) {
-	                spec.transform = Transform.translate(translateX, translateY, translateZ);
-	            }
-	            else {
-	                spec.transform[12] = translateX;
-	                spec.transform[13] = translateY;
-	                spec.transform[14] = translateZ;
-	            }
-	        }
-	        else {
-	            spec.transform = undefined;
-	        }
-	        return this._spec;
-	    };
-
-	    /**
-	     * Helper function to set the property of a node (e.g. opacity, translate, etc..)
-	     */
-	    function _setPropertyValue(prop, propName, endState, defaultValue, immediate, isTranslate) {
-
-	        // Get property
-	        prop = prop || this._properties[propName];
-
-	        // Update the property
-	        if (prop && prop.init) {
-	            prop.invalidated = true;
-	            var value = defaultValue;
-	            if (endState !== undefined) {
-	                value = endState;
-	            }
-	            else if (this._removing) {
-	                value = prop.particle.getPosition();
-	            }
-	            //if (isTranslate && (this._lockDirection !== undefined) && (this._lockTransitionable.get() === 1)) {
-	            //    immediate = true; // this is a bit dirty, it should check !_lockDirection for non changes as well before setting immediate to true
-	            //}
-	            // set new end state (the quick way)
-	            prop.endState.x = value[0];
-	            prop.endState.y = (value.length > 1) ? value[1] : 0;
-	            prop.endState.z = (value.length > 2) ? value[2] : 0;
-	            if (immediate) {
-	                // set current state (the quick way)
-	                prop.curState.x = prop.endState.x;
-	                prop.curState.y = prop.endState.y;
-	                prop.curState.z = prop.endState.z;
-	                // reset velocity (the quick way)
-	                prop.velocity.x = 0;
-	                prop.velocity.y = 0;
-	                prop.velocity.z = 0;
-	            }
-	            else if ((prop.endState.x !== prop.curState.x) ||
-	                     (prop.endState.y !== prop.curState.y) ||
-	                     (prop.endState.z !== prop.curState.z)) {
-	                this._pe.wake();
-	            }
-	            return;
-	        }
-	        else {
-
-	            // Create property if neccesary
-	            var wasSleeping = this._pe.isSleeping();
-	            if (!prop) {
-	                prop = {
-	                    particle: new Particle({
-	                        position: (this._initial || immediate) ? endState : defaultValue
-	                    }),
-	                    endState: new Vector(endState)
-	                };
-	                prop.curState = prop.particle.position;
-	                prop.velocity = prop.particle.velocity;
-	                prop.force = new Spring(this.options.spring);
-	                prop.force.setOptions({
-	                    anchor: prop.endState
-	                });
-	                this._pe.addBody(prop.particle);
-	                prop.forceId = this._pe.attach(prop.force, prop.particle);
-	                this._properties[propName] = prop;
-	            }
-	            else {
-	                prop.particle.setPosition((this._initial || immediate) ? endState : defaultValue);
-	                prop.endState.set(endState);
-	            }
-	            if (!this._initial && !immediate) {
-	                this._pe.wake();
-	            } else if (wasSleeping) {
-	                this._pe.sleep(); // nothing has changed, put back to sleep
-	            }
-	            prop.init = true;
-	            prop.invalidated = true;
-	        }
-	    }
-
-	    /**
-	     * Get value if not equals.
-	     */
-	    function _getIfNE2D(a1, a2) {
-	        return ((a1[0] === a2[0]) && (a1[1] === a2[1])) ? undefined : a1;
-	    }
-	    function _getIfNE3D(a1, a2) {
-	        return ((a1[0] === a2[0]) && (a1[1] === a2[1]) && (a1[2] === a2[2])) ? undefined : a1;
-	    }
-
-	    /**
-	     * context.set(..)
-	     */
-	    FlowLayoutNode.prototype.set = function(set, defaultSize) {
-	        if (defaultSize) {
-	            this._removing = false;
-	        }
-	        this._invalidated = true;
-	        this.scrollLength = set.scrollLength;
-	        this._specModified = true;
-
-	        // opacity
-	        var prop = this._properties.opacity;
-	        var value = (set.opacity === DEFAULT.opacity) ? undefined : set.opacity;
-	        if ((value !== undefined) || (prop && prop.init)) {
-	            _setPropertyValue.call(this, prop, 'opacity', (value === undefined) ? undefined : [value, 0], DEFAULT.opacity2D);
-	        }
-
-	        // set align
-	        prop = this._properties.align;
-	        value = set.align ? _getIfNE2D(set.align, DEFAULT.align) : undefined;
-	        if (value || (prop && prop.init)) {
-	            _setPropertyValue.call(this, prop, 'align', value, DEFAULT.align);
-	        }
-
-	        // set orgin
-	        prop = this._properties.origin;
-	        value = set.origin ? _getIfNE2D(set.origin, DEFAULT.origin) : undefined;
-	        if (value || (prop && prop.init)) {
-	            _setPropertyValue.call(this, prop, 'origin', value, DEFAULT.origin);
-	        }
-
-	        // set size
-	        prop = this._properties.size;
-	        value = set.size || defaultSize;
-	        if (value || (prop && prop.init)) {
-	            _setPropertyValue.call(this, prop, 'size', value, defaultSize, this.usesTrueSize);
-	        }
-
-	        // set translate
-	        prop = this._properties.translate;
-	        value = set.translate;
-	        if (value || (prop && prop.init)) {
-	            _setPropertyValue.call(this, prop, 'translate', value, DEFAULT.translate, undefined, true);
-	        }
-
-	        // set scale
-	        prop = this._properties.scale;
-	        value = set.scale ? _getIfNE3D(set.scale, DEFAULT.scale) : undefined;
-	        if (value || (prop && prop.init)) {
-	            _setPropertyValue.call(this, prop, 'scale', value, DEFAULT.scale);
-	        }
-
-	        // set rotate
-	        prop = this._properties.rotate;
-	        value = set.rotate ? _getIfNE3D(set.rotate, DEFAULT.rotate) : undefined;
-	        if (value || (prop && prop.init)) {
-	            _setPropertyValue.call(this, prop, 'rotate', value, DEFAULT.rotate);
-	        }
-
-	        // set skew
-	        prop = this._properties.skew;
-	        value = set.skew ? _getIfNE3D(set.skew, DEFAULT.skew) : undefined;
-	        if (value || (prop && prop.init)) {
-	            _setPropertyValue.call(this, prop, 'skew', value, DEFAULT.skew);
-	        }
-	    };
-
-	    module.exports = FlowLayoutNode;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 24 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -5826,21 +3975,21 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var LayoutUtility = __webpack_require__(20);
+	    var LayoutUtility = __webpack_require__(18);
 	    var LayoutController = __webpack_require__(9);
-	    var LayoutNode = __webpack_require__(22);
-	    var FlowLayoutNode = __webpack_require__(23);
-	    var LayoutNodeManager = __webpack_require__(21);
-	    var ContainerSurface = __webpack_require__(43);
+	    var LayoutNode = __webpack_require__(23);
+	    var FlowLayoutNode = __webpack_require__(24);
+	    var LayoutNodeManager = __webpack_require__(22);
+	    var ContainerSurface = __webpack_require__(37);
 	    var Transform = __webpack_require__(29);
-	    var EventHandler = __webpack_require__(19);
-	    var Group = __webpack_require__(34);
-	    var Vector = __webpack_require__(37);
-	    var PhysicsEngine = __webpack_require__(38);
-	    var Particle = __webpack_require__(39);
+	    var EventHandler = __webpack_require__(21);
+	    var Group = __webpack_require__(32);
+	    var Vector = __webpack_require__(38);
+	    var PhysicsEngine = __webpack_require__(39);
+	    var Particle = __webpack_require__(40);
 	    var Drag = __webpack_require__(41);
-	    var Spring = __webpack_require__(40);
-	    var ScrollSync = __webpack_require__(44);
+	    var Spring = __webpack_require__(42);
+	    var ScrollSync = __webpack_require__(43);
 	    var ViewSequence = __webpack_require__(28);
 
 	    /**
@@ -7705,6 +5854,1858 @@
 
 
 /***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
+	 * License, v. 2.0. If a copy of the MPL was not distributed with this
+	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+	 *
+	 * Owner: mark@famo.us
+	 * @license MPL 2.0
+	 * @copyright Famous Industries, Inc. 2014
+	 */
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+	    var EventHandler = __webpack_require__(21);
+
+	    /**
+	     *  A collection of methods for setting options which can be extended
+	     *  onto other classes.
+	     *
+	     *
+	     *  **** WARNING ****
+	     *  You can only pass through objects that will compile into valid JSON.
+	     *
+	     *  Valid options:
+	     *      Strings,
+	     *      Arrays,
+	     *      Objects,
+	     *      Numbers,
+	     *      Nested Objects,
+	     *      Nested Arrays.
+	     *
+	     *    This excludes:
+	     *        Document Fragments,
+	     *        Functions
+	     * @class OptionsManager
+	     * @constructor
+	     * @param {Object} value options dictionary
+	     */
+	    function OptionsManager(value) {
+	        this._value = value;
+	        this.eventOutput = null;
+	    }
+
+	    /**
+	     * Create options manager from source dictionary with arguments overriden by patch dictionary.
+	     *
+	     * @static
+	     * @method OptionsManager.patch
+	     *
+	     * @param {Object} source source arguments
+	     * @param {...Object} data argument additions and overwrites
+	     * @return {Object} source object
+	     */
+	    OptionsManager.patch = function patchObject(source, data) {
+	        var manager = new OptionsManager(source);
+	        for (var i = 1; i < arguments.length; i++) manager.patch(arguments[i]);
+	        return source;
+	    };
+
+	    function _createEventOutput() {
+	        this.eventOutput = new EventHandler();
+	        this.eventOutput.bindThis(this);
+	        EventHandler.setOutputHandler(this, this.eventOutput);
+	    }
+
+	    /**
+	     * Create OptionsManager from source with arguments overriden by patches.
+	     *   Triggers 'change' event on this object's event handler if the state of
+	     *   the OptionsManager changes as a result.
+	     *
+	     * @method patch
+	     *
+	     * @param {...Object} arguments list of patch objects
+	     * @return {OptionsManager} this
+	     */
+	    OptionsManager.prototype.patch = function patch() {
+	        var myState = this._value;
+	        for (var i = 0; i < arguments.length; i++) {
+	            var data = arguments[i];
+	            for (var k in data) {
+	                if ((k in myState) && (data[k] && data[k].constructor === Object) && (myState[k] && myState[k].constructor === Object)) {
+	                    if (!myState.hasOwnProperty(k)) myState[k] = Object.create(myState[k]);
+	                    this.key(k).patch(data[k]);
+	                    if (this.eventOutput) this.eventOutput.emit('change', {id: k, value: this.key(k).value()});
+	                }
+	                else this.set(k, data[k]);
+	            }
+	        }
+	        return this;
+	    };
+
+	    /**
+	     * Alias for patch
+	     *
+	     * @method setOptions
+	     *
+	     */
+	    OptionsManager.prototype.setOptions = OptionsManager.prototype.patch;
+
+	    /**
+	     * Return OptionsManager based on sub-object retrieved by key
+	     *
+	     * @method key
+	     *
+	     * @param {string} identifier key
+	     * @return {OptionsManager} new options manager with the value
+	     */
+	    OptionsManager.prototype.key = function key(identifier) {
+	        var result = new OptionsManager(this._value[identifier]);
+	        if (!(result._value instanceof Object) || result._value instanceof Array) result._value = {};
+	        return result;
+	    };
+
+	    /**
+	     * Look up value by key or get the full options hash
+	     * @method get
+	     *
+	     * @param {string} key key
+	     * @return {Object} associated object or full options hash
+	     */
+	    OptionsManager.prototype.get = function get(key) {
+	        return key ? this._value[key] : this._value;
+	    };
+
+	    /**
+	     * Alias for get
+	     * @method getOptions
+	     */
+	    OptionsManager.prototype.getOptions = OptionsManager.prototype.get;
+
+	    /**
+	     * Set key to value.  Outputs 'change' event if a value is overwritten.
+	     *
+	     * @method set
+	     *
+	     * @param {string} key key string
+	     * @param {Object} value value object
+	     * @return {OptionsManager} new options manager based on the value object
+	     */
+	    OptionsManager.prototype.set = function set(key, value) {
+	        var originalValue = this.get(key);
+	        this._value[key] = value;
+	        if (this.eventOutput && value !== originalValue) this.eventOutput.emit('change', {id: key, value: value});
+	        return this;
+	    };
+
+	    /**
+	     * Bind a callback function to an event type handled by this object.
+	     *
+	     * @method "on"
+	     *
+	     * @param {string} type event type key (for example, 'change')
+	     * @param {function(string, Object)} handler callback
+	     * @return {EventHandler} this
+	     */
+	    OptionsManager.prototype.on = function on() {
+	        _createEventOutput.call(this);
+	        return this.on.apply(this, arguments);
+	    };
+
+	    /**
+	     * Unbind an event by type and handler.
+	     *   This undoes the work of "on".
+	     *
+	     * @method removeListener
+	     *
+	     * @param {string} type event type key (for example, 'change')
+	     * @param {function} handler function object to remove
+	     * @return {EventHandler} internal event handler object (for chaining)
+	     */
+	    OptionsManager.prototype.removeListener = function removeListener() {
+	        _createEventOutput.call(this);
+	        return this.removeListener.apply(this, arguments);
+	    };
+
+	    /**
+	     * Add event handler object to set of downstream handlers.
+	     *
+	     * @method pipe
+	     *
+	     * @param {EventHandler} target event handler target object
+	     * @return {EventHandler} passed event handler
+	     */
+	    OptionsManager.prototype.pipe = function pipe() {
+	        _createEventOutput.call(this);
+	        return this.pipe.apply(this, arguments);
+	    };
+
+	    /**
+	     * Remove handler object from set of downstream handlers.
+	     * Undoes work of "pipe"
+	     *
+	     * @method unpipe
+	     *
+	     * @param {EventHandler} target target handler object
+	     * @return {EventHandler} provided target
+	     */
+	    OptionsManager.prototype.unpipe = function unpipe() {
+	        _createEventOutput.call(this);
+	        return this.unpipe.apply(this, arguments);
+	    };
+
+	    module.exports = OptionsManager;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
+	 * License, v. 2.0. If a copy of the MPL was not distributed with this
+	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+	 *
+	 * Owner: mark@famo.us
+	 * @license MPL 2.0
+	 * @copyright Famous Industries, Inc. 2014
+	 */
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+	    var EventEmitter = __webpack_require__(33);
+
+	    /**
+	     * EventHandler forwards received events to a set of provided callback functions.
+	     * It allows events to be captured, processed, and optionally piped through to other event handlers.
+	     *
+	     * @class EventHandler
+	     * @extends EventEmitter
+	     * @constructor
+	     */
+	    function EventHandler() {
+	        EventEmitter.apply(this, arguments);
+
+	        this.downstream = []; // downstream event handlers
+	        this.downstreamFn = []; // downstream functions
+
+	        this.upstream = []; // upstream event handlers
+	        this.upstreamListeners = {}; // upstream listeners
+	    }
+	    EventHandler.prototype = Object.create(EventEmitter.prototype);
+	    EventHandler.prototype.constructor = EventHandler;
+
+	    /**
+	     * Assign an event handler to receive an object's input events.
+	     *
+	     * @method setInputHandler
+	     * @static
+	     *
+	     * @param {Object} object object to mix trigger, subscribe, and unsubscribe functions into
+	     * @param {EventHandler} handler assigned event handler
+	     */
+	    EventHandler.setInputHandler = function setInputHandler(object, handler) {
+	        object.trigger = handler.trigger.bind(handler);
+	        if (handler.subscribe && handler.unsubscribe) {
+	            object.subscribe = handler.subscribe.bind(handler);
+	            object.unsubscribe = handler.unsubscribe.bind(handler);
+	        }
+	    };
+
+	    /**
+	     * Assign an event handler to receive an object's output events.
+	     *
+	     * @method setOutputHandler
+	     * @static
+	     *
+	     * @param {Object} object object to mix pipe, unpipe, on, addListener, and removeListener functions into
+	     * @param {EventHandler} handler assigned event handler
+	     */
+	    EventHandler.setOutputHandler = function setOutputHandler(object, handler) {
+	        if (handler instanceof EventHandler) handler.bindThis(object);
+	        object.pipe = handler.pipe.bind(handler);
+	        object.unpipe = handler.unpipe.bind(handler);
+	        object.on = handler.on.bind(handler);
+	        object.addListener = object.on;
+	        object.removeListener = handler.removeListener.bind(handler);
+	    };
+
+	    /**
+	     * Trigger an event, sending to all downstream handlers
+	     *   listening for provided 'type' key.
+	     *
+	     * @method emit
+	     *
+	     * @param {string} type event type key (for example, 'click')
+	     * @param {Object} event event data
+	     * @return {EventHandler} this
+	     */
+	    EventHandler.prototype.emit = function emit(type, event) {
+	        EventEmitter.prototype.emit.apply(this, arguments);
+	        var i = 0;
+	        for (i = 0; i < this.downstream.length; i++) {
+	            if (this.downstream[i].trigger) this.downstream[i].trigger(type, event);
+	        }
+	        for (i = 0; i < this.downstreamFn.length; i++) {
+	            this.downstreamFn[i](type, event);
+	        }
+	        return this;
+	    };
+
+	    /**
+	     * Alias for emit
+	     * @method addListener
+	     */
+	    EventHandler.prototype.trigger = EventHandler.prototype.emit;
+
+	    /**
+	     * Add event handler object to set of downstream handlers.
+	     *
+	     * @method pipe
+	     *
+	     * @param {EventHandler} target event handler target object
+	     * @return {EventHandler} passed event handler
+	     */
+	    EventHandler.prototype.pipe = function pipe(target) {
+	        if (target.subscribe instanceof Function) return target.subscribe(this);
+
+	        var downstreamCtx = (target instanceof Function) ? this.downstreamFn : this.downstream;
+	        var index = downstreamCtx.indexOf(target);
+	        if (index < 0) downstreamCtx.push(target);
+
+	        if (target instanceof Function) target('pipe', null);
+	        else if (target.trigger) target.trigger('pipe', null);
+
+	        return target;
+	    };
+
+	    /**
+	     * Remove handler object from set of downstream handlers.
+	     *   Undoes work of "pipe".
+	     *
+	     * @method unpipe
+	     *
+	     * @param {EventHandler} target target handler object
+	     * @return {EventHandler} provided target
+	     */
+	    EventHandler.prototype.unpipe = function unpipe(target) {
+	        if (target.unsubscribe instanceof Function) return target.unsubscribe(this);
+
+	        var downstreamCtx = (target instanceof Function) ? this.downstreamFn : this.downstream;
+	        var index = downstreamCtx.indexOf(target);
+	        if (index >= 0) {
+	            downstreamCtx.splice(index, 1);
+	            if (target instanceof Function) target('unpipe', null);
+	            else if (target.trigger) target.trigger('unpipe', null);
+	            return target;
+	        }
+	        else return false;
+	    };
+
+	    /**
+	     * Bind a callback function to an event type handled by this object.
+	     *
+	     * @method "on"
+	     *
+	     * @param {string} type event type key (for example, 'click')
+	     * @param {function(string, Object)} handler callback
+	     * @return {EventHandler} this
+	     */
+	    EventHandler.prototype.on = function on(type, handler) {
+	        EventEmitter.prototype.on.apply(this, arguments);
+	        if (!(type in this.upstreamListeners)) {
+	            var upstreamListener = this.trigger.bind(this, type);
+	            this.upstreamListeners[type] = upstreamListener;
+	            for (var i = 0; i < this.upstream.length; i++) {
+	                this.upstream[i].on(type, upstreamListener);
+	            }
+	        }
+	        return this;
+	    };
+
+	    /**
+	     * Alias for "on"
+	     * @method addListener
+	     */
+	    EventHandler.prototype.addListener = EventHandler.prototype.on;
+
+	    /**
+	     * Listen for events from an upstream event handler.
+	     *
+	     * @method subscribe
+	     *
+	     * @param {EventEmitter} source source emitter object
+	     * @return {EventHandler} this
+	     */
+	    EventHandler.prototype.subscribe = function subscribe(source) {
+	        var index = this.upstream.indexOf(source);
+	        if (index < 0) {
+	            this.upstream.push(source);
+	            for (var type in this.upstreamListeners) {
+	                source.on(type, this.upstreamListeners[type]);
+	            }
+	        }
+	        return this;
+	    };
+
+	    /**
+	     * Stop listening to events from an upstream event handler.
+	     *
+	     * @method unsubscribe
+	     *
+	     * @param {EventEmitter} source source emitter object
+	     * @return {EventHandler} this
+	     */
+	    EventHandler.prototype.unsubscribe = function unsubscribe(source) {
+	        var index = this.upstream.indexOf(source);
+	        if (index >= 0) {
+	            this.upstream.splice(index, 1);
+	            for (var type in this.upstreamListeners) {
+	                source.removeListener(type, this.upstreamListeners[type]);
+	            }
+	        }
+	        return this;
+	    };
+
+	    module.exports = EventHandler;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/**
+	 * This Source Code is licensed under the MIT license. If a copy of the
+	 * MIT-license was not distributed with this file, You can obtain one at:
+	 * http://opensource.org/licenses/mit-license.html.
+	 *
+	 * @author: Hein Rutjes (IjzerenHein)
+	 * @license MIT
+	 * @copyright Gloey Apps, 2014
+	 */
+
+	/*global define*/
+	/*eslint no-use-before-define:0 */
+
+	/**
+	 * LayoutNodeManager is a private class used internally by LayoutController, ScrollController
+	 * and ScrollView. It manages the layout-nodes that are rendered and exposes the layout-context
+	 * which is passed along to the layout-function.
+	 *
+	 * LayoutNodeManager keeps track of every rendered node through an ordered double-linked
+	 * list. The first time the layout-function is called, the linked list is created.
+	 * After that, the linked list is updated to reflect the output of the layout-function.
+	 * When the layout is unchanged, then the linked-list exactly matches the order of the
+	 * accessed nodes in the layout-function, and no layout-nodes need to be created or
+	 * re-ordered.
+	 *
+	 * @module
+	 */
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+
+	    // import dependencies
+	    var LayoutContext = __webpack_require__(34);
+	    var LayoutUtility = __webpack_require__(18);
+
+	    var MAX_POOL_SIZE = 100;
+
+	    /**
+	     * @class
+	     * @param {LayoutNode} LayoutNode Layout-nodes to create
+	     * @param {Function} initLayoutNodeFn function to use when initializing new nodes
+	     * @alias module:LayoutNodeManager
+	     */
+	    function LayoutNodeManager(LayoutNode, initLayoutNodeFn) {
+	        this.LayoutNode = LayoutNode;
+	        this._initLayoutNodeFn = initLayoutNodeFn;
+	        this._layoutCount = 0;
+	        this._context = new LayoutContext({
+	            next: _contextNext.bind(this),
+	            prev: _contextPrev.bind(this),
+	            get: _contextGet.bind(this),
+	            set: _contextSet.bind(this),
+	            resolveSize: _contextResolveSize.bind(this),
+	            size: [0, 0]
+	            //,cycle: 0
+	        });
+	        this._contextState = {
+	            // enumation state for the context
+	            //nextSequence: undefined,
+	            //prevSequence: undefined,
+	            //next: undefined
+	            //prev: undefined
+	            //start: undefined
+	        };
+	        this._pool = {
+	            layoutNodes: {
+	                size: 0
+	                //first: undefined
+	            },
+	            resolveSize: [0, 0]
+	        };
+	        //this._first = undefined; // first item in the linked list
+	        //this._nodesById = undefined;
+	        //this._trueSizeRequested = false;
+	    }
+
+	    /**
+	     * Prepares the manager for a new layout iteration, after which it returns the
+	     * context which can be used by the layout-function.
+	     *
+	     * @param {ViewSequence} viewSequence first node to layout
+	     * @param {Object} [nodesById] dictionary to use when looking up nodes by id
+	     * @return {LayoutContext} context which can be passed to the layout-function
+	     */
+	    LayoutNodeManager.prototype.prepareForLayout = function(viewSequence, nodesById, contextData) {
+
+	        // Reset all nodes
+	        var node = this._first;
+	        while (node) {
+	            node.reset();
+	            node = node._next;
+	        }
+
+	        // Prepare data
+	        var context = this._context;
+	        this._layoutCount++;
+	        this._nodesById = nodesById;
+	        this._trueSizeRequested = false;
+	        this._reevalTrueSize =
+	            contextData.reevalTrueSize ||
+	            !context.size ||
+	            (context.size[0] !== contextData.size[0]) ||
+	            (context.size[1] !== contextData.size[1]);
+
+	        // Prepare context for enumation
+	        var contextState = this._contextState;
+	        contextState.nextSequence = viewSequence;
+	        contextState.prevSequence = viewSequence;
+	        contextState.start = undefined;
+	        contextState.nextGetIndex = 0;
+	        contextState.prevGetIndex = 0;
+	        contextState.nextSetIndex = 0;
+	        contextState.prevSetIndex = 0;
+	        contextState.addCount = 0;
+	        contextState.removeCount = 0;
+
+	        // Prepare content
+	        context.size[0] = contextData.size[0];
+	        context.size[1] = contextData.size[1];
+	        context.direction = contextData.direction;
+	        context.reverse = contextData.reverse;
+	        context.alignment = contextData.reverse ? 1 : 0;
+	        context.scrollOffset = contextData.scrollOffset || 0;
+	        context.scrollStart = contextData.scrollStart || 0;
+	        context.scrollEnd = contextData.scrollEnd || context.size[context.direction];
+	        //context.cycle++;
+	        return context;
+	    };
+
+	    /**
+	     * When the layout-function no longer lays-out the node, then it is not longer
+	     * being invalidated. In this case the destination is set to the removeSpec
+	     * after which the node is animated towards the remove-spec.
+	     *
+	     * @param {Spec} [removeSpec] spec towards which the no longer layed-out nodes are animated
+	     */
+	    LayoutNodeManager.prototype.removeNonInvalidatedNodes = function(removeSpec) {
+	        var node = this._first;
+	        while (node) {
+
+	            // If a node existed, but it is no longer being layed out,
+	            // then set it to the '_removing' state.
+	            if (!node._invalidated && !node._removing) {
+	                node.remove(removeSpec);
+	            }
+
+	            // Move to next node
+	            node = node._next;
+	        }
+	    };
+
+	    /**
+	     * Builds the render-spec and destroy any layout-nodes that no longer
+	     * return a render-spec.
+	     *
+	     * @return {Array.Spec} array of Specs
+	     */
+	    LayoutNodeManager.prototype.buildSpecAndDestroyUnrenderedNodes = function(translate) {
+	        var specs = [];
+	        var result = {
+	            specs: specs,
+	            modified: false
+	        };
+	        var node = this._first;
+	        while (node) {
+	            var modified = node._specModified;
+	            var spec = node.getSpec();
+	            //if (spec.removed && (!this._contextState.addCount || (this._contextState.removeCount > 5))) {
+	            if (spec.removed) {
+
+	                // Destroy node
+	                var destroyNode = node;
+	                node = node._next;
+	                _destroyNode.call(this, destroyNode);
+
+	                // Mark as modified
+	                result.modified = true;
+	            }
+	            else {
+
+	                // Update stats
+	                if (modified) {
+	                    if (spec.transform && translate) {
+	                        spec.transform[12] += translate[0];
+	                        spec.transform[13] += translate[1];
+	                        spec.transform[14] += translate[2];
+	                        spec.transform[12] = Math.round(spec.transform[12] * 100000) / 100000;
+	                        spec.transform[13] = Math.round(spec.transform[13] * 100000) / 100000;
+	                    }
+	                    result.modified = true;
+	                }
+
+	                // Add node to result output
+	                specs.push(spec);
+	                node = node._next;
+	            }
+	        }
+	        this._contextState.addCount = 0;
+	        this._contextState.removeCount = 0;
+	        return result;
+	    };
+
+	    /**
+	     * Get the layout-node by its renderable.
+	     *
+	     * @param {Object} renderable renderable
+	     * @return {LayoutNode} layout-node or undefined
+	     */
+	    LayoutNodeManager.prototype.getNodeByRenderNode = function(renderable) {
+	        var node = this._first;
+	        while (node) {
+	            if (node.renderNode === renderable) {
+	                return node;
+	            }
+	            node = node._next;
+	        }
+	        return undefined;
+	    };
+
+	    /**
+	     * Inserts a layout-node into the linked-list.
+	     *
+	     * @param {LayoutNode} node layout-node to insert
+	     */
+	    LayoutNodeManager.prototype.insertNode = function(node) {
+	        node._next = this._first;
+	        if (this._first) {
+	            this._first._prev = node;
+	        }
+	        this._first = node;
+	    };
+
+	    /**
+	     * Sets the options for all nodes.
+	     *
+	     * @param {Object} options node options
+	     */
+	    LayoutNodeManager.prototype.setNodeOptions = function(options) {
+	        this._nodeOptions = options;
+	        var node = this._first;
+	        while (node) {
+	            node.setOptions(options);
+	            node = node._next;
+	        }
+	        node = this._pool.layoutNodes.first;
+	        while (node) {
+	            node.setOptions(options);
+	            node = node._next;
+	        }
+	    };
+
+	    /**
+	     * Pre-allocate layout-nodes ahead of using them.
+	     *
+	     * @param {Number} count number of nodes to pre-allocate with the given spec
+	     * @param {Spec} [spec] render-spec (defined the node properties which to pre-allocate)
+	     */
+	    LayoutNodeManager.prototype.preallocateNodes = function(count, spec) {
+	        var nodes = [];
+	        for (var i = 0; i < count ; i++) {
+	            nodes.push(this.createNode(undefined, spec));
+	        }
+	        for (i = 0; i < count ; i++) {
+	            _destroyNode.call(this, nodes[i]);
+	        }
+	    };
+
+	    /**
+	     * Creates a layout-node
+	     *
+	     * @param {Object} renderNode render-node for whom to create a layout-node for
+	     * @return {LayoutNode} layout-node
+	     */
+	    LayoutNodeManager.prototype.createNode = function(renderNode, spec) {
+	        var node;
+	        if (this._pool.layoutNodes.first) {
+	            node = this._pool.layoutNodes.first;
+	            this._pool.layoutNodes.first = node._next;
+	            this._pool.layoutNodes.size--;
+	            node.constructor.apply(node, arguments);
+	        }
+	        else {
+	            node = new this.LayoutNode(renderNode, spec);
+	            if (this._nodeOptions) {
+	                node.setOptions(this._nodeOptions);
+	            }
+	        }
+	        node._prev = undefined;
+	        node._next = undefined;
+	        node._viewSequence = undefined;
+	        node._layoutCount = 0;
+	        if (this._initLayoutNodeFn) {
+	            this._initLayoutNodeFn.call(this, node, spec);
+	        }
+	        return node;
+	    };
+
+	    /**
+	     * Destroys a layout-node
+	     */
+	    function _destroyNode(node) {
+
+	        // Remove node from linked-list
+	        if (node._next) {
+	            node._next._prev = node._prev;
+	        }
+	        if (node._prev) {
+	            node._prev._next = node._next;
+	        }
+	        else {
+	            this._first = node._next;
+	        }
+
+	        // Destroy the node
+	        node.destroy();
+
+	        // Add node to pool
+	        if (this._pool.layoutNodes.size < MAX_POOL_SIZE) {
+	            this._pool.layoutNodes.size++;
+	            node._prev = undefined;
+	            node._next = this._pool.layoutNodes.first;
+	            this._pool.layoutNodes.first = node;
+	        }
+	    }
+
+	    /**
+	     * Gets start layout-node for enumeration.
+	     *
+	     * @param {Bool} [next] undefined = all, true = all next, false = all previous
+	     * @return {LayoutNode} layout-node or undefined
+	     */
+	    LayoutNodeManager.prototype.getStartEnumNode = function(next) {
+	        if (next === undefined) {
+	            return this._first;
+	        } else if (next === true) {
+	            return (this._contextState.start && this._contextState.startPrev) ? this._contextState.start._next : this._contextState.start;
+	        } else if (next === false) {
+	            return (this._contextState.start && !this._contextState.startPrev) ? this._contextState.start._prev : this._contextState.start;
+	        }
+	    };
+
+	    /**
+	     * Checks the integrity of the linked-list.
+	     */
+	    /*function _checkIntegrity() {
+	        var node = this._first;
+	        var count = 0;
+	        var prevNode;
+	        while (node) {
+	            if (!node._prev && (node !== this._first)) {
+	                throw 'No prev but not first';
+	            }
+	            if (node._prev !== prevNode) {
+	                throw 'Bork';
+	            }
+	            prevNode = node;
+	            node = node._next;
+	            count++;
+	        }
+	    }
+
+	    function _checkContextStateIntegrity() {
+	        var node = this._contextState.start;
+	        while (node) {
+	            if (node === this._contextState.next) {
+	                break;
+	            }
+	            if (!node._invalidated) {
+	                throw 'WTF';
+	            }
+	            node = node._next;
+	        }
+	        node = this._contextState.start;
+	        while (node) {
+	            if (node === this._contextState.prev) {
+	                break;
+	            }
+	            if (!node._invalidated) {
+	                throw 'WTF';
+	            }
+	            node = node._prev;
+	        }
+	    }*/
+
+	    /**
+	     * Creates or gets a layout node.
+	     */
+	    function _contextGetCreateAndOrderNodes(renderNode, prev) {
+
+	        // The first time this function is called, the current
+	        // prev/next position is obtained.
+	        var node;
+	        var state = this._contextState;
+	        if (!state.start) {
+	            node = this._first;
+	            while (node) {
+	                if (node.renderNode === renderNode) {
+	                    break;
+	                }
+	                node = node._next;
+	            }
+	            if (!node) {
+	                node = this.createNode(renderNode);
+	                node._next = this._first;
+	                if (this._first) {
+	                    this._first._prev = node;
+	                }
+	                this._first = node;
+	            }
+	            state.start = node;
+	            state.startPrev = prev;
+	            state.prev = node;
+	            state.next = node;
+	            return node;
+	        }
+
+	        // Check whether node already exist at the correct position
+	        // in the linked-list. If so, return that node immediately
+	        // and advance the prev/next pointer for the next/prev
+	        // lookup operation.
+	        if (prev) {
+	            if (state.prev._prev && (state.prev._prev.renderNode === renderNode)) {
+	                state.prev = state.prev._prev;
+	                return state.prev;
+	            }
+	        }
+	        else {
+	            if (state.next._next && (state.next._next.renderNode === renderNode)) {
+	                state.next = state.next._next;
+	                return state.next;
+	            }
+	        }
+
+	        // Lookup the node anywhere in the list..
+	        node = this._first;
+	        while (node) {
+	            if (node.renderNode === renderNode) {
+	                break;
+	            }
+	            node = node._next;
+	        }
+
+	        // Create new node if neccessary
+	        if (!node) {
+	            node = this.createNode(renderNode);
+	        }
+
+	        // Node existed, remove from linked-list
+	        else {
+	            if (node._next) {
+	                node._next._prev = node._prev;
+	            }
+	            if (node._prev) {
+	                node._prev._next = node._next;
+	            }
+	            else {
+	                this._first = node._next;
+	            }
+	            node._next = undefined;
+	            node._prev = undefined;
+	        }
+
+	        // Insert node into the linked list
+	        if (prev) {
+	            if (state.prev._prev) {
+	                node._prev = state.prev._prev;
+	                state.prev._prev._next = node;
+	            }
+	            else {
+	                this._first = node;
+	            }
+	            state.prev._prev = node;
+	            node._next = state.prev;
+	            state.prev = node;
+	        }
+	        else {
+	            if (state.next._next) {
+	                node._next = state.next._next;
+	                state.next._next._prev = node;
+	            }
+	            state.next._next = node;
+	            node._prev = state.next;
+	            state.next = node;
+	        }
+
+	        return node;
+	    }
+
+	    /**
+	     * Get the next render-node
+	     */
+	    function _contextNext() {
+
+	        // Get the next node from the sequence
+	        if (!this._contextState.nextSequence) {
+	            return undefined;
+	        }
+	        if (this._context.reverse) {
+	            this._contextState.nextSequence = this._contextState.nextSequence.getNext();
+	            if (!this._contextState.nextSequence) {
+	                return undefined;
+	            }
+	        }
+	        var renderNode = this._contextState.nextSequence.get();
+	        if (!renderNode) {
+	            this._contextState.nextSequence = undefined;
+	            return undefined;
+	        }
+	        var nextSequence = this._contextState.nextSequence;
+	        if (!this._context.reverse) {
+	            this._contextState.nextSequence = this._contextState.nextSequence.getNext();
+	        }
+	        return {
+	            renderNode: renderNode,
+	            viewSequence: nextSequence,
+	            next: true,
+	            index: ++this._contextState.nextGetIndex
+	        };
+	    }
+
+	    /**
+	     * Get the previous render-node
+	     */
+	    function _contextPrev() {
+
+	        // Get the previous node from the sequence
+	        if (!this._contextState.prevSequence) {
+	            return undefined;
+	        }
+	        if (!this._context.reverse) {
+	            this._contextState.prevSequence = this._contextState.prevSequence.getPrevious();
+	            if (!this._contextState.prevSequence) {
+	                return undefined;
+	            }
+	        }
+	        var renderNode = this._contextState.prevSequence.get();
+	        if (!renderNode) {
+	            this._contextState.prevSequence = undefined;
+	            return undefined;
+	        }
+	        var prevSequence = this._contextState.prevSequence;
+	        if (this._context.reverse) {
+	            this._contextState.prevSequence = this._contextState.prevSequence.getPrevious();
+	        }
+	        return {
+	            renderNode: renderNode,
+	            viewSequence: prevSequence,
+	            prev: true,
+	            index: --this._contextState.prevGetIndex
+	        };
+	    }
+
+	    /**
+	     * Resolve id into a context-node.
+	     */
+	     function _contextGet(contextNodeOrId) {
+	        if (this._nodesById && ((contextNodeOrId instanceof String) || (typeof contextNodeOrId === 'string'))) {
+	            var renderNode = this._nodesById[contextNodeOrId];
+	            if (!renderNode) {
+	                return undefined;
+	            }
+
+	            // Return array
+	            if (renderNode instanceof Array) {
+	                var result = [];
+	                for (var i = 0, j = renderNode.length; i < j; i++) {
+	                    result.push({
+	                        renderNode: renderNode[i],
+	                        arrayElement: true
+	                    });
+	                }
+	                return result;
+	            }
+
+	            // Create context node
+	            return {
+	                renderNode: renderNode,
+	                byId: true
+	            };
+	        }
+	        else {
+	            return contextNodeOrId;
+	        }
+	    }
+
+	    /**
+	     * Set the node content
+	     */
+	    function _contextSet(contextNodeOrId, set) {
+	        var contextNode = this._nodesById ? _contextGet.call(this, contextNodeOrId) : contextNodeOrId;
+	        if (contextNode) {
+	            var node = contextNode.node;
+	            if (!node) {
+	                if (contextNode.next) {
+	                     if (contextNode.index < this._contextState.nextSetIndex) {
+	                        LayoutUtility.error('Nodes must be layed out in the same order as they were requested!');
+	                     }
+	                     this._contextState.nextSetIndex = contextNode.index;
+	                } else if (contextNode.prev) {
+	                     if (contextNode.index > this._contextState.prevSetIndex) {
+	                        LayoutUtility.error('Nodes must be layed out in the same order as they were requested!');
+	                     }
+	                     this._contextState.prevSetIndex = contextNode.index;
+	                }
+	                node = _contextGetCreateAndOrderNodes.call(this, contextNode.renderNode, contextNode.prev);
+	                node._viewSequence = contextNode.viewSequence;
+	                node._layoutCount++;
+	                if (node._layoutCount === 1) {
+	                    this._contextState.addCount++;
+	                }
+	                contextNode.node = node;
+	            }
+	            node.usesTrueSize = contextNode.usesTrueSize;
+	            node.trueSizeRequested = contextNode.trueSizeRequested;
+	            node.set(set, this._context.size);
+	            contextNode.set = set;
+	        }
+	    }
+
+	    /**
+	     * Resolve the size of the layout-node from the renderable itsself
+	     */
+	    function _contextResolveSize(contextNodeOrId, parentSize) {
+	        var contextNode = this._nodesById ? _contextGet.call(this, contextNodeOrId) : contextNodeOrId;
+	        var resolveSize = this._pool.resolveSize;
+	        if (!contextNode) {
+	            resolveSize[0] = 0;
+	            resolveSize[1] = 0;
+	            return resolveSize;
+	        }
+
+	        // Get in use size
+	        var renderNode = contextNode.renderNode;
+	        var size = renderNode.getSize();
+	        if (!size) {
+	            return parentSize;
+	        }
+
+	        // Check if true-size is used and it must be reavaluated.
+	        // This particular piece of code specifically handles true-size Surfaces in famo.us.
+	        // It contains portions that ensure that the true-size of a Surface is re-evaluated
+	        // and also workaround code that backs up the size of a Surface, so that when the surface
+	        // is re-added to the DOM (e.g. when scrolling) it doesn't temporarily have a size of 0.
+	        var configSize = renderNode.size && (renderNode._trueSizeCheck !== undefined) ? renderNode.size : undefined;
+	        if (configSize && ((configSize[0] === true) || (configSize[1] === true))) {
+	            contextNode.usesTrueSize = true;
+	            var backupSize = renderNode._backupSize;
+	            if (renderNode._trueSizeCheck) {
+
+	                // Fix for true-size renderables. When true-size is used, the size
+	                // is incorrect for one render-cycle due to the fact that Surface.commit
+	                // updates the content after asking the DOM for the offsetHeight/offsetWidth.
+	                // The code below backs the size up, and re-uses that when this scenario
+	                // occurs.
+	                if (backupSize && (configSize !== size)) {
+	                    var newWidth = (configSize[0] === true) ? Math.max(backupSize[0], size[0]) : size[0];
+	                    var newHeight = (configSize[1] === true) ? Math.max(backupSize[1], size[1]) : size[1];
+	                    if ((newWidth !== backupSize[0]) || (newHeight !== backupSize[1])) {
+	                        this._trueSizeRequested = true;
+	                        contextNode.trueSizeRequested = true;
+	                    }
+	                    backupSize[0] = newWidth;
+	                    backupSize[1] = newHeight;
+	                    size = backupSize;
+	                    renderNode._backupSize = undefined;
+	                    backupSize = undefined;
+	                }
+	                else {
+	                    this._trueSizeRequested = true;
+	                    contextNode.trueSizeRequested = true;
+	                }
+	            }
+	            if (this._reevalTrueSize || (backupSize && ((backupSize[0] !== size[0]) || (backupSize[1] !== size[1])))) {
+	                renderNode._trueSizeCheck = true; // force request of true-size from DOM
+	                renderNode._sizeDirty = true;
+	                this._trueSizeRequested = true;
+	            }
+
+	            // Backup the size of the node
+	            if (!backupSize) {
+	                renderNode._backupSize = [0, 0];
+	                backupSize = renderNode._backupSize;
+	            }
+	            backupSize[0] = size[0];
+	            backupSize[1] = size[1];
+	        }
+
+	        // Ensure re-layout when a child layout-controller is using true-size and it
+	        // has ben changed.
+	        configSize = renderNode._nodes ? renderNode.options.size : undefined;
+	        if (configSize && ((configSize[0] === true) || (configSize[1] === true))) {
+	            if (this._reevalTrueSize || renderNode._nodes._trueSizeRequested) {
+	                contextNode.usesTrueSize = true;
+	                contextNode.trueSizeRequested = true;
+	                this._trueSizeRequested = true;
+	            }
+	        }
+
+	        // Resolve 'undefined' to parent-size and true to 0
+	        if ((size[0] === undefined) || (size[0] === true) || (size[1] === undefined) || (size[1] === true)) {
+	            resolveSize[0] = size[0];
+	            resolveSize[1] = size[1];
+	            size = resolveSize;
+	            if (size[0] === undefined) {
+	                size[0] = parentSize[0];
+	            } else if (size[0] === true) {
+	                size[0] = 0;
+	                this._trueSizeRequested = true;
+	                contextNode.trueSizeRequested = true;
+	            }
+	            if (size[1] === undefined) {
+	                size[1] = parentSize[1];
+	            } else if (size[1] === true) {
+	                size[1] = 0;
+	                this._trueSizeRequested = true;
+	                contextNode.trueSizeRequested = true;
+	            }
+	        }
+	        return size;
+	    }
+
+	    module.exports = LayoutNodeManager;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/**
+	 * This Source Code is licensed under the MIT license. If a copy of the
+	 * MIT-license was not distributed with this file, You can obtain one at:
+	 * http://opensource.org/licenses/mit-license.html.
+	 *
+	 * @author: Hein Rutjes (IjzerenHein)
+	 * @license MIT
+	 * @copyright Gloey Apps, 2014
+	 */
+
+	/*global define*/
+	/*eslint no-use-before-define:0 */
+
+	/**
+	 * Internal LayoutNode class used by `LayoutController`.
+	 *
+	 * @module
+	 */
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+
+	    // import dependencies
+	    var Transform = __webpack_require__(29);
+	    var LayoutUtility = __webpack_require__(18);
+
+	    /**
+	     * @class
+	     * @param {Object} renderNode Render-node which this layout-node represents
+	     * @alias module:LayoutNode
+	     */
+	    function LayoutNode(renderNode, spec) {
+	        this.renderNode = renderNode;
+	        this._spec = spec ? LayoutUtility.cloneSpec(spec) : {};
+	        this._spec.renderNode = renderNode; // also store in spec
+	        this._specModified = true;
+	        this._invalidated = false;
+	        this._removing = false;
+	        //this.scrollLength = undefined;
+	        //this.trueSizeRequested = false;
+	    }
+
+	    /**
+	     * Called to update the options for the node
+	     */
+	    LayoutNode.prototype.setOptions = function(options) {
+	        // override to implement
+	    };
+
+	    /**
+	     * Called when the node is destroyed
+	     */
+	    LayoutNode.prototype.destroy = function() {
+	        this.renderNode = undefined;
+	        this._spec.renderNode = undefined;
+	        this._viewSequence = undefined;
+	    };
+
+	    /**
+	     * Reset the end-state. This function is called on all layout-nodes prior to
+	     * calling the layout-function. So that the layout-function starts with a clean slate.
+	     */
+	    LayoutNode.prototype.reset = function() {
+	        this._invalidated = false;
+	        this.trueSizeRequested = false;
+	    };
+
+	    /**
+	     * Set the spec of the node
+	     *
+	     * @param {Object} spec
+	     */
+	    LayoutNode.prototype.setSpec = function(spec) {
+	        this._specModified = true;
+	        if (spec.align) {
+	            if (!spec.align) {
+	                this._spec.align = [0, 0];
+	            }
+	            this._spec.align[0] = spec.align[0];
+	            this._spec.align[1] = spec.align[1];
+	        }
+	        else {
+	            this._spec.align = undefined;
+	        }
+	        if (spec.origin) {
+	            if (!spec.origin) {
+	                this._spec.origin = [0, 0];
+	            }
+	            this._spec.origin[0] = spec.origin[0];
+	            this._spec.origin[1] = spec.origin[1];
+	        }
+	        else {
+	            this._spec.origin = undefined;
+	        }
+	        if (spec.size) {
+	            if (!spec.size) {
+	                this._spec.size = [0, 0];
+	            }
+	            this._spec.size[0] = spec.size[0];
+	            this._spec.size[1] = spec.size[1];
+	        }
+	        else {
+	            this._spec.size = undefined;
+	        }
+	        if (spec.transform) {
+	            if (!spec.transform) {
+	                this._spec.transform = spec.transform.slice(0);
+	            }
+	            else {
+	                for (var i = 0; i < 16; i++) {
+	                    this._spec.transform[0] = spec.transform[0];
+	                }
+	            }
+	        }
+	        else {
+	            this._spec.transform = undefined;
+	        }
+	        this._spec.opacity = spec.opacity;
+	    };
+
+	    /**
+	     * Set the content of the node
+	     *
+	     * @param {Object} set
+	     */
+	    LayoutNode.prototype.set = function(set, size) {
+	        this._invalidated = true;
+	        this._specModified = true;
+	        this._removing = false;
+	        var spec = this._spec;
+	        spec.opacity = set.opacity;
+	        if (set.size) {
+	            if (!spec.size) {
+	                spec.size = [0, 0];
+	            }
+	            spec.size[0] = set.size[0];
+	            spec.size[1] = set.size[1];
+	        }
+	        else {
+	            spec.size = undefined;
+	        }
+	        if (set.origin) {
+	            if (!spec.origin) {
+	                spec.origin = [0, 0];
+	            }
+	            spec.origin[0] = set.origin[0];
+	            spec.origin[1] = set.origin[1];
+	        }
+	        else {
+	            spec.origin = undefined;
+	        }
+	        if (set.align) {
+	            if (!spec.align) {
+	                spec.align = [0, 0];
+	            }
+	            spec.align[0] = set.align[0];
+	            spec.align[1] = set.align[1];
+	        }
+	        else {
+	            spec.align = undefined;
+	        }
+
+	        if (set.skew || set.rotate || set.scale) {
+	            this._spec.transform = Transform.build({
+	                translate: set.translate || [0, 0, 0],
+	                skew: set.skew || [0, 0, 0],
+	                scale: set.scale || [1, 1, 1],
+	                rotate: set.rotate || [0, 0, 0]
+	            });
+	        }
+	        else if (set.translate) {
+	            this._spec.transform = Transform.translate(set.translate[0], set.translate[1], set.translate[2]);
+	        }
+	        else {
+	            this._spec.transform = undefined;
+	        }
+	        this.scrollLength = set.scrollLength;
+	    };
+
+	    /**
+	     * Creates the render-spec
+	     */
+	    LayoutNode.prototype.getSpec = function() {
+	        this._specModified = false;
+	        this._spec.removed = !this._invalidated;
+	        return this._spec;
+	    };
+
+	    /**
+	     * Marks the node for removal
+	     */
+	    LayoutNode.prototype.remove = function(removeSpec) {
+	        this._removing = true;
+	    };
+
+	    module.exports = LayoutNode;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/**
+	 * This Source Code is licensed under the MIT license. If a copy of the
+	 * MIT-license was not distributed with this file, You can obtain one at:
+	 * http://opensource.org/licenses/mit-license.html.
+	 *
+	 * @author: Hein Rutjes (IjzerenHein)
+	 * @license MIT
+	 * @copyright Gloey Apps, 2014
+	 */
+
+	/*global define*/
+	/*eslint no-use-before-define:0 */
+
+	/**
+	 * Internal LayoutNode class used by `FlowLayoutController`.
+	 *
+	 * @module
+	 */
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+
+	    // import dependencies
+	    var OptionsManager = __webpack_require__(20);
+	    var Transform = __webpack_require__(29);
+	    var Vector = __webpack_require__(38);
+	    var Particle = __webpack_require__(40);
+	    var Spring = __webpack_require__(42);
+	    var PhysicsEngine = __webpack_require__(39);
+	    var LayoutNode = __webpack_require__(23);
+	    var Transitionable = __webpack_require__(44);
+
+	    /**
+	     * @class
+	     * @extends LayoutNode
+	     * @param {Object} renderNode Render-node which this layout-node represents
+	     * @param {Spec} spec Initial state
+	     * @param {Object} physicsEngines physics-engines to use
+	     * @alias module:FlowLayoutNode
+	     */
+	    function FlowLayoutNode(renderNode, spec) {
+	        LayoutNode.apply(this, arguments);
+
+	        if (!this.options) {
+	            this.options = Object.create(this.constructor.DEFAULT_OPTIONS);
+	            this._optionsManager = new OptionsManager(this.options);
+	        }
+
+	        if (!this._pe) {
+	            this._pe = new PhysicsEngine();
+	            this._pe.sleep();
+	        }
+
+	        if (!this._properties) {
+	            this._properties = {};
+	        }
+	        else {
+	            for (var propName in this._properties) {
+	                this._properties[propName].init = false;
+	            }
+	        }
+
+	        if (!this._lockTransitionable) {
+	            this._lockTransitionable = new Transitionable(1);
+	        }
+	        else {
+	            this._lockTransitionable.halt();
+	            this._lockTransitionable.reset(1);
+	        }
+
+	        this._specModified = true;
+	        this._initial = true;
+	        if (spec) {
+	            this.setSpec(spec);
+	        }
+	    }
+	    FlowLayoutNode.prototype = Object.create(LayoutNode.prototype);
+	    FlowLayoutNode.prototype.constructor = FlowLayoutNode;
+
+	    FlowLayoutNode.DEFAULT_OPTIONS = {
+	        spring: {
+	            dampingRatio: 0.8,
+	            period: 300
+	        },
+	        particleRounding: 0.001
+	    };
+
+	    /**
+	     * Defaults
+	     */
+	    var DEFAULT = {
+	        opacity: 1,
+	        opacity2D: [1, 0],
+	        size: [0, 0],
+	        origin: [0, 0],
+	        align: [0, 0],
+	        scale: [1, 1, 1],
+	        translate: [0, 0, 0],
+	        rotate: [0, 0, 0],
+	        skew: [0, 0, 0]
+	    };
+
+	    /**
+	     * Verifies that the integrity of the layout-node is oke.
+	     */
+	    /*function _verifyIntegrity() {
+	        var i;
+	        for (var propName in this._properties) {
+	            var prop = this._properties[propName];
+	            if (prop.particle) {
+	                if (isNaN(prop.particle.getEnergy())) {
+	                    throw 'invalid particle energy: ' + propName;
+	                }
+	                var value = prop.particle.getPosition();
+	                for (i = 0; i < value.length; i++) {
+	                    if (isNaN(value[i])) {
+	                       throw 'invalid particle value: ' + propName + '(' + i + ')';
+	                    }
+	                }
+	                value = prop.endState.get();
+	                for (i = 0; i < value.length; i++) {
+	                    if (isNaN(value[i])) {
+	                       throw 'invalid endState value: ' + propName + '(' + i + ')';
+	                    }
+	                }
+	            }
+	        }
+	    }*/
+
+	    /**
+	     * Sets the configuration options
+	     */
+	    FlowLayoutNode.prototype.setOptions = function(options) {
+	        this._optionsManager.setOptions(options);
+	        var wasSleeping = this._pe.isSleeping();
+	        for (var propName in this._properties) {
+	            var prop = this._properties[propName];
+	            if (prop.force) {
+	                prop.force.setOptions(prop.force);
+	            }
+	        }
+	        if (wasSleeping) {
+	            this._pe.sleep();
+	        }
+	        return this;
+	    };
+
+	    /**
+	     * Set the properties from a spec.
+	     */
+	    FlowLayoutNode.prototype.setSpec = function(spec) {
+	        var set;
+	        if (spec.transform) {
+	            set = Transform.interpret(spec.transform);
+	        }
+	        if (!set) {
+	            set = {};
+	        }
+	        set.opacity = spec.opacity;
+	        set.size = spec.size;
+	        set.align = spec.align;
+	        set.origin = spec.origin;
+
+	        var oldRemoving = this._removing;
+	        var oldInvalidated = this._invalidated;
+	        this.set(set);
+	        this._removing = oldRemoving;
+	        this._invalidated = oldInvalidated;
+	    };
+
+	    /**
+	     * Reset the end-state. This function is called on all layout-nodes prior to
+	     * calling the layout-function. So that the layout-function starts with a clean slate.
+	     */
+	    FlowLayoutNode.prototype.reset = function() {
+	        if (this._invalidated) {
+	            for (var propName in this._properties) {
+	                this._properties[propName].invalidated = false;
+	            }
+	            this._invalidated = false;
+	        }
+	        this.trueSizeRequested = false;
+	        this.usesTrueSize = false;
+	    };
+
+	    /**
+	     * Markes the node for removal.
+	     */
+	    FlowLayoutNode.prototype.remove = function(removeSpec) {
+
+	        // Transition to the remove-spec state
+	        this._removing = true;
+	        if (removeSpec) {
+	            this.setSpec(removeSpec);
+	        }
+	        else {
+	            this._pe.sleep();
+	            this._specModified = false;
+	        }
+
+	        // Mark for removal
+	        this._invalidated = false;
+	    };
+
+	    /**
+	     * Temporarily releases the flowing-lock that is applied to the node.
+	     * E.g., when changing position, resizing, the lock should be released so that
+	     * the renderables can smoothly transition to their new positions.
+	     */
+	    FlowLayoutNode.prototype.releaseLock = function(duration) {
+	        this._lockTransitionable.halt();
+	        this._lockTransitionable.reset(0);
+	        this._lockTransitionable.set(1, {
+	            duration: duration || this.options.spring.period || 1000
+	        });
+	    };
+
+	    /**
+	     * Helper function for getting the property value.
+	     */
+	    function _getRoundedValue3D(prop, def, precision) {
+	        if (!prop || !prop.init) {
+	            return def;
+	        }
+	        precision = precision || this.options.particleRounding;
+	        var value = prop.particle.getPosition();
+	        return [
+	            Math.round(value[0] / precision) * precision,
+	            Math.round(value[1] / precision) * precision,
+	            Math.round(value[2] / precision) * precision
+	        ];
+	    }
+
+	    /**
+	     * Creates the render-spec
+	     */
+	    FlowLayoutNode.prototype.getSpec = function() {
+
+	        // When the end state was reached, return the previous spec
+	        var endStateReached = this._pe.isSleeping();
+	        if (!this._specModified && endStateReached) {
+	            this._spec.removed = !this._invalidated;
+	            return this._spec;
+	        }
+	        this._initial = false;
+	        this._specModified = !endStateReached;
+	        this._spec.removed = false;
+
+	        // Step physics engine when not sleeping
+	        if (!endStateReached) {
+	            this._pe.step();
+	        }
+
+	        // Build fresh spec
+	        var spec = this._spec;
+	        var precision = this.options.particleRounding;
+	        var lockValue = this._lockTransitionable.get();
+
+	        // opacity
+	        var prop = this._properties.opacity;
+	        if (prop && prop.init) {
+	            spec.opacity = Math.round(Math.max(0, Math.min(1, prop.curState.x)) / precision) * precision;
+	        }
+	        else {
+	            spec.opacity = undefined;
+	        }
+
+	        // size
+	        prop = this._properties.size;
+	        if (prop && prop.init) {
+	            spec.size = spec.size || [0, 0];
+	            spec.size[0] = Math.round((prop.curState.x + ((prop.endState.x - prop.curState.x) * lockValue)) / 0.1) * 0.1;
+	            spec.size[1] = Math.round((prop.curState.y + ((prop.endState.y - prop.curState.y) * lockValue)) / 0.1) * 0.1;
+	        }
+	        else {
+	            spec.size = undefined;
+	        }
+
+	        // align
+	        prop = this._properties.align;
+	        if (prop && prop.init) {
+	            spec.align = spec.align || [0, 0];
+	            spec.align[0] = Math.round((prop.curState.x + ((prop.endState.x - prop.curState.x) * lockValue)) / 0.1) * 0.1;
+	            spec.align[1] = Math.round((prop.curState.y + ((prop.endState.y - prop.curState.y) * lockValue)) / 0.1) * 0.1;
+	        }
+	        else {
+	            spec.align = undefined;
+	        }
+
+	        // origin
+	        prop = this._properties.origin;
+	        if (prop && prop.init) {
+	            spec.origin = spec.origin || [0, 0];
+	            spec.origin[0] = Math.round((prop.curState.x + ((prop.endState.x - prop.curState.x) * lockValue)) / 0.1) * 0.1;
+	            spec.origin[1] = Math.round((prop.curState.y + ((prop.endState.y - prop.curState.y) * lockValue)) / 0.1) * 0.1;
+	        }
+	        else {
+	            spec.origin = undefined;
+	        }
+
+	        // translate
+	        var translate = this._properties.translate;
+	        var translateX;
+	        var translateY;
+	        var translateZ;
+	        if (translate && translate.init) {
+	            translateX = Math.round((translate.curState.x + ((translate.endState.x - translate.curState.x) * lockValue)) / precision) * precision;
+	            translateY = Math.round((translate.curState.y + ((translate.endState.y - translate.curState.y) * lockValue)) / precision) * precision;
+	            translateZ = Math.round((translate.curState.z + ((translate.endState.z - translate.curState.z) * lockValue)) / precision) * precision;
+	        }
+	        else {
+	            translateX = 0;
+	            translateY = 0;
+	            translateZ = 0;
+	        }
+
+	        // scale, skew, scale
+	        var scale = this._properties.scale;
+	        var skew = this._properties.skew;
+	        var rotate = this._properties.rotate;
+	        if (scale || skew || rotate) {
+	            spec.transform = Transform.build({
+	                translate: [translateX, translateY, translateZ],
+	                skew: _getRoundedValue3D.call(this, skew, DEFAULT.skew),
+	                scale: _getRoundedValue3D.call(this, scale, DEFAULT.scale),
+	                rotate: _getRoundedValue3D.call(this, rotate, DEFAULT.rotate)
+	            });
+	        }
+	        else if (translate) {
+	            if (!spec.transform) {
+	                spec.transform = Transform.translate(translateX, translateY, translateZ);
+	            }
+	            else {
+	                spec.transform[12] = translateX;
+	                spec.transform[13] = translateY;
+	                spec.transform[14] = translateZ;
+	            }
+	        }
+	        else {
+	            spec.transform = undefined;
+	        }
+	        return this._spec;
+	    };
+
+	    /**
+	     * Helper function to set the property of a node (e.g. opacity, translate, etc..)
+	     */
+	    function _setPropertyValue(prop, propName, endState, defaultValue, immediate, isTranslate) {
+
+	        // Get property
+	        prop = prop || this._properties[propName];
+
+	        // Update the property
+	        if (prop && prop.init) {
+	            prop.invalidated = true;
+	            var value = defaultValue;
+	            if (endState !== undefined) {
+	                value = endState;
+	            }
+	            else if (this._removing) {
+	                value = prop.particle.getPosition();
+	            }
+	            //if (isTranslate && (this._lockDirection !== undefined) && (this._lockTransitionable.get() === 1)) {
+	            //    immediate = true; // this is a bit dirty, it should check !_lockDirection for non changes as well before setting immediate to true
+	            //}
+	            // set new end state (the quick way)
+	            prop.endState.x = value[0];
+	            prop.endState.y = (value.length > 1) ? value[1] : 0;
+	            prop.endState.z = (value.length > 2) ? value[2] : 0;
+	            if (immediate) {
+	                // set current state (the quick way)
+	                prop.curState.x = prop.endState.x;
+	                prop.curState.y = prop.endState.y;
+	                prop.curState.z = prop.endState.z;
+	                // reset velocity (the quick way)
+	                prop.velocity.x = 0;
+	                prop.velocity.y = 0;
+	                prop.velocity.z = 0;
+	            }
+	            else if ((prop.endState.x !== prop.curState.x) ||
+	                     (prop.endState.y !== prop.curState.y) ||
+	                     (prop.endState.z !== prop.curState.z)) {
+	                this._pe.wake();
+	            }
+	            return;
+	        }
+	        else {
+
+	            // Create property if neccesary
+	            var wasSleeping = this._pe.isSleeping();
+	            if (!prop) {
+	                prop = {
+	                    particle: new Particle({
+	                        position: (this._initial || immediate) ? endState : defaultValue
+	                    }),
+	                    endState: new Vector(endState)
+	                };
+	                prop.curState = prop.particle.position;
+	                prop.velocity = prop.particle.velocity;
+	                prop.force = new Spring(this.options.spring);
+	                prop.force.setOptions({
+	                    anchor: prop.endState
+	                });
+	                this._pe.addBody(prop.particle);
+	                prop.forceId = this._pe.attach(prop.force, prop.particle);
+	                this._properties[propName] = prop;
+	            }
+	            else {
+	                prop.particle.setPosition((this._initial || immediate) ? endState : defaultValue);
+	                prop.endState.set(endState);
+	            }
+	            if (!this._initial && !immediate) {
+	                this._pe.wake();
+	            } else if (wasSleeping) {
+	                this._pe.sleep(); // nothing has changed, put back to sleep
+	            }
+	            prop.init = true;
+	            prop.invalidated = true;
+	        }
+	    }
+
+	    /**
+	     * Get value if not equals.
+	     */
+	    function _getIfNE2D(a1, a2) {
+	        return ((a1[0] === a2[0]) && (a1[1] === a2[1])) ? undefined : a1;
+	    }
+	    function _getIfNE3D(a1, a2) {
+	        return ((a1[0] === a2[0]) && (a1[1] === a2[1]) && (a1[2] === a2[2])) ? undefined : a1;
+	    }
+
+	    /**
+	     * context.set(..)
+	     */
+	    FlowLayoutNode.prototype.set = function(set, defaultSize) {
+	        if (defaultSize) {
+	            this._removing = false;
+	        }
+	        this._invalidated = true;
+	        this.scrollLength = set.scrollLength;
+	        this._specModified = true;
+
+	        // opacity
+	        var prop = this._properties.opacity;
+	        var value = (set.opacity === DEFAULT.opacity) ? undefined : set.opacity;
+	        if ((value !== undefined) || (prop && prop.init)) {
+	            _setPropertyValue.call(this, prop, 'opacity', (value === undefined) ? undefined : [value, 0], DEFAULT.opacity2D);
+	        }
+
+	        // set align
+	        prop = this._properties.align;
+	        value = set.align ? _getIfNE2D(set.align, DEFAULT.align) : undefined;
+	        if (value || (prop && prop.init)) {
+	            _setPropertyValue.call(this, prop, 'align', value, DEFAULT.align);
+	        }
+
+	        // set orgin
+	        prop = this._properties.origin;
+	        value = set.origin ? _getIfNE2D(set.origin, DEFAULT.origin) : undefined;
+	        if (value || (prop && prop.init)) {
+	            _setPropertyValue.call(this, prop, 'origin', value, DEFAULT.origin);
+	        }
+
+	        // set size
+	        prop = this._properties.size;
+	        value = set.size || defaultSize;
+	        if (value || (prop && prop.init)) {
+	            _setPropertyValue.call(this, prop, 'size', value, defaultSize, this.usesTrueSize);
+	        }
+
+	        // set translate
+	        prop = this._properties.translate;
+	        value = set.translate;
+	        if (value || (prop && prop.init)) {
+	            _setPropertyValue.call(this, prop, 'translate', value, DEFAULT.translate, undefined, true);
+	        }
+
+	        // set scale
+	        prop = this._properties.scale;
+	        value = set.scale ? _getIfNE3D(set.scale, DEFAULT.scale) : undefined;
+	        if (value || (prop && prop.init)) {
+	            _setPropertyValue.call(this, prop, 'scale', value, DEFAULT.scale);
+	        }
+
+	        // set rotate
+	        prop = this._properties.rotate;
+	        value = set.rotate ? _getIfNE3D(set.rotate, DEFAULT.rotate) : undefined;
+	        if (value || (prop && prop.init)) {
+	            _setPropertyValue.call(this, prop, 'rotate', value, DEFAULT.rotate);
+	        }
+
+	        // set skew
+	        prop = this._properties.skew;
+	        value = set.skew ? _getIfNE3D(set.skew, DEFAULT.skew) : undefined;
+	        if (value || (prop && prop.init)) {
+	            _setPropertyValue.call(this, prop, 'skew', value, DEFAULT.skew);
+	        }
+	    };
+
+	    module.exports = FlowLayoutNode;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
 /* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -7719,10 +7720,10 @@
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 	    var RenderNode = __webpack_require__(35);
-	    var EventHandler = __webpack_require__(19);
+	    var EventHandler = __webpack_require__(21);
 	    var ElementAllocator = __webpack_require__(36);
 	    var Transform = __webpack_require__(29);
-	    var Transitionable = __webpack_require__(42);
+	    var Transitionable = __webpack_require__(44);
 
 	    var _zeroZero = [0, 0];
 	    var usePrefix = !('perspective' in document.documentElement.style);
@@ -7958,7 +7959,7 @@
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 	    var Entity = __webpack_require__(27);
-	    var EventHandler = __webpack_require__(19);
+	    var EventHandler = __webpack_require__(21);
 	    var Transform = __webpack_require__(29);
 
 	    var usePrefix = !('transform' in document.documentElement.style);
@@ -9573,7 +9574,7 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 
 	    // import dependencies
-	    var LayoutUtility = __webpack_require__(20);
+	    var LayoutUtility = __webpack_require__(18);
 
 	    /**
 	     * @class
@@ -9801,6 +9802,136 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+	    var Context = __webpack_require__(25);
+	    var Transform = __webpack_require__(29);
+	    var Surface = __webpack_require__(14);
+
+	    /**
+	     * A Context designed to contain surfaces and set properties
+	     *   to be applied to all of them at once.
+	     *   This is primarily used for specific performance improvements in the rendering engine.
+	     *   Private.
+	     *
+	     * @private
+	     * @class Group
+	     * @extends Surface
+	     * @constructor
+	     * @param {Object} [options] Surface options array (see Surface})
+	     */
+	    function Group(options) {
+	        Surface.call(this, options);
+	        this._shouldRecalculateSize = false;
+	        this._container = document.createDocumentFragment();
+	        this.context = new Context(this._container);
+	        this.setContent(this._container);
+	        this._groupSize = [undefined, undefined];
+	    }
+
+	    /** @const */
+	    Group.SIZE_ZERO = [0, 0];
+
+	    Group.prototype = Object.create(Surface.prototype);
+	    Group.prototype.elementType = 'div';
+	    Group.prototype.elementClass = 'famous-group';
+
+	    /**
+	     * Add renderables to this component's render tree.
+	     *
+	     * @method add
+	     * @private
+	     * @param {Object} obj renderable object
+	     * @return {RenderNode} Render wrapping provided object, if not already a RenderNode
+	     */
+	    Group.prototype.add = function add() {
+	        return this.context.add.apply(this.context, arguments);
+	    };
+
+	    /**
+	     * Generate a render spec from the contents of this component.
+	     *
+	     * @private
+	     * @method render
+	     * @return {Number} Render spec for this component
+	     */
+	    Group.prototype.render = function render() {
+	        return Surface.prototype.render.call(this);
+	    };
+
+	    /**
+	     * Place the document element this component manages into the document.
+	     *
+	     * @private
+	     * @method deploy
+	     * @param {Node} target document parent of this container
+	     */
+	    Group.prototype.deploy = function deploy(target) {
+	        this.context.migrate(target);
+	    };
+
+	    /**
+	     * Remove this component and contained content from the document
+	     *
+	     * @private
+	     * @method recall
+	     *
+	     * @param {Node} target node to which the component was deployed
+	     */
+	    Group.prototype.recall = function recall(target) {
+	        this._container = document.createDocumentFragment();
+	        this.context.migrate(this._container);
+	    };
+
+	    /**
+	     * Apply changes from this component to the corresponding document element.
+	     *
+	     * @private
+	     * @method commit
+	     *
+	     * @param {Object} context update spec passed in from above in the render tree.
+	     */
+	    Group.prototype.commit = function commit(context) {
+	        var transform = context.transform;
+	        var origin = context.origin;
+	        var opacity = context.opacity;
+	        var size = context.size;
+	        var result = Surface.prototype.commit.call(this, {
+	            allocator: context.allocator,
+	            transform: Transform.thenMove(transform, [-origin[0] * size[0], -origin[1] * size[1], 0]),
+	            opacity: opacity,
+	            origin: origin,
+	            size: Group.SIZE_ZERO
+	        });
+	        if (size[0] !== this._groupSize[0] || size[1] !== this._groupSize[1]) {
+	            this._groupSize[0] = size[0];
+	            this._groupSize[1] = size[1];
+	            this.context.setSize(size);
+	        }
+	        this.context.update({
+	            transform: Transform.translate(-origin[0] * size[0], -origin[1] * size[1], 0),
+	            origin: origin,
+	            size: size
+	        });
+	        return result;
+	    };
+
+	    module.exports = Group;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
+	 * License, v. 2.0. If a copy of the MPL was not distributed with this
+	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+	 *
+	 * Owner: mark@famo.us
+	 * @license MPL 2.0
+	 * @copyright Famous Industries, Inc. 2014
+	 */
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 	    /**
 	     * EventEmitter represents a channel for events.
 	     *
@@ -9889,7 +10020,7 @@
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -10155,136 +10286,6 @@
 	    };
 
 	    module.exports = LayoutContext;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 34 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
-	 * License, v. 2.0. If a copy of the MPL was not distributed with this
-	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-	 *
-	 * Owner: mark@famo.us
-	 * @license MPL 2.0
-	 * @copyright Famous Industries, Inc. 2014
-	 */
-
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Context = __webpack_require__(25);
-	    var Transform = __webpack_require__(29);
-	    var Surface = __webpack_require__(14);
-
-	    /**
-	     * A Context designed to contain surfaces and set properties
-	     *   to be applied to all of them at once.
-	     *   This is primarily used for specific performance improvements in the rendering engine.
-	     *   Private.
-	     *
-	     * @private
-	     * @class Group
-	     * @extends Surface
-	     * @constructor
-	     * @param {Object} [options] Surface options array (see Surface})
-	     */
-	    function Group(options) {
-	        Surface.call(this, options);
-	        this._shouldRecalculateSize = false;
-	        this._container = document.createDocumentFragment();
-	        this.context = new Context(this._container);
-	        this.setContent(this._container);
-	        this._groupSize = [undefined, undefined];
-	    }
-
-	    /** @const */
-	    Group.SIZE_ZERO = [0, 0];
-
-	    Group.prototype = Object.create(Surface.prototype);
-	    Group.prototype.elementType = 'div';
-	    Group.prototype.elementClass = 'famous-group';
-
-	    /**
-	     * Add renderables to this component's render tree.
-	     *
-	     * @method add
-	     * @private
-	     * @param {Object} obj renderable object
-	     * @return {RenderNode} Render wrapping provided object, if not already a RenderNode
-	     */
-	    Group.prototype.add = function add() {
-	        return this.context.add.apply(this.context, arguments);
-	    };
-
-	    /**
-	     * Generate a render spec from the contents of this component.
-	     *
-	     * @private
-	     * @method render
-	     * @return {Number} Render spec for this component
-	     */
-	    Group.prototype.render = function render() {
-	        return Surface.prototype.render.call(this);
-	    };
-
-	    /**
-	     * Place the document element this component manages into the document.
-	     *
-	     * @private
-	     * @method deploy
-	     * @param {Node} target document parent of this container
-	     */
-	    Group.prototype.deploy = function deploy(target) {
-	        this.context.migrate(target);
-	    };
-
-	    /**
-	     * Remove this component and contained content from the document
-	     *
-	     * @private
-	     * @method recall
-	     *
-	     * @param {Node} target node to which the component was deployed
-	     */
-	    Group.prototype.recall = function recall(target) {
-	        this._container = document.createDocumentFragment();
-	        this.context.migrate(this._container);
-	    };
-
-	    /**
-	     * Apply changes from this component to the corresponding document element.
-	     *
-	     * @private
-	     * @method commit
-	     *
-	     * @param {Object} context update spec passed in from above in the render tree.
-	     */
-	    Group.prototype.commit = function commit(context) {
-	        var transform = context.transform;
-	        var origin = context.origin;
-	        var opacity = context.opacity;
-	        var size = context.size;
-	        var result = Surface.prototype.commit.call(this, {
-	            allocator: context.allocator,
-	            transform: Transform.thenMove(transform, [-origin[0] * size[0], -origin[1] * size[1], 0]),
-	            opacity: opacity,
-	            origin: origin,
-	            size: Group.SIZE_ZERO
-	        });
-	        if (size[0] !== this._groupSize[0] || size[1] !== this._groupSize[1]) {
-	            this._groupSize[0] = size[0];
-	            this._groupSize[1] = size[1];
-	            this.context.setSize(size);
-	        }
-	        this.context.update({
-	            transform: Transform.translate(-origin[0] * size[0], -origin[1] * size[1], 0),
-	            origin: origin,
-	            size: size
-	        });
-	        return result;
-	    };
-
-	    module.exports = Group;
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 
@@ -10575,6 +10576,127 @@
 
 /***/ },
 /* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;
+	/* This Source Code Form is subject to the terms of the Mozilla Public
+	 * License, v. 2.0. If a copy of the MPL was not distributed with this
+	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+	 *
+	 * Owner: mark@famo.us
+	 * @license MPL 2.0
+	 * @copyright Famous Industries, Inc. 2014
+	 */
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+	    var Surface = __webpack_require__(14);
+	    var Context = __webpack_require__(25);
+
+	    /**
+	     * ContainerSurface is an object designed to contain surfaces and
+	     *   set properties to be applied to all of them at once.
+	     *   This extends the Surface class.
+	     *   A container surface will enforce these properties on the
+	     *   surfaces it contains:
+	     *
+	     *   size (clips contained surfaces to its own width and height);
+	     *
+	     *   origin;
+	     *
+	     *   its own opacity and transform, which will be automatically
+	     *   applied to  all Surfaces contained directly and indirectly.
+	     *
+	     * @class ContainerSurface
+	     * @extends Surface
+	     * @constructor
+	     * @param {Array.Number} [options.size] [width, height] in pixels
+	     * @param {Array.string} [options.classes] CSS classes to set on all inner content
+	     * @param {Array} [options.properties] string dictionary of HTML attributes to set on target div
+	     * @param {string} [options.content] inner (HTML) content of surface (should not be used)
+	     */
+	    function ContainerSurface(options) {
+	        Surface.call(this, options);
+	        this._container = document.createElement('div');
+	        this._container.classList.add('famous-group');
+	        this._container.classList.add('famous-container-group');
+	        this._shouldRecalculateSize = false;
+	        this.context = new Context(this._container);
+	        this.setContent(this._container);
+	    }
+
+	    ContainerSurface.prototype = Object.create(Surface.prototype);
+	    ContainerSurface.prototype.constructor = ContainerSurface;
+	    ContainerSurface.prototype.elementType = 'div';
+	    ContainerSurface.prototype.elementClass = 'famous-surface';
+
+	    /**
+	     * Add renderables to this object's render tree
+	     *
+	     * @method add
+	     *
+	     * @param {Object} obj renderable object
+	     * @return {RenderNode} RenderNode wrapping this object, if not already a RenderNode
+	     */
+	    ContainerSurface.prototype.add = function add() {
+	        return this.context.add.apply(this.context, arguments);
+	    };
+
+	    /**
+	     * Return spec for this surface.  Note: Can result in a size recalculation.
+	     *
+	     * @private
+	     * @method render
+	     *
+	     * @return {Object} render spec for this surface (spec id)
+	     */
+	    ContainerSurface.prototype.render = function render() {
+	        if (this._sizeDirty) this._shouldRecalculateSize = true;
+	        return Surface.prototype.render.apply(this, arguments);
+	    };
+
+	    /**
+	     * Place the document element this component manages into the document.
+	     *
+	     * @private
+	     * @method deploy
+	     * @param {Node} target document parent of this container
+	     */
+	    ContainerSurface.prototype.deploy = function deploy() {
+	        this._shouldRecalculateSize = true;
+	        return Surface.prototype.deploy.apply(this, arguments);
+	    };
+
+	    /**
+	     * Apply changes from this component to the corresponding document element.
+	     * This includes changes to classes, styles, size, content, opacity, origin,
+	     * and matrix transforms.
+	     *
+	     * @private
+	     * @method commit
+	     * @param {Context} context commit context
+	     * @param {Transform} transform unused TODO
+	     * @param {Number} opacity  unused TODO
+	     * @param {Array.Number} origin unused TODO
+	     * @param {Array.Number} size unused TODO
+	     * @return {undefined} TODO returns an undefined value
+	     */
+	    ContainerSurface.prototype.commit = function commit(context, transform, opacity, origin, size) {
+	        var previousSize = this._size ? [this._size[0], this._size[1]] : null;
+	        var result = Surface.prototype.commit.apply(this, arguments);
+	        if (this._shouldRecalculateSize || (previousSize && (this._size[0] !== previousSize[0] || this._size[1] !== previousSize[1]))) {
+	            this.context.setSize();
+	            this._shouldRecalculateSize = false;
+	        }
+	        this.context.update();
+	        return result;
+	    };
+
+	    module.exports = ContainerSurface;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -10960,7 +11082,7 @@
 
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -10971,7 +11093,7 @@
 	 * @copyright Famous Industries, Inc. 2014
 	 */
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var EventHandler = __webpack_require__(19);
+	    var EventHandler = __webpack_require__(21);
 
 	    /**
 	     * The Physics Engine is responsible for mediating bodies with their
@@ -11493,7 +11615,7 @@
 
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -11506,9 +11628,9 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Vector = __webpack_require__(37);
+	    var Vector = __webpack_require__(38);
 	    var Transform = __webpack_require__(29);
-	    var EventHandler = __webpack_require__(19);
+	    var EventHandler = __webpack_require__(21);
 	    var Integrator = __webpack_require__(49);
 
 	    /**
@@ -11886,7 +12008,132 @@
 
 
 /***/ },
-/* 40 */
+/* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
+	 * License, v. 2.0. If a copy of the MPL was not distributed with this
+	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+	 *
+	 * Owner: david@famo.us
+	 * @license MPL 2.0
+	 * @copyright Famous Industries, Inc. 2014
+	 */
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
+	    var Force = __webpack_require__(46);
+
+	    /**
+	     * Drag is a force that opposes velocity. Attach it to the physics engine
+	     * to slow down a physics body in motion.
+	     *
+	     * @class Drag
+	     * @constructor
+	     * @extends Force
+	     * @param {Object} options options to set on drag
+	     */
+	    function Drag(options) {
+	        this.options = Object.create(this.constructor.DEFAULT_OPTIONS);
+	        if (options) this.setOptions(options);
+
+	        Force.call(this);
+	    }
+
+	    Drag.prototype = Object.create(Force.prototype);
+	    Drag.prototype.constructor = Drag;
+
+	    /**
+	     * @property Drag.FORCE_FUNCTIONS
+	     * @type Object
+	     * @protected
+	     * @static
+	     */
+	    Drag.FORCE_FUNCTIONS = {
+
+	        /**
+	         * A drag force proportional to the velocity
+	         * @attribute LINEAR
+	         * @type Function
+	         * @param {Vector} velocity
+	         * @return {Vector} drag force
+	         */
+	        LINEAR : function(velocity) {
+	            return velocity;
+	        },
+
+	        /**
+	         * A drag force proportional to the square of the velocity
+	         * @attribute QUADRATIC
+	         * @type Function
+	         * @param {Vector} velocity
+	         * @return {Vector} drag force
+	         */
+	        QUADRATIC : function(velocity) {
+	            return velocity.mult(velocity.norm());
+	        }
+	    };
+
+	    /**
+	     * @property Drag.DEFAULT_OPTIONS
+	     * @type Object
+	     * @protected
+	     * @static
+	     */
+	    Drag.DEFAULT_OPTIONS = {
+
+	        /**
+	         * The strength of the force
+	         *    Range : [0, 0.1]
+	         * @attribute strength
+	         * @type Number
+	         * @default 0.01
+	         */
+	        strength : 0.01,
+
+	        /**
+	         * The type of opposing force
+	         * @attribute forceFunction
+	         * @type Function
+	         */
+	        forceFunction : Drag.FORCE_FUNCTIONS.LINEAR
+	    };
+
+	    /**
+	     * Adds a drag force to a physics body's force accumulator.
+	     *
+	     * @method applyForce
+	     * @param targets {Array.Body} Array of bodies to apply drag force to.
+	     */
+	    Drag.prototype.applyForce = function applyForce(targets) {
+	        var strength        = this.options.strength;
+	        var forceFunction   = this.options.forceFunction;
+	        var force           = this.force;
+	        var index;
+	        var particle;
+
+	        for (index = 0; index < targets.length; index++) {
+	            particle = targets[index];
+	            forceFunction(particle.velocity).mult(-strength).put(force);
+	            particle.applyForce(force);
+	        }
+	    };
+
+	    /**
+	     * Basic options setter
+	     *
+	     * @method setOptions
+	     * @param {Objects} options
+	     */
+	    Drag.prototype.setOptions = function setOptions(options) {
+	        for (var key in options) this.options[key] = options[key];
+	    };
+
+	    module.exports = Drag;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -11902,7 +12149,7 @@
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
 	    var Force = __webpack_require__(46);
-	    var Vector = __webpack_require__(37);
+	    var Vector = __webpack_require__(38);
 
 	    /**
 	     *  A force that moves a physics body to a location with a spring motion.
@@ -12159,132 +12406,210 @@
 
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
 	 * License, v. 2.0. If a copy of the MPL was not distributed with this
 	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 	 *
-	 * Owner: david@famo.us
+	 * Owner: mark@famo.us
 	 * @license MPL 2.0
 	 * @copyright Famous Industries, Inc. 2014
 	 */
-
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Force = __webpack_require__(46);
+	    var EventHandler = __webpack_require__(21);
+	    var Engine = __webpack_require__(13);
+	    var OptionsManager = __webpack_require__(20);
 
 	    /**
-	     * Drag is a force that opposes velocity. Attach it to the physics engine
-	     * to slow down a physics body in motion.
+	     * Handles piped in mousewheel events.
+	     *   Emits 'start', 'update', and 'end' events with payloads including:
+	     *   delta: change since last position,
+	     *   position: accumulated deltas,
+	     *   velocity: speed of change in pixels per ms,
+	     *   slip: true (unused).
 	     *
-	     * @class Drag
+	     *   Can be used as delegate of GenericSync.
+	     *
+	     * @class ScrollSync
 	     * @constructor
-	     * @extends Force
-	     * @param {Object} options options to set on drag
+	     * @param {Object} [options] overrides of default options
+	     * @param {Number} [options.direction] Pay attention to x changes (ScrollSync.DIRECTION_X),
+	     *   y changes (ScrollSync.DIRECTION_Y) or both (undefined)
+	     * @param {Number} [options.minimumEndSpeed] End speed calculation floors at this number, in pixels per ms
+	     * @param {boolean} [options.rails] whether to snap position calculations to nearest axis
+	     * @param {Number | Array.Number} [options.scale] scale outputs in by scalar or pair of scalars
+	     * @param {Number} [options.stallTime] reset time for velocity calculation in ms
 	     */
-	    function Drag(options) {
-	        this.options = Object.create(this.constructor.DEFAULT_OPTIONS);
+	    function ScrollSync(options) {
+	        this.options = Object.create(ScrollSync.DEFAULT_OPTIONS);
+	        this._optionsManager = new OptionsManager(this.options);
 	        if (options) this.setOptions(options);
 
-	        Force.call(this);
+	        this._payload = {
+	            delta    : null,
+	            position : null,
+	            velocity : null,
+	            slip     : true
+	        };
+
+	        this._eventInput = new EventHandler();
+	        this._eventOutput = new EventHandler();
+
+	        EventHandler.setInputHandler(this, this._eventInput);
+	        EventHandler.setOutputHandler(this, this._eventOutput);
+
+	        this._position = (this.options.direction === undefined) ? [0,0] : 0;
+	        this._prevTime = undefined;
+	        this._prevVel = undefined;
+	        this._eventInput.on('mousewheel', _handleMove.bind(this));
+	        this._eventInput.on('wheel', _handleMove.bind(this));
+	        this._inProgress = false;
+	        this._loopBound = false;
 	    }
 
-	    Drag.prototype = Object.create(Force.prototype);
-	    Drag.prototype.constructor = Drag;
+	    ScrollSync.DEFAULT_OPTIONS = {
+	        direction: undefined,
+	        minimumEndSpeed: Infinity,
+	        rails: false,
+	        scale: 1,
+	        stallTime: 50,
+	        lineHeight: 40,
+	        preventDefault: true
+	    };
 
-	    /**
-	     * @property Drag.FORCE_FUNCTIONS
-	     * @type Object
-	     * @protected
-	     * @static
-	     */
-	    Drag.FORCE_FUNCTIONS = {
+	    ScrollSync.DIRECTION_X = 0;
+	    ScrollSync.DIRECTION_Y = 1;
 
-	        /**
-	         * A drag force proportional to the velocity
-	         * @attribute LINEAR
-	         * @type Function
-	         * @param {Vector} velocity
-	         * @return {Vector} drag force
-	         */
-	        LINEAR : function(velocity) {
-	            return velocity;
-	        },
+	    var MINIMUM_TICK_TIME = 8;
 
-	        /**
-	         * A drag force proportional to the square of the velocity
-	         * @attribute QUADRATIC
-	         * @type Function
-	         * @param {Vector} velocity
-	         * @return {Vector} drag force
-	         */
-	        QUADRATIC : function(velocity) {
-	            return velocity.mult(velocity.norm());
+	    var _now = Date.now;
+
+	    function _newFrame() {
+	        if (this._inProgress && (_now() - this._prevTime) > this.options.stallTime) {
+	            this._inProgress = false;
+
+	            var finalVel = (Math.abs(this._prevVel) >= this.options.minimumEndSpeed)
+	                ? this._prevVel
+	                : 0;
+
+	            var payload = this._payload;
+	            payload.position = this._position;
+	            payload.velocity = finalVel;
+	            payload.slip = true;
+
+	            this._eventOutput.emit('end', payload);
 	        }
-	    };
+	    }
+
+	    function _handleMove(event) {
+	        if (this.options.preventDefault) event.preventDefault();
+
+	        if (!this._inProgress) {
+	            this._inProgress = true;
+	            this._position = (this.options.direction === undefined) ? [0,0] : 0;
+	            payload = this._payload;
+	            payload.slip = true;
+	            payload.position = this._position;
+	            payload.clientX = event.clientX;
+	            payload.clientY = event.clientY;
+	            payload.offsetX = event.offsetX;
+	            payload.offsetY = event.offsetY;
+	            this._eventOutput.emit('start', payload);
+	            if (!this._loopBound) {
+	                Engine.on('prerender', _newFrame.bind(this));
+	                this._loopBound = true;
+	            }
+	        }
+
+	        var currTime = _now();
+	        var prevTime = this._prevTime || currTime;
+
+	        var diffX = (event.wheelDeltaX !== undefined) ? event.wheelDeltaX : -event.deltaX;
+	        var diffY = (event.wheelDeltaY !== undefined) ? event.wheelDeltaY : -event.deltaY;
+
+	        if (event.deltaMode === 1) { // units in lines, not pixels
+	            diffX *= this.options.lineHeight;
+	            diffY *= this.options.lineHeight;
+	        }
+
+	        if (this.options.rails) {
+	            if (Math.abs(diffX) > Math.abs(diffY)) diffY = 0;
+	            else diffX = 0;
+	        }
+
+	        var diffTime = Math.max(currTime - prevTime, MINIMUM_TICK_TIME); // minimum tick time
+
+	        var velX = diffX / diffTime;
+	        var velY = diffY / diffTime;
+
+	        var scale = this.options.scale;
+	        var nextVel;
+	        var nextDelta;
+
+	        if (this.options.direction === ScrollSync.DIRECTION_X) {
+	            nextDelta = scale * diffX;
+	            nextVel = scale * velX;
+	            this._position += nextDelta;
+	        }
+	        else if (this.options.direction === ScrollSync.DIRECTION_Y) {
+	            nextDelta = scale * diffY;
+	            nextVel = scale * velY;
+	            this._position += nextDelta;
+	        }
+	        else {
+	            nextDelta = [scale * diffX, scale * diffY];
+	            nextVel = [scale * velX, scale * velY];
+	            this._position[0] += nextDelta[0];
+	            this._position[1] += nextDelta[1];
+	        }
+
+	        var payload = this._payload;
+	        payload.delta    = nextDelta;
+	        payload.velocity = nextVel;
+	        payload.position = this._position;
+	        payload.slip     = true;
+
+	        this._eventOutput.emit('update', payload);
+
+	        this._prevTime = currTime;
+	        this._prevVel = nextVel;
+	    }
 
 	    /**
-	     * @property Drag.DEFAULT_OPTIONS
-	     * @type Object
-	     * @protected
-	     * @static
-	     */
-	    Drag.DEFAULT_OPTIONS = {
-
-	        /**
-	         * The strength of the force
-	         *    Range : [0, 0.1]
-	         * @attribute strength
-	         * @type Number
-	         * @default 0.01
-	         */
-	        strength : 0.01,
-
-	        /**
-	         * The type of opposing force
-	         * @attribute forceFunction
-	         * @type Function
-	         */
-	        forceFunction : Drag.FORCE_FUNCTIONS.LINEAR
-	    };
-
-	    /**
-	     * Adds a drag force to a physics body's force accumulator.
+	     * Return entire options dictionary, including defaults.
 	     *
-	     * @method applyForce
-	     * @param targets {Array.Body} Array of bodies to apply drag force to.
+	     * @method getOptions
+	     * @return {Object} configuration options
 	     */
-	    Drag.prototype.applyForce = function applyForce(targets) {
-	        var strength        = this.options.strength;
-	        var forceFunction   = this.options.forceFunction;
-	        var force           = this.force;
-	        var index;
-	        var particle;
-
-	        for (index = 0; index < targets.length; index++) {
-	            particle = targets[index];
-	            forceFunction(particle.velocity).mult(-strength).put(force);
-	            particle.applyForce(force);
-	        }
+	    ScrollSync.prototype.getOptions = function getOptions() {
+	        return this.options;
 	    };
 
 	    /**
-	     * Basic options setter
+	     * Set internal options, overriding any default options
 	     *
 	     * @method setOptions
-	     * @param {Objects} options
+	     *
+	     * @param {Object} [options] overrides of default options
+	     * @param {Number} [options.minimimEndSpeed] If final velocity smaller than this, round down to 0.
+	     * @param {Number} [options.stallTime] ms of non-motion before 'end' emitted
+	     * @param {Number} [options.rails] whether to constrain to nearest axis.
+	     * @param {Number} [options.direction] ScrollSync.DIRECTION_X, DIRECTION_Y -
+	     *    pay attention to one specific direction.
+	     * @param {Number} [options.scale] constant factor to scale velocity output
 	     */
-	    Drag.prototype.setOptions = function setOptions(options) {
-	        for (var key in options) this.options[key] = options[key];
+	    ScrollSync.prototype.setOptions = function setOptions(options) {
+	        return this._optionsManager.setOptions(options);
 	    };
 
-	    module.exports = Drag;
+	    module.exports = ScrollSync;
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -12512,330 +12837,6 @@
 
 
 /***/ },
-/* 43 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;
-	/* This Source Code Form is subject to the terms of the Mozilla Public
-	 * License, v. 2.0. If a copy of the MPL was not distributed with this
-	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-	 *
-	 * Owner: mark@famo.us
-	 * @license MPL 2.0
-	 * @copyright Famous Industries, Inc. 2014
-	 */
-
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Surface = __webpack_require__(14);
-	    var Context = __webpack_require__(25);
-
-	    /**
-	     * ContainerSurface is an object designed to contain surfaces and
-	     *   set properties to be applied to all of them at once.
-	     *   This extends the Surface class.
-	     *   A container surface will enforce these properties on the
-	     *   surfaces it contains:
-	     *
-	     *   size (clips contained surfaces to its own width and height);
-	     *
-	     *   origin;
-	     *
-	     *   its own opacity and transform, which will be automatically
-	     *   applied to  all Surfaces contained directly and indirectly.
-	     *
-	     * @class ContainerSurface
-	     * @extends Surface
-	     * @constructor
-	     * @param {Array.Number} [options.size] [width, height] in pixels
-	     * @param {Array.string} [options.classes] CSS classes to set on all inner content
-	     * @param {Array} [options.properties] string dictionary of HTML attributes to set on target div
-	     * @param {string} [options.content] inner (HTML) content of surface (should not be used)
-	     */
-	    function ContainerSurface(options) {
-	        Surface.call(this, options);
-	        this._container = document.createElement('div');
-	        this._container.classList.add('famous-group');
-	        this._container.classList.add('famous-container-group');
-	        this._shouldRecalculateSize = false;
-	        this.context = new Context(this._container);
-	        this.setContent(this._container);
-	    }
-
-	    ContainerSurface.prototype = Object.create(Surface.prototype);
-	    ContainerSurface.prototype.constructor = ContainerSurface;
-	    ContainerSurface.prototype.elementType = 'div';
-	    ContainerSurface.prototype.elementClass = 'famous-surface';
-
-	    /**
-	     * Add renderables to this object's render tree
-	     *
-	     * @method add
-	     *
-	     * @param {Object} obj renderable object
-	     * @return {RenderNode} RenderNode wrapping this object, if not already a RenderNode
-	     */
-	    ContainerSurface.prototype.add = function add() {
-	        return this.context.add.apply(this.context, arguments);
-	    };
-
-	    /**
-	     * Return spec for this surface.  Note: Can result in a size recalculation.
-	     *
-	     * @private
-	     * @method render
-	     *
-	     * @return {Object} render spec for this surface (spec id)
-	     */
-	    ContainerSurface.prototype.render = function render() {
-	        if (this._sizeDirty) this._shouldRecalculateSize = true;
-	        return Surface.prototype.render.apply(this, arguments);
-	    };
-
-	    /**
-	     * Place the document element this component manages into the document.
-	     *
-	     * @private
-	     * @method deploy
-	     * @param {Node} target document parent of this container
-	     */
-	    ContainerSurface.prototype.deploy = function deploy() {
-	        this._shouldRecalculateSize = true;
-	        return Surface.prototype.deploy.apply(this, arguments);
-	    };
-
-	    /**
-	     * Apply changes from this component to the corresponding document element.
-	     * This includes changes to classes, styles, size, content, opacity, origin,
-	     * and matrix transforms.
-	     *
-	     * @private
-	     * @method commit
-	     * @param {Context} context commit context
-	     * @param {Transform} transform unused TODO
-	     * @param {Number} opacity  unused TODO
-	     * @param {Array.Number} origin unused TODO
-	     * @param {Array.Number} size unused TODO
-	     * @return {undefined} TODO returns an undefined value
-	     */
-	    ContainerSurface.prototype.commit = function commit(context, transform, opacity, origin, size) {
-	        var previousSize = this._size ? [this._size[0], this._size[1]] : null;
-	        var result = Surface.prototype.commit.apply(this, arguments);
-	        if (this._shouldRecalculateSize || (previousSize && (this._size[0] !== previousSize[0] || this._size[1] !== previousSize[1]))) {
-	            this.context.setSize();
-	            this._shouldRecalculateSize = false;
-	        }
-	        this.context.update();
-	        return result;
-	    };
-
-	    module.exports = ContainerSurface;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 44 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* This Source Code Form is subject to the terms of the Mozilla Public
-	 * License, v. 2.0. If a copy of the MPL was not distributed with this
-	 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-	 *
-	 * Owner: mark@famo.us
-	 * @license MPL 2.0
-	 * @copyright Famous Industries, Inc. 2014
-	 */
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var EventHandler = __webpack_require__(19);
-	    var Engine = __webpack_require__(13);
-	    var OptionsManager = __webpack_require__(18);
-
-	    /**
-	     * Handles piped in mousewheel events.
-	     *   Emits 'start', 'update', and 'end' events with payloads including:
-	     *   delta: change since last position,
-	     *   position: accumulated deltas,
-	     *   velocity: speed of change in pixels per ms,
-	     *   slip: true (unused).
-	     *
-	     *   Can be used as delegate of GenericSync.
-	     *
-	     * @class ScrollSync
-	     * @constructor
-	     * @param {Object} [options] overrides of default options
-	     * @param {Number} [options.direction] Pay attention to x changes (ScrollSync.DIRECTION_X),
-	     *   y changes (ScrollSync.DIRECTION_Y) or both (undefined)
-	     * @param {Number} [options.minimumEndSpeed] End speed calculation floors at this number, in pixels per ms
-	     * @param {boolean} [options.rails] whether to snap position calculations to nearest axis
-	     * @param {Number | Array.Number} [options.scale] scale outputs in by scalar or pair of scalars
-	     * @param {Number} [options.stallTime] reset time for velocity calculation in ms
-	     */
-	    function ScrollSync(options) {
-	        this.options = Object.create(ScrollSync.DEFAULT_OPTIONS);
-	        this._optionsManager = new OptionsManager(this.options);
-	        if (options) this.setOptions(options);
-
-	        this._payload = {
-	            delta    : null,
-	            position : null,
-	            velocity : null,
-	            slip     : true
-	        };
-
-	        this._eventInput = new EventHandler();
-	        this._eventOutput = new EventHandler();
-
-	        EventHandler.setInputHandler(this, this._eventInput);
-	        EventHandler.setOutputHandler(this, this._eventOutput);
-
-	        this._position = (this.options.direction === undefined) ? [0,0] : 0;
-	        this._prevTime = undefined;
-	        this._prevVel = undefined;
-	        this._eventInput.on('mousewheel', _handleMove.bind(this));
-	        this._eventInput.on('wheel', _handleMove.bind(this));
-	        this._inProgress = false;
-	        this._loopBound = false;
-	    }
-
-	    ScrollSync.DEFAULT_OPTIONS = {
-	        direction: undefined,
-	        minimumEndSpeed: Infinity,
-	        rails: false,
-	        scale: 1,
-	        stallTime: 50,
-	        lineHeight: 40,
-	        preventDefault: true
-	    };
-
-	    ScrollSync.DIRECTION_X = 0;
-	    ScrollSync.DIRECTION_Y = 1;
-
-	    var MINIMUM_TICK_TIME = 8;
-
-	    var _now = Date.now;
-
-	    function _newFrame() {
-	        if (this._inProgress && (_now() - this._prevTime) > this.options.stallTime) {
-	            this._inProgress = false;
-
-	            var finalVel = (Math.abs(this._prevVel) >= this.options.minimumEndSpeed)
-	                ? this._prevVel
-	                : 0;
-
-	            var payload = this._payload;
-	            payload.position = this._position;
-	            payload.velocity = finalVel;
-	            payload.slip = true;
-
-	            this._eventOutput.emit('end', payload);
-	        }
-	    }
-
-	    function _handleMove(event) {
-	        if (this.options.preventDefault) event.preventDefault();
-
-	        if (!this._inProgress) {
-	            this._inProgress = true;
-	            this._position = (this.options.direction === undefined) ? [0,0] : 0;
-	            payload = this._payload;
-	            payload.slip = true;
-	            payload.position = this._position;
-	            payload.clientX = event.clientX;
-	            payload.clientY = event.clientY;
-	            payload.offsetX = event.offsetX;
-	            payload.offsetY = event.offsetY;
-	            this._eventOutput.emit('start', payload);
-	            if (!this._loopBound) {
-	                Engine.on('prerender', _newFrame.bind(this));
-	                this._loopBound = true;
-	            }
-	        }
-
-	        var currTime = _now();
-	        var prevTime = this._prevTime || currTime;
-
-	        var diffX = (event.wheelDeltaX !== undefined) ? event.wheelDeltaX : -event.deltaX;
-	        var diffY = (event.wheelDeltaY !== undefined) ? event.wheelDeltaY : -event.deltaY;
-
-	        if (event.deltaMode === 1) { // units in lines, not pixels
-	            diffX *= this.options.lineHeight;
-	            diffY *= this.options.lineHeight;
-	        }
-
-	        if (this.options.rails) {
-	            if (Math.abs(diffX) > Math.abs(diffY)) diffY = 0;
-	            else diffX = 0;
-	        }
-
-	        var diffTime = Math.max(currTime - prevTime, MINIMUM_TICK_TIME); // minimum tick time
-
-	        var velX = diffX / diffTime;
-	        var velY = diffY / diffTime;
-
-	        var scale = this.options.scale;
-	        var nextVel;
-	        var nextDelta;
-
-	        if (this.options.direction === ScrollSync.DIRECTION_X) {
-	            nextDelta = scale * diffX;
-	            nextVel = scale * velX;
-	            this._position += nextDelta;
-	        }
-	        else if (this.options.direction === ScrollSync.DIRECTION_Y) {
-	            nextDelta = scale * diffY;
-	            nextVel = scale * velY;
-	            this._position += nextDelta;
-	        }
-	        else {
-	            nextDelta = [scale * diffX, scale * diffY];
-	            nextVel = [scale * velX, scale * velY];
-	            this._position[0] += nextDelta[0];
-	            this._position[1] += nextDelta[1];
-	        }
-
-	        var payload = this._payload;
-	        payload.delta    = nextDelta;
-	        payload.velocity = nextVel;
-	        payload.position = this._position;
-	        payload.slip     = true;
-
-	        this._eventOutput.emit('update', payload);
-
-	        this._prevTime = currTime;
-	        this._prevVel = nextVel;
-	    }
-
-	    /**
-	     * Return entire options dictionary, including defaults.
-	     *
-	     * @method getOptions
-	     * @return {Object} configuration options
-	     */
-	    ScrollSync.prototype.getOptions = function getOptions() {
-	        return this.options;
-	    };
-
-	    /**
-	     * Set internal options, overriding any default options
-	     *
-	     * @method setOptions
-	     *
-	     * @param {Object} [options] overrides of default options
-	     * @param {Number} [options.minimimEndSpeed] If final velocity smaller than this, round down to 0.
-	     * @param {Number} [options.stallTime] ms of non-motion before 'end' emitted
-	     * @param {Number} [options.rails] whether to constrain to nearest axis.
-	     * @param {Number} [options.direction] ScrollSync.DIRECTION_X, DIRECTION_Y -
-	     *    pay attention to one specific direction.
-	     * @param {Number} [options.scale] constant factor to scale velocity output
-	     */
-	    ScrollSync.prototype.setOptions = function setOptions(options) {
-	        return this._optionsManager.setOptions(options);
-	    };
-
-	    module.exports = ScrollSync;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
 /* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -13031,8 +13032,8 @@
 	 */
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require, exports, module) {
-	    var Vector = __webpack_require__(37);
-	    var EventHandler = __webpack_require__(19);
+	    var Vector = __webpack_require__(38);
+	    var EventHandler = __webpack_require__(21);
 
 	    /**
 	     * Force base class.
