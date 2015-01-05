@@ -41,7 +41,7 @@ define(function(require) {
     var scrollView;
     function _createScrollView() {
         scrollView = new FlexScrollView({
-            useContainer: true,
+            autoPipeEvents: true,
             flow: false,
             mouseMove: true
         });
@@ -57,6 +57,7 @@ define(function(require) {
     function _createLC(data) {
         var lc = new LayoutController({
             layout: ListLayout,
+            autoPipeEvents: true,
             size: [undefined, true],
             dataSource: data
         });
